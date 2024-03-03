@@ -2,24 +2,54 @@ package com.example.crud.Model;
 
 import jakarta.validation.constraints.*;
 
+import java.time.LocalDate;
+
 public class Produto {
+
+    @NotNull
+    @Positive
+    @Min(5)
+    @Max(10)
+    private Integer codigoProduto;
 
     @NotBlank
     private String nome;
 
     @NotNull
     @PositiveOrZero
-    private Double preco;
+    private Double precoDeVenda;
+
+    @NotNull
+    @PositiveOrZero
+    private double precoDeCompra;
+
+    @NotNull
+    private LocalDate dataDeEntrada;
+
+    @NotBlank
+    private String unidadeDeMedida;
+    //se vai ser em caixa, unidade, litros etc
 
     @NotBlank
     private String descricao;
 
     @NotBlank
-    private String grupo;
+    private String categoria;
 
     @NotNull
     @PositiveOrZero
     private Integer qtdEstoque;
+
+    //marca
+
+
+    public Integer getCodigoProduto() {
+        return codigoProduto;
+    }
+
+    public void setCodigoProduto(Integer codigoProduto) {
+        this.codigoProduto = codigoProduto;
+    }
 
     public String getNome() {
         return nome;
@@ -29,12 +59,37 @@ public class Produto {
         this.nome = nome;
     }
 
-    public Double getPreco() {
-        return preco;
+    public Double getPreceDeVenda() {
+        return precoDeVenda;
     }
 
-    public void setPreco(Double preco) {
-        this.preco = preco;
+    public void setPrecoDeVenda(Double precoDeVenda) {
+        this.precoDeVenda = precoDeVenda;
+    }
+
+    public double getPrecoDeCompra() {
+        return precoDeCompra;
+    }
+
+    public void setPrecoDeCompra(double precoDeCompra) {
+        this.precoDeCompra = precoDeCompra;
+    }
+
+
+    public LocalDate getDataDeEntrada() {
+        return dataDeEntrada;
+    }
+
+    public void setDataDeEntrada(LocalDate dataDeEntrada) {
+        this.dataDeEntrada = dataDeEntrada;
+    }
+
+    public String getUnidadeDeMedida() {
+        return unidadeDeMedida;
+    }
+
+    public void setUnidadeDeMedida(String unidadeDeMedida) {
+        this.unidadeDeMedida = unidadeDeMedida;
     }
 
     public String getDescricao() {
@@ -45,12 +100,12 @@ public class Produto {
         this.descricao = descricao;
     }
 
-    public String getGrupo() {
-        return grupo;
+    public String getCategoria() {
+        return categoria;
     }
 
-    public void setGrupo(String grupo) {
-        this.grupo = grupo;
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
 
     public Integer getQtdEstoque() {
