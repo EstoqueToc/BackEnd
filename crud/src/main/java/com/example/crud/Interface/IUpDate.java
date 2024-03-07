@@ -1,13 +1,10 @@
 package com.example.crud.Interface;
 
+import org.springframework.http.ResponseEntity;
+
 import java.time.LocalDate;
 
 public interface IUpDate {
-
-    Double attPrecoProduto();
-
-    Double descontoPrecoProduto();
-
-    void atualizarFuncionario(String nome, String CPF, String email, String senha, LocalDate idade, String cargo);
-
+    //criar uma interface que de desconto no material e desconto no produto
+    ResponseEntity<String> aplicarDesconto(int indice, double percentualDesconto);
 }
