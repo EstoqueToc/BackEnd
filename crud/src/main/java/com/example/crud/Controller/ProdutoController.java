@@ -134,7 +134,7 @@ public class ProdutoController extends FonecedorController {
     public ResponseEntity<String> aplicarDesconto(@PathVariable int indice, @RequestParam ("percentualDesconto") double percentualDesconto) {
         if (indice >= 0 && indice < produtos.size() && percentualDesconto >= 0) {
             Produto produto = produtos.get(indice);
-            double precoComDesconto = produto.getPreceDeVenda() * (1 - percentualDesconto / 100);
+            double precoComDesconto = produto.getPrecoDeCompra() * (1 - percentualDesconto / 100);
             produto.setPrecoDeVenda(precoComDesconto);
             return ResponseEntity.status(200).body("Desconto aplicado com sucesso.");
         } else {
