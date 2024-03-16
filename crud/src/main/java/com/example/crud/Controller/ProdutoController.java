@@ -31,6 +31,7 @@ public class ProdutoController extends FonecedorController {
     }
 
 
+    // vai obter produtos que tenha no estoque o valor escolhido pelo usuário
     @GetMapping("/estoque/{qtdEstoque}")
     public ResponseEntity<List<Produto>> buscarPorEstoque(@PathVariable int qtdEstoque) {
         List<Produto> produtosComEstoqueSuficiente = produtos.stream()
@@ -52,13 +53,15 @@ public class ProdutoController extends FonecedorController {
         return ResponseEntity.status(404).build();
     }
 
+    //obtendo os produtos por categoria por exemplo o usuário escolhe Ferramentas e irá aparecer martelos,furadeira,serras.
     @GetMapping("/categoria/{categoria}")
     public List<Produto> getProdutosPorCategoria(@PathVariable String categoria) {
         return produtos.stream()
-                .filter(produto -> produto.getCategoria().equalsIgnoreCase(categoria)).collect(Collectors.toList());
+                .filter(produto -> produto.getCategoria().equals(categoria)).collect(Collectors.toList());
     }
 
 
+    //obtendo produtos com base no preço filtrado pelo usuário
     @GetMapping("/preco")
     public ResponseEntity<List<Produto>> buscarPorFaixaPreco(@RequestParam("minimo") @PositiveOrZero Double precoMinimo,
             @RequestParam("maximo") @PositiveOrZero Double precoMaximo) {
@@ -68,7 +71,7 @@ public class ProdutoController extends FonecedorController {
         }
 
         List<Produto> produtosNaFaixa = produtos.stream()
-                .filter(produto -> produto.getPreceDeVenda() >= precoMinimo && produto.getPreceDeVenda() <= precoMaximo)
+                .filter(produto -> produto.getPrecoDeVenda() >= precoMinimo && produto.getPrecoDeVenda() <= precoMaximo)
                 .collect(Collectors.toList());
 
         if (produtosNaFaixa.isEmpty()) {
@@ -79,29 +82,7 @@ public class ProdutoController extends FonecedorController {
     }
 
 
-//    @GetMapping("/preco")
-//    public ResponseEntity<List<Produto>> buscarPorFaixaPreco(@RequestParam("minimo") @PositiveOrZero Double precoMinimo,
-//                                                             @RequestParam("maximo") @PositiveOrZero Double precoMaximo) {
-//        if (precoMinimo == null || precoMaximo == null || precoMinimo > precoMaximo) {
-//            return ResponseEntity.status(400).build();
-//        }
-//
-//        List<Produto> produtosNaFaixa = produtos.stream()
-//                .filter(produto -> produto.getPreceDeVenda() >= precoMinimo && produto.getPreceDeVenda() <= precoMaximo)
-//                .collect(Collectors.toList());
-//
-//        if (produtosNaFaixa.isEmpty()) {
-//            return ResponseEntity.status(404).build();
-//        }
-//        return ResponseEntity.status(200).body(produtosNaFaixa);
-//    }
-
-
-
-
-
-//misericordia fiz cagada
-
+    //adicionando produtos no estoque de um produto existente
     @PutMapping("/{indice}/estoque")
     public ResponseEntity<String> adicionarEstoque(@PathVariable int indice,
                                                    @RequestParam("qtdEstoque") @NotNull @PositiveOrZero Integer quantidadeAdicional) {
