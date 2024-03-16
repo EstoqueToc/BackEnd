@@ -2,19 +2,23 @@ package com.example.crud.Controller;
 
 import com.example.crud.Model.Funcionario;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@RestController
+@RequestMapping("/funcionarios")
 public class FuncionarioController {
 
     private List<Funcionario> funcionarios = new ArrayList<>();
 
     @GetMapping
     public ResponseEntity<List<Funcionario>> listar() {
+        if (funcionarios.isEmpty()){
+            return ResponseEntity.status(204).build();
+        }
         return ResponseEntity.status(200).body(funcionarios);
     }
 
@@ -23,7 +27,7 @@ public class FuncionarioController {
         if (indice >= 0 && indice < funcionarios.size()){
             return ResponseEntity.status(200).body(funcionarios.get(indice));
         }
-        return ResponseEntity.status(200).build();
+        return ResponseEntity.status(404).build();
     }
 
     @PostMapping
@@ -45,14 +49,9 @@ public class FuncionarioController {
     public ResponseEntity<Funcionario> removerFuncionario(@PathVariable int indice){
         if (indice >= 0 && indice < funcionarios.size()){
             funcionarios.remove(indice);
-            return ResponseEntity.status(200).body(funcionarios.get(indice));
+            return ResponseEntity.status(200).build();
         }
         return ResponseEntity.status(404).build();
     }
-
-    /*@PatchMapping("/{indice}")
-    public ResponseEntity<Funcionario> atualizarFuncioario(@PathVariable int indice, @RequestBody @Valid ){
-
-    }*/
 
 }

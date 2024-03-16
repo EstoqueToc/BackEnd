@@ -2,7 +2,6 @@ package com.example.crud.Controller;
 
 import com.example.crud.Interface.IUpDate;
 import com.example.crud.Model.Fornecedor;
-import com.example.crud.Model.Produto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@RestController
+@RequestMapping("/fornecedores")
 public class FonecedorController implements IUpDate {
     private List<Fornecedor> fornecedores = new ArrayList<>();
 
@@ -34,12 +35,16 @@ public class FonecedorController implements IUpDate {
     }
 
     @DeleteMapping("/{indice}")
-    public Fornecedor delete(@PathVariable int indice){
-        return fornecedores.remove(indice);
+    public ResponseEntity<Fornecedor> delete(@PathVariable int indice){
+        if (indice >= 0 && indice < fornecedores.size()){
+            fornecedores.remove(indice);
+            return ResponseEntity.status(200).build();
+        }
+        return ResponseEntity.status(404).build();
     }
 
-
     @Override
+    @PutMapping("/desconto/{indice}")
     public ResponseEntity<String> aplicarDesconto(@PathVariable int indice, @RequestParam("percentualDesconto") double percentualDesconto) {
         if (indice >= 0 && indice < fornecedores.size() && percentualDesconto >= 0) {
             Fornecedor fornecedor = fornecedores.get(indice);

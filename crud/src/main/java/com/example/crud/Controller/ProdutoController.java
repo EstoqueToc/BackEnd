@@ -1,6 +1,5 @@
 package com.example.crud.Controller;
 
-import com.example.crud.Interface.IUpDate;
 import com.example.crud.Model.Produto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -12,19 +11,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-
 @RestController
 @RequestMapping("/produtos")
-public class ProdutoController implements IUpDate {
+public class ProdutoController extends FonecedorController {
     private List<Produto> produtos = new ArrayList<>();
 
-    @PostMapping
+    @PostMapping("/cadastrar-produto")
     public ResponseEntity<Produto> criarProduto(@Valid @RequestBody Produto novoProduto) {
         produtos.add(novoProduto);
         return ResponseEntity.status(201).body(novoProduto);
     }
 
-    @GetMapping
+    @GetMapping("/receber-produto")
     public ResponseEntity<List<Produto>> getProdutos() {
         if (produtos.isEmpty()) {
             return ResponseEntity.status(204).build();
@@ -34,14 +32,19 @@ public class ProdutoController implements IUpDate {
 
 
     @GetMapping("/estoque/{qtdEstoque}")
-    public List<Produto> buscarPorEstoque(
-            @PathVariable int qtdEstoque) {
-        return produtos
-                .stream().
-                filter(produtodaVez -> produtodaVez.getQtdEstoque() >= qtdEstoque).toList();
+    public ResponseEntity<List<Produto>> buscarPorEstoque(@PathVariable int qtdEstoque) {
+        List<Produto> produtosComEstoqueSuficiente = produtos.stream()
+                .filter(produto -> produto.getQtdEstoque() >= qtdEstoque)
+                .collect(Collectors.toList());
+
+        if (produtosComEstoqueSuficiente.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        } else {
+            return ResponseEntity.status(200).body(produtosComEstoqueSuficiente);
+        }
     }
 
-    @GetMapping("/{indice}")
+    @GetMapping("/receber/{indice}")
     public ResponseEntity<Produto> get(@PathVariable int indice) {
         if (indice >=0 && indice < produtos.size()) {
             return ResponseEntity.status(200).body(produtos.get(indice));
@@ -132,19 +135,21 @@ public class ProdutoController implements IUpDate {
 
 
 
-    @PutMapping("/{indice}")
+    @PutMapping("/atualiazar-produtos/{indice}")
     public ResponseEntity<String> atualizarProduto(@PathVariable int indice,@Valid @RequestBody Produto produto) {
             produtos.set(indice, produto);
             return ResponseEntity.status(200).body("Produto atualizado com sucesso.");
     }
 
-    @DeleteMapping("/{indice}")
-    public Produto delete(@PathVariable int indice){
-        return produtos.remove(indice);
+    @DeleteMapping("/delete/{indice}")
+    public ResponseEntity<Produto> deleteProduto(@PathVariable int indice){
+         produtos.remove(indice);
+         return ResponseEntity.status(200).build();
     }
 
     //Atualizar o valor/desconto
     @Override
+    @PutMapping("/desconto/{indice}")
     public ResponseEntity<String> aplicarDesconto(@PathVariable int indice, @RequestParam ("percentualDesconto") double percentualDesconto) {
         if (indice >= 0 && indice < produtos.size() && percentualDesconto >= 0) {
             Produto produto = produtos.get(indice);

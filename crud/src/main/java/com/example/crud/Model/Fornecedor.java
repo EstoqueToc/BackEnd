@@ -18,7 +18,7 @@ public class Fornecedor {
     @NotBlank
     private String cnpj;
 
-    @NotBlank
+    @NotNull
     private Double preco;
 
     public Fornecedor(String nome, String endereco, String telefone, String email, String cnpj, Double preco) {

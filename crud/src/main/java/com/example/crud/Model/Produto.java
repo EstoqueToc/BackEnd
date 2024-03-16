@@ -8,8 +8,6 @@ public class Produto {
 
     @NotNull
     @Positive
-    @Min(5)
-    @Max(10)
     private Integer codigoProduto;
 
     @NotBlank
