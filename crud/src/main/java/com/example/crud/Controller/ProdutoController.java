@@ -1,5 +1,6 @@
 package com.example.crud.Controller;
 
+import com.example.crud.Interface.IUpDate;
 import com.example.crud.Model.Produto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/produtos")
-public class ProdutoController {
+public class ProdutoController implements IUpDate {
     private List<Produto> produtos = new ArrayList<>();
 
 
@@ -126,6 +127,17 @@ public class ProdutoController {
         return produtos.remove(indice);
     }
 
-
+    //Atualizar o valor/desconto
+    @Override
+    public ResponseEntity<String> aplicarDesconto(@PathVariable int indice, @RequestParam ("percentualDesconto") double percentualDesconto) {
+        if (indice >= 0 && indice < produtos.size() && percentualDesconto >= 0) {
+            Produto produto = produtos.get(indice);
+            double precoComDesconto = produto.getPreceDeVenda() * (1 - percentualDesconto / 100);
+            produto.setPrecoDeVenda(precoComDesconto);
+            return ResponseEntity.status(200).body("Desconto aplicado com sucesso.");
+        } else {
+            return ResponseEntity.status(404).body("Produto não encontrado ou percentual de desconto inválido.");
+        }
+    }
 }
 
