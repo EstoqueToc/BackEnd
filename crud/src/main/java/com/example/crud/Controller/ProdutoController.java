@@ -11,18 +11,20 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
     private List<Produto> produtos = new ArrayList<>();
 
+
+    //criando um novo produto
     @PostMapping
     public ResponseEntity<Produto> criarProduto(@Valid @RequestBody Produto novoProduto) {
         produtos.add(novoProduto);
         return ResponseEntity.status(201).body(novoProduto);
     }
 
+    // obtendo todos os produtos da lista
     @GetMapping
     public ResponseEntity<List<Produto>> getProdutos() {
         if (produtos.isEmpty()) {
@@ -32,6 +34,7 @@ public class ProdutoController {
     }
 
 
+    // vai obter produtos que tenha no estoque o valor escolhido pelo usuário
     @GetMapping("/estoque/{qtdEstoque}")
     public List<Produto> buscarPorEstoque(
             @PathVariable int qtdEstoque) {
@@ -40,6 +43,7 @@ public class ProdutoController {
                 filter(produtodaVez -> produtodaVez.getQtdEstoque() >= qtdEstoque).toList();
     }
 
+    //obter o produto pelo indice
     @GetMapping("/{indice}")
     public ResponseEntity<Produto> get(@PathVariable int indice) {
         if (indice >=0 && indice < produtos.size()) {
@@ -48,13 +52,15 @@ public class ProdutoController {
         return ResponseEntity.status(404).build();
     }
 
+    //obtendo os produtos por categoria por exemplo o usuário escolhe Ferramentas e irá aparecer martelos,furadeira,serras.
     @GetMapping("/categoria/{categoria}")
     public List<Produto> getProdutosPorCategoria(@PathVariable String categoria) {
         return produtos.stream()
-                .filter(produto -> produto.getCategoria().equalsIgnoreCase(categoria)).collect(Collectors.toList());
+                .filter(produto -> produto.getCategoria().equals(categoria)).collect(Collectors.toList());
     }
 
 
+    //obtendo produtos com base no preço filtrado pelo usuário
     @GetMapping("/preco")
     public ResponseEntity<List<Produto>> buscarPorFaixaPreco(@RequestParam("minimo") @PositiveOrZero Double precoMinimo,
             @RequestParam("maximo") @PositiveOrZero Double precoMaximo) {
@@ -64,7 +70,7 @@ public class ProdutoController {
         }
 
         List<Produto> produtosNaFaixa = produtos.stream()
-                .filter(produto -> produto.getPreceDeVenda() >= precoMinimo && produto.getPreceDeVenda() <= precoMaximo)
+                .filter(produto -> produto.getPrecoDeVenda() >= precoMinimo && produto.getPrecoDeVenda() <= precoMaximo)
                 .collect(Collectors.toList());
 
         if (produtosNaFaixa.isEmpty()) {
@@ -75,29 +81,7 @@ public class ProdutoController {
     }
 
 
-//    @GetMapping("/preco")
-//    public ResponseEntity<List<Produto>> buscarPorFaixaPreco(@RequestParam("minimo") @PositiveOrZero Double precoMinimo,
-//                                                             @RequestParam("maximo") @PositiveOrZero Double precoMaximo) {
-//        if (precoMinimo == null || precoMaximo == null || precoMinimo > precoMaximo) {
-//            return ResponseEntity.status(400).build();
-//        }
-//
-//        List<Produto> produtosNaFaixa = produtos.stream()
-//                .filter(produto -> produto.getPreceDeVenda() >= precoMinimo && produto.getPreceDeVenda() <= precoMaximo)
-//                .collect(Collectors.toList());
-//
-//        if (produtosNaFaixa.isEmpty()) {
-//            return ResponseEntity.status(404).build();
-//        }
-//        return ResponseEntity.status(200).body(produtosNaFaixa);
-//    }
-
-
-
-
-
-//misericordia fiz cagada
-
+    //adicionando produtos no estoque de um produto existente
     @PutMapping("/{indice}/estoque")
     public ResponseEntity<String> adicionarEstoque(@PathVariable int indice,
                                                    @RequestParam("qtdEstoque") @NotNull @PositiveOrZero Integer quantidadeAdicional) {
@@ -129,14 +113,14 @@ public class ProdutoController {
 //    }
 
 
-
-
+    //atualizando informações do produto
     @PutMapping("/{indice}")
     public ResponseEntity<String> atualizarProduto(@PathVariable int indice,@Valid @RequestBody Produto produto) {
             produtos.set(indice, produto);
             return ResponseEntity.status(200).body("Produto atualizado com sucesso.");
     }
 
+    //deletando produto
     @DeleteMapping("/{indice}")
     public Produto delete(@PathVariable int indice){
         return produtos.remove(indice);

@@ -34,11 +34,13 @@ public class Produto {
     private String descricao;
 
     @NotBlank
-    private String categoria;
+    private Categoria categoria;
 
     @NotNull
     @PositiveOrZero
     private Integer qtdEstoque;
+
+    private LocalDate dataDeValidade;
 
     //marca
 
@@ -59,7 +61,7 @@ public class Produto {
         this.nome = nome;
     }
 
-    public Double getPreceDeVenda() {
+    public Double getPrecoDeVenda() {
         return precoDeVenda;
     }
 
@@ -74,7 +76,6 @@ public class Produto {
     public void setPrecoDeCompra(double precoDeCompra) {
         this.precoDeCompra = precoDeCompra;
     }
-
 
     public LocalDate getDataDeEntrada() {
         return dataDeEntrada;
@@ -100,11 +101,11 @@ public class Produto {
         this.descricao = descricao;
     }
 
-    public String getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 
@@ -115,4 +116,14 @@ public class Produto {
     public void setQtdEstoque(Integer qtdEstoque) {
         this.qtdEstoque = qtdEstoque;
     }
+
+    public LocalDate getDataDeValidade() {
+        return dataDeValidade;
+    }
+
+    public void setDataDeValidade(LocalDate dataDeValidade) {
+        this.dataDeValidade = dataDeValidade;
+    }
+
+
 }
