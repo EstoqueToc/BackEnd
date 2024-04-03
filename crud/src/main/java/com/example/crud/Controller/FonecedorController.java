@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Parameter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +15,11 @@ import java.util.List;
 @RequestMapping("/fornecedores")
 public class FonecedorController implements IUpDate {
     private List<Fornecedor> fornecedores = new ArrayList<>();
+
     @Operation(summary = "Adiciona um novo fornecedor à lista")
     @PostMapping
-    public ResponseEntity<Fornecedor> adicionarFornecedor(@Valid @RequestBody Fornecedor novoFornecedor) {
+    public ResponseEntity<Fornecedor> adicionarFornecedor(
+            @Parameter(description = "Objeto de fornecedor com os dados para criação") @Valid @RequestBody Fornecedor novoFornecedor) {
         fornecedores.add(novoFornecedor);
         return ResponseEntity.status(201).body(novoFornecedor);
     }
@@ -32,38 +35,43 @@ public class FonecedorController implements IUpDate {
 
     @Operation(summary = "Atualiza os dados de um fornecedor pelo índice")
     @PutMapping("/{indice}")
-    public ResponseEntity<String> atualizarFornecedor(@PathVariable int indice, @Valid @RequestBody Fornecedor fornecedor) {
-        fornecedores.set(indice, fornecedor);
-        return ResponseEntity.status(200).body("Fornecedor atualizado com sucesso.");
+    public ResponseEntity<String> atualizarFornecedor(
+            @Parameter(description = "Índice do fornecedor na lista") @PathVariable int indice,
+            @Parameter(description = "Dados do fornecedor para atualização") @Valid @RequestBody Fornecedor fornecedor) {
+        if (indice >= 0 && indice < fornecedores.size()) {
+            fornecedores.set(indice, fornecedor);
+            return ResponseEntity.status(200).body("Fornecedor atualizado com sucesso.");
+        } else {
+            return ResponseEntity.status(404).body("Índice fora dos limites da lista.");
+        }
     }
 
     @Operation(summary = "Remove um fornecedor da lista pelo índice")
     @DeleteMapping("/{indice}")
-    public ResponseEntity<Fornecedor> delete(@PathVariable int indice) {
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Índice do fornecedor na lista para remoção") @PathVariable int indice) {
         if (indice >= 0 && indice < fornecedores.size()) {
             fornecedores.remove(indice);
             return ResponseEntity.status(200).build();
+        } else {
+            return ResponseEntity.status(404).build();
         }
-        return ResponseEntity.status(404).build();
     }
 
     @Operation(summary = "Aplica um desconto ao preço de um fornecedor pelo índice")
-    @Override
     @PutMapping("/desconto/{indice}")
-    public ResponseEntity<String> aplicarDesconto(@PathVariable int indice, @RequestParam("percentualDesconto") double percentualDesconto) {
+    public ResponseEntity<String> aplicarDesconto(
+            @Parameter(description = "Índice do fornecedor na lista") @PathVariable int indice,
+            @Parameter(description = "Percentual de desconto a ser aplicado ao preço do fornecedor") @RequestParam("percentualDesconto") double percentualDesconto) {
         if (indice >= 0 && indice < fornecedores.size() && percentualDesconto >= 0) {
             Fornecedor fornecedor = fornecedores.get(indice);
-            double novoPreco = fornecedor.getPreco();
-
-            if (novoPreco > 0) {
-                novoPreco -= novoPreco * (percentualDesconto / 100.0);
-                fornecedor.setPreco(novoPreco);
-                return ResponseEntity.status(200).body("Desconto aplicado com sucesso.");
-            } else {
-                return ResponseEntity.status(400).body("O preço do fornecedor não é válido.");
-            }
+            double novoPreco = fornecedor.getPreco() - (fornecedor.getPreco() * (percentualDesconto / 100.0));
+            fornecedor.setPreco(novoPreco);
+            return ResponseEntity.status(200).body("Desconto aplicado com sucesso.");
         } else {
             return ResponseEntity.status(404).body("Fornecedor não encontrado ou percentual de desconto inválido.");
         }
     }
+
 }
+
