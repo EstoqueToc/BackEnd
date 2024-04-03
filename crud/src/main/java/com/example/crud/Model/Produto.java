@@ -1,14 +1,16 @@
 package com.example.crud.Model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
+@Entity
 public class Produto {
 
-    @NotNull
-    @Positive
-    private Integer codigoProduto;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotBlank
     private String nome;
@@ -32,6 +34,7 @@ public class Produto {
     private String descricao;
 
     @NotBlank
+    @ManyToOne
     private Categoria categoria;
 
     @NotNull
@@ -43,12 +46,12 @@ public class Produto {
     //marca
 
 
-    public Integer getCodigoProduto() {
-        return codigoProduto;
+    public Long getId() {
+        return id;
     }
 
-    public void setCodigoProduto(Integer codigoProduto) {
-        this.codigoProduto = codigoProduto;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNome() {

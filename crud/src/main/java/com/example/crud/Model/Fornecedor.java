@@ -1,8 +1,17 @@
 package com.example.crud.Model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
 
+@Entity
 public class Fornecedor {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @NotBlank
     private String nome;
 
@@ -28,6 +37,18 @@ public class Fornecedor {
         this.email = email;
         this.cnpj = cnpj;
         this.preco = preco;
+    }
+
+    public Fornecedor() {
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNome() {

@@ -1,13 +1,21 @@
 package com.example.crud.Model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-
+@Entity
 public class Funcionario {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @NotBlank
     private String nome;
 
@@ -19,7 +27,7 @@ public class Funcionario {
     @NotBlank
     private String email;
 
-    @Size(min = 7,max = 14)
+    @Size(min = 7, max = 14)
     @NotBlank
     private String senha;
 
@@ -32,6 +40,14 @@ public class Funcionario {
 
     @NotNull
     private boolean acesso;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getNome() {
         return nome;
@@ -89,7 +105,7 @@ public class Funcionario {
         this.acesso = acesso;
     }
 
-    public long getIdade(){
+    public long getIdade() {
         LocalDate hoje = LocalDate.now();
         return ChronoUnit.YEARS.between(dtNascimento, hoje);
     }
