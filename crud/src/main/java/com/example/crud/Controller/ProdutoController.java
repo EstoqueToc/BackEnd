@@ -51,7 +51,7 @@ public class ProdutoController {
 
     @GetMapping("/categoria/{categoria}")
     public ResponseEntity<List<Produto>> getProdutosPorCategoria(@PathVariable String categoria) {
-        List<Produto> produtos = repository.findByCategoriaIgnoreCase(categoria);
+        List<Produto> produtos = repository.findByCategoriaNomeIgnoreCase(categoria);
         if (produtos.isEmpty()) {
             return ResponseEntity.status(204).build();
         }
