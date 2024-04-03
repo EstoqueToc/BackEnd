@@ -2,6 +2,7 @@ package com.example.crud.Controller;
 
 import com.example.crud.Model.Produto;
 import com.example.crud.repository.ProdutoRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -19,15 +20,14 @@ public class ProdutoController {
 
     @Autowired
     private ProdutoRepository repository;
-    private List<Produto> produtos = new ArrayList<>();
-
-
+    @Operation(summary = "Cria um novo produto e o adiciona ao repositório")
     @PostMapping
     public ResponseEntity<Produto> criarProduto(@RequestBody @Valid Produto novoProduto) {
         repository.save(novoProduto);
         return ResponseEntity.status(201).body(novoProduto);
     }
 
+    @Operation(summary = "Retorna todos os produtos")
     @GetMapping
     public ResponseEntity<List<Produto>> getProdutos() {
         var lista = repository.findAll();
@@ -35,60 +35,58 @@ public class ProdutoController {
                 : ResponseEntity.status(200).body(lista);
     }
 
-
+    @Operation(summary = "Busca produtos com quantidade em estoque maior ou igual ao valor especificado")
     @GetMapping("/estoque/{qtdEstoque}")
-    public List<Produto> buscarPorEstoque(
+    public ResponseEntity<List<Produto>> buscarPorEstoque(
             @PathVariable int qtdEstoque) {
-        return produtos
-                .stream().
-                filter(produtodaVez -> produtodaVez.getQtdEstoque() >= qtdEstoque).toList();
+        var produtos = repository.findByQtdEstoqueGreaterThanEqual(qtdEstoque);
+        return produtos.isEmpty() ? ResponseEntity.status(204).build()
+                : ResponseEntity.status(200).body(produtos);
     }
 
+    @Operation(summary = "Busca um produto pelo seu ID")
     @GetMapping("/{id}")
     public ResponseEntity<Produto> listarProdutoPorId(@PathVariable Long id) {
         return ResponseEntity.of(repository.findById(id));
     }
 
+    @Operation(summary = "Busca produtos por uma categoria específica, ignorando diferenças entre maiúsculas e minúsculas")
     @GetMapping("/categoria/{categoria}")
     public ResponseEntity<List<Produto>> getProdutosPorCategoria(@PathVariable String categoria) {
         List<Produto> produtos = repository.findByCategoriaNomeIgnoreCase(categoria);
-        if (produtos.isEmpty()) {
-            return ResponseEntity.status(204).build();
-        }
-        return ResponseEntity.status(200).body(produtos);
+        return produtos.isEmpty() ? ResponseEntity.status(204).build()
+                : ResponseEntity.status(200).body(produtos);
     }
 
+    @Operation(summary = "Busca produtos dentro de uma faixa de preço especificada")
     @GetMapping("/preco")
-    public ResponseEntity<List<Produto>> buscarPorFaixaPreco(@RequestParam("minimo") @PositiveOrZero Double precoMinimo,
-                                                             @RequestParam("maximo") @PositiveOrZero Double precoMaximo) {
+    public ResponseEntity<List<Produto>> buscarPorFaixaPreco(
+            @RequestParam("minimo") @PositiveOrZero Double precoMinimo,
+            @RequestParam("maximo") @PositiveOrZero Double precoMaximo) {
         if (precoMinimo == null || precoMaximo == null || precoMinimo > precoMaximo) {
-            return ResponseEntity.status(400).build(); // HTTP 400 Bad Request
+            return ResponseEntity.status(400).build();
         }
-
         List<Produto> produtosNaFaixa = repository.findByPrecoDeVendaBetween(precoMinimo, precoMaximo);
-        if (produtosNaFaixa.isEmpty()) {
-            return ResponseEntity.status(204).build(); // HTTP 204 No Content
-        }
-        return ResponseEntity.status(200).body(produtosNaFaixa); // HTTP 200 OK
+        return produtosNaFaixa.isEmpty() ? ResponseEntity.status(204).build()
+                : ResponseEntity.status(200).body(produtosNaFaixa);
     }
 
+    @Operation(summary = "Adiciona estoque ao produto pelo ID")
     @PutMapping("/{id}/estoque")
     public ResponseEntity<String> adicionarEstoque(@PathVariable Long id,
                                                    @RequestParam("qtdEstoque") @NotNull @PositiveOrZero Integer quantidadeAdicional) {
         var produtoOpt = repository.findById(id);
-
-        if (!produtoOpt.isPresent()) {
-            return ResponseEntity.status(404).body("Produto não encontrado.");
+        if (produtoOpt.isPresent()) {
+            Produto produto = produtoOpt.get();
+            int quantidadeAtual = produto.getQtdEstoque();
+            produto.setQtdEstoque(quantidadeAtual + quantidadeAdicional);
+            repository.save(produto);
+            return ResponseEntity.ok("Quantidade em estoque atualizada com sucesso.");
         }
-
-        Produto produto = produtoOpt.get();
-        int quantidadeAtual = produto.getQtdEstoque();
-        produto.setQtdEstoque(quantidadeAtual + quantidadeAdicional);
-        repository.save(produto);
-
-        return ResponseEntity.ok("Quantidade em estoque atualizada com sucesso.");
+        return ResponseEntity.status(404).body("Produto não encontrado.");
     }
 
+    @Operation(summary = "Atualiza os dados de um produto pelo ID")
     @PutMapping("/{id}")
     public ResponseEntity<Produto> alterarProduto(@PathVariable Long id, @Valid @RequestBody Produto produtoAtualizado) {
         if (repository.existsById(id)) {
@@ -99,15 +97,14 @@ public class ProdutoController {
         return ResponseEntity.status(404).build();
     }
 
+    @Operation(summary = "Deleta um produto pelo ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-
         if (repository.existsById(id)) {
             repository.deleteById(id);
             return ResponseEntity.status(204).build();
         }
         return ResponseEntity.status(404).build();
     }
-
 }
 

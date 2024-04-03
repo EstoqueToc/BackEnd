@@ -11,4 +11,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     List<Produto> findByPrecoDeVendaBetween(Double precoMinimo, Double precoMaximo);
 
+    List<Produto> findByQtdEstoqueGreaterThanEqual(int qtdEstoque);
+
 }
