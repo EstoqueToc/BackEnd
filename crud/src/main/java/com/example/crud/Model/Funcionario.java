@@ -16,6 +16,7 @@ public class Funcionario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank
     private String nome;
 
@@ -40,6 +41,10 @@ public class Funcionario {
 
     @NotNull
     private boolean acesso;
+
+    public int compareTo(Funcionario funcionario) {
+        return this.nome.compareTo(funcionario.getNome());
+    }
 
     public Long getId() {
         return id;

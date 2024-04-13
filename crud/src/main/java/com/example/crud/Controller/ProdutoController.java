@@ -2,6 +2,7 @@ package com.example.crud.Controller;
 
 import com.example.crud.Model.Produto;
 import com.example.crud.repository.ProdutoRepository;
+import com.example.crud.service.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
@@ -20,6 +21,9 @@ public class ProdutoController {
 
     @Autowired
     private ProdutoRepository repository;
+
+    private ProdutoService service;
+
     @Operation(summary = "Cria um novo produto")
     @PostMapping
     public ResponseEntity<Produto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid Produto novoProduto) {
@@ -107,6 +111,11 @@ public class ProdutoController {
             return ResponseEntity.status(204).build();
         }
         return ResponseEntity.status(404).build();
+    }
+
+    @GetMapping("/lista-produto")
+    public ResponseEntity<List<Produto>> listarProdutos() {
+        return ResponseEntity.status(200).body(service.ordenacaoQuickSort(repository.findAll().toArray(new Produto[0]), 0, repository.findAll().size() - 1).getBody());
     }
 }
 

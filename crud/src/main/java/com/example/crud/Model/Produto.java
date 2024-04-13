@@ -33,7 +33,6 @@ public class Produto {
     @NotBlank
     private String descricao;
 
-    @NotBlank
     @ManyToOne
     private Categoria categoria;
 
@@ -45,6 +44,9 @@ public class Produto {
 
     //marca
 
+    public int compareTo(Produto outroFilme) {
+        return this.nome.compareTo(outroFilme.getNome());
+    }
 
     public Long getId() {
         return id;
