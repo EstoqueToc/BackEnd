@@ -8,11 +8,6 @@ import java.util.List;
 
 public class FuncionarioService {
 
-    public List<Funcionario> obterFuncionariosOrdenados(List<Funcionario> funcionarios) {
-        ordenacaoQuickSort(funcionarios.toArray(new Funcionario[0]), 0, funcionarios.size() - 1);
-        return funcionarios;
-    }
-
     public ResponseEntity<List<Funcionario>> ordenacaoQuickSort(Funcionario[] v, int indInicio, int indFim){
         int i = indInicio;
         int j = indFim;

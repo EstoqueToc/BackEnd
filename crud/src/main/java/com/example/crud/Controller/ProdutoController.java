@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.ResponseEntity.*;
+
 
 @RestController
 @RequestMapping("/produtos")
@@ -28,14 +30,14 @@ public class ProdutoController {
     @PostMapping
     public ResponseEntity<Produto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid Produto novoProduto) {
         repository.save(novoProduto);
-        return ResponseEntity.status(201).body(novoProduto);
+        return status(201).body(novoProduto);
     }
 
     @Operation(summary = "Retorna todos os produtos")
     @GetMapping
     public ResponseEntity<List<Produto>> getProdutos() {
         var lista = repository.findAll();
-        return lista.isEmpty() ? ResponseEntity.status(204).build() : ResponseEntity.status(200).body(lista);
+        return lista.isEmpty() ? status(204).build() : status(200).body(lista);
     }
 
     @Operation(summary = "Busca produtos com quantidade em estoque maior ou igual ao valor especificado")
@@ -43,14 +45,14 @@ public class ProdutoController {
     public ResponseEntity<List<Produto>> buscarPorEstoque(
             @Parameter(description = "Quantidade de estoque para filtrar os produtos") @PathVariable int qtdEstoque) {
         var produtos = repository.findByQtdEstoqueGreaterThanEqual(qtdEstoque);
-        return produtos.isEmpty() ? ResponseEntity.status(204).build() : ResponseEntity.status(200).body(produtos);
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
 
     @Operation(summary = "Busca um produto pelo seu ID")
     @GetMapping("/{id}")
     public ResponseEntity<Produto> listarProdutoPorId(
             @Parameter(description = "ID do produto para busca") @PathVariable Long id) {
-        return ResponseEntity.of(repository.findById(id));
+        return of(repository.findById(id));
     }
 
     @Operation(summary = "Busca produtos por uma categoria específica")
@@ -58,7 +60,7 @@ public class ProdutoController {
     public ResponseEntity<List<Produto>> getProdutosPorCategoria(
             @Parameter(description = "Nome da categoria para filtrar os produtos") @PathVariable String categoria) {
         List<Produto> produtos = repository.findByCategoriaNomeIgnoreCase(categoria);
-        return produtos.isEmpty() ? ResponseEntity.status(204).build() : ResponseEntity.status(200).body(produtos);
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
 
     @Operation(summary = "Busca produtos dentro de uma faixa de preço")
@@ -67,10 +69,10 @@ public class ProdutoController {
             @Parameter(description = "Preço mínimo para a filtragem de produtos") @RequestParam("minimo") @PositiveOrZero Double precoMinimo,
             @Parameter(description = "Preço máximo para a filtragem de produtos") @RequestParam("maximo") @PositiveOrZero Double precoMaximo) {
         if (precoMinimo == null || precoMaximo == null || precoMinimo > precoMaximo) {
-            return ResponseEntity.status(400).build();
+            return status(400).build();
         }
         List<Produto> produtosNaFaixa = repository.findByPrecoDeVendaBetween(precoMinimo, precoMaximo);
-        return produtosNaFaixa.isEmpty() ? ResponseEntity.status(204).build() : ResponseEntity.status(200).body(produtosNaFaixa);
+        return produtosNaFaixa.isEmpty() ? status(204).build() : status(200).body(produtosNaFaixa);
     }
 
     @Operation(summary = "Adiciona estoque ao produto pelo ID")
@@ -84,9 +86,9 @@ public class ProdutoController {
             int quantidadeAtual = produto.getQtdEstoque();
             produto.setQtdEstoque(quantidadeAtual + quantidadeAdicional);
             repository.save(produto);
-            return ResponseEntity.ok("Quantidade em estoque atualizada com sucesso.");
+            return ok("Quantidade em estoque atualizada com sucesso.");
         }
-        return ResponseEntity.status(404).body("Produto não encontrado.");
+        return status(404).body("Produto não encontrado.");
     }
 
     @Operation(summary = "Atualiza os dados de um produto pelo ID")
@@ -97,9 +99,9 @@ public class ProdutoController {
         if (repository.existsById(id)) {
             produtoAtualizado.setId(id);
             repository.save(produtoAtualizado);
-            return ResponseEntity.status(200).body(produtoAtualizado);
+            return status(200).body(produtoAtualizado);
         }
-        return ResponseEntity.status(404).build();
+        return status(404).build();
     }
 
     @Operation(summary = "Deleta um produto pelo ID")
@@ -108,14 +110,51 @@ public class ProdutoController {
             @Parameter(description = "ID do produto para exclusão") @PathVariable Long id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
-            return ResponseEntity.status(204).build();
+            return status(204).build();
         }
-        return ResponseEntity.status(404).build();
+        return status(404).build();
     }
 
+    @Operation(summary = "Lista os produtos em ordem alfabética")
     @GetMapping("/lista-produto")
     public ResponseEntity<List<Produto>> listarProdutos() {
-        return ResponseEntity.status(200).body(service.ordenacaoQuickSort(repository.findAll().toArray(new Produto[0]), 0, repository.findAll().size() - 1).getBody());
+        var listaOrdenada = repository.findAllByOrderByNomeAsc();
+        return listaOrdenada.isEmpty() ? status(204).build() : status(200).body(listaOrdenada);
+    }
+
+    @Operation(summary = "Ordena os produtos por preço de venda")
+    @GetMapping("/ordenar-preco")
+    public ResponseEntity<List<Produto>> ordenarPorPreco() {
+        List<Produto> produtos = repository.findAllByOrderByPrecoDeVendaAsc();
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
+    }
+
+    @Operation(summary = "Lista os produtos por data de validade")
+    @GetMapping("/ordenar-validade")
+    public ResponseEntity<List<Produto>> listarPorValidade() {
+        List<Produto> produtos = repository.findAllByOrderByDataDeValidadeAsc();
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
+    }
+
+    @Operation(summary = "Lista os produtos por data de entrada")
+    @GetMapping("/ordenar-entrada")
+    public ResponseEntity<List<Produto>> listarPorDataEntrada() {
+        List<Produto> produtos = repository.findAllByOrderByDataDeEntradaAsc();
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
+    }
+
+    @Operation(summary = "Lista os produtos por quantidade de estoque")
+    @GetMapping("/ordenar-estoque")
+    public ResponseEntity<List<Produto>> listarPorEstoque() {
+        List<Produto> produtos = repository.findAllByOrderByQtdEstoqueAsc();
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
+    }
+
+    @Operation(summary = "Pesquisa produtos por nome")
+    @GetMapping("/pesquisa-produto/{nome}")
+    public ResponseEntity<List<Produto>> pesquisarProdutoPorNome(@Parameter(description = "Nome do produto para pesquisa") @PathVariable String nome) {
+        List<Produto> produtos = repository.findByNomeContainsIgnoreCase(nome);
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
 }
 

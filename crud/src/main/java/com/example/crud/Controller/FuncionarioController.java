@@ -71,11 +71,21 @@ public class FuncionarioController {
         return status(404).build();
     }
 
+    @Operation(summary = "Lista os funcionários em ordem alfabética")
     @GetMapping("/lista-funcionario")
     public ResponseEntity<List<Funcionario>> listarFuncionariosOrdenados() {
-        List<Funcionario> funcionarios = service.obterFuncionariosOrdenados(repository.findAll());
+        List<Funcionario> funcionarios = service.ordenacaoQuickSort(repository.findAll().toArray(new Funcionario[0]), 0, repository.findAll().size() - 1).getBody();
 
-        return ResponseEntity.status(200).body(funcionarios);
+        return status(200).body(funcionarios);
+    }
+
+    @Operation(summary = "Ordena os funcionários por Função")
+    @GetMapping("/lista-funcao")
+    public ResponseEntity<List<Funcionario>> listarFuncionariosPorCargo() {
+        List<Funcionario> funcionarios = repository.findAllByOrderByFuncaoAsc();
+        return funcionarios.isEmpty()
+                ? status(204).build()
+                : status(200).body(funcionarios);
     }
 
 }
