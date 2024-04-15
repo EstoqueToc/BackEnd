@@ -71,17 +71,15 @@ public class CategoriaController {
     }
 
     @Operation(summary = "Pesquisa categorias por nome")
-    @GetMapping("/pesquisa-categoria/{nome}")
-    public ResponseEntity<List<Categoria>> pesquisarCategoriaPorNome(@PathVariable @Parameter(description = "Nome da categoria para pesquisa") String nome) {
-        List<Categoria> categorias = repository.findByNomeContainsIgnoreCase(nome);
+    @GetMapping("/pesquisar/{nome}")
+    public ResponseEntity<List<Categoria>> pesquisarCategoriaPorNome(@PathVariable String nome) {
+        var categorias = repository.findByNomeContainsIgnoreCase(nome);
         return categorias.isEmpty() ? status(204).build() : status(200).body(categorias);
     }
+
+
 }
 
-//    public ResponseEntity<List<Categoria>> pesquisarCategoriaPorNome(@Parameter(description = "Nome da categoria para pesquisa") @PathVariable String nome) {
-//        List<Categoria> categorias = repository.findByNomeContainsIgnoreCase(nome);
-//        return categorias.isEmpty() ? status(204).build() : status(200).body(categorias);
-//    }
 
 
 

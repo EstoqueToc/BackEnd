@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.http.ResponseEntity.of;
 import static org.springframework.http.ResponseEntity.status;
 
 @RestController
@@ -81,10 +82,9 @@ public class FonecedorController implements IUpDate {
         }
     }
 
-
     @Operation(summary = "Pesquisa fornecedores por nome")
-    @GetMapping("/pesquisa-fornecedor/{nome}")
-    public ResponseEntity<List<Fornecedor>> pesquisarFornecedorPorNome(@PathVariable @Parameter(description = "Nome do fornecedor para pesquisa") String nome) {
+    @GetMapping("/fornecedor/{nome}")
+    public ResponseEntity<List<Fornecedor>> getFornecedorPorNome(@PathVariable @Parameter(description = "Nome do fornecedor para pesquisa") String nome) {
         List<Fornecedor> fornecedores = repository.findByNomeContainsIgnoreCase(nome);
         return fornecedores.isEmpty() ? status(204).build() : status(200).body(fornecedores);
     }
@@ -96,12 +96,10 @@ public class FonecedorController implements IUpDate {
         return lista.isEmpty() ? status(204).build() : status(200).body(lista);
     }
 
-    //ordenar cnpj
-    @Operation(summary = "Ordena os fornecedores por cnpj")
-    @GetMapping("/ordenar-cnpj")
-    public ResponseEntity<List<Fornecedor>> listarFornecedorCnpj() {
-        var lista = repository.findAllByOrderByCnpjAsc();
-        return lista.isEmpty() ? status(204).build() : status(200).body(lista);
+    @Operation(summary = "Retorna um fornecedor pelo ID")
+    @GetMapping("/{id}")
+    public ResponseEntity<Fornecedor> getFornecedorById(@PathVariable @Parameter(description = "ID do fornecedor para busca") Long id) {
+        return of(repository.findById(id));
     }
 
 }
