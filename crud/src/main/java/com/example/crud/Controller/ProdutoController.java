@@ -156,5 +156,9 @@ public class ProdutoController {
         List<Produto> produtos = repository.findByNomeContainsIgnoreCase(nome);
         return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
+
+
+
+
 }
 

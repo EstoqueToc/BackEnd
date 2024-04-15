@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CategoriaRepository extends JpaRepository<Categoria, Long>{
-    List<Categoria> findAllByOrderCategoria(String nome);
-    List<Categoria>
+
+    List<Categoria> findAllByOrderByNomeAsc();
+    List<Categoria> findByNomeContainsIgnoreCase(String nome);
 }

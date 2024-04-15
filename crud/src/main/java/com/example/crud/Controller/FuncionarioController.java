@@ -74,8 +74,8 @@ public class FuncionarioController {
     @Operation(summary = "Lista os funcionários em ordem alfabética")
     @GetMapping("/lista-funcionario")
     public ResponseEntity<List<Funcionario>> listarFuncionariosOrdenados() {
-        List<Funcionario> funcionarios = service.ordenacaoQuickSort(repository.findAll().toArray(new Funcionario[0]), 0, repository.findAll().size() - 1).getBody();
-
+        List<Funcionario> funcionarios = service.ordenacaoQuickSort(repository.findAll().toArray(new Funcionario[0])
+                , 0, repository.findAll().size() - 1).getBody();
         return status(200).body(funcionarios);
     }
 
