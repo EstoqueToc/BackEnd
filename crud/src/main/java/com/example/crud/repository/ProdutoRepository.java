@@ -13,4 +13,15 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     List<Produto> findByQtdEstoqueGreaterThanEqual(int qtdEstoque);
 
+    List<Produto> findAllByOrderByNomeAsc();
+
+    List<Produto> findAllByOrderByPrecoDeVendaAsc();
+
+    List<Produto> findAllByOrderByDataDeValidadeAsc();
+
+    List<Produto> findAllByOrderByDataDeEntradaAsc();
+
+    List<Produto> findAllByOrderByQtdEstoqueAsc();
+
+    List<Produto> findByNomeContainsIgnoreCase(String nome);
 }

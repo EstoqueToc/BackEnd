@@ -1,24 +1,31 @@
 package com.example.crud.Controller;
 
 import com.example.crud.Model.Funcionario;
+import com.example.crud.repository.FuncionarioRepository;
+import com.example.crud.service.FuncionarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Parameter;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/funcionarios")
 public class FuncionarioController {
 
-    private List<Funcionario> funcionarios = new ArrayList<>();
+    @Autowired
+    private FuncionarioRepository repository;
+
+    FuncionarioService service = new FuncionarioService();
 
     @Operation(summary = "Lista todos os funcionários")
     @ApiResponses(value = {
@@ -27,10 +34,10 @@ public class FuncionarioController {
     })
     @GetMapping
     public ResponseEntity<List<Funcionario>> listar() {
-        if (funcionarios.isEmpty()) {
-            return ResponseEntity.status(204).build();
-        }
-        return ResponseEntity.status(200).body(funcionarios);
+        var lista = repository.findAll();
+        return lista.isEmpty()
+                ? status(204).build()
+                : status(200).body(lista);
     }
 
     @Operation(summary = "Pesquisa um funcionário pelo índice na lista")
@@ -40,11 +47,8 @@ public class FuncionarioController {
     })
     @GetMapping("/{indice}")
     public ResponseEntity<Funcionario> pesquisarFuncionario(
-            @Parameter(description = "Índice do funcionário na lista") @PathVariable int indice) {
-        if (indice >= 0 && indice < funcionarios.size()) {
-            return ResponseEntity.status(200).body(funcionarios.get(indice));
-        }
-        return ResponseEntity.status(404).build();
+            @Parameter(description = "Índice do funcionário na lista") @PathVariable Long indice) {
+        return of(repository.findById(indice));
     }
 
     @Operation(summary = "Cadastra um novo funcionário")
@@ -55,8 +59,8 @@ public class FuncionarioController {
     @PostMapping
     public ResponseEntity<Funcionario> cadastrar(
             @Parameter(description = "Objeto do funcionário com dados para cadastro") @RequestBody @Valid Funcionario funcionarioNovo) {
-        funcionarios.add(funcionarioNovo);
-        return ResponseEntity.status(201).body(funcionarioNovo);
+        repository.save(funcionarioNovo);
+        return status(201).body(funcionarioNovo);
     }
 
     @Operation(summary = "Atualiza os dados de um funcionário pelo índice")
@@ -67,13 +71,14 @@ public class FuncionarioController {
     })
     @PutMapping("/{indice}")
     public ResponseEntity<Funcionario> atualizarFuncionario(
-            @Parameter(description = "Índice do funcionário na lista") @PathVariable int indice,
+            @Parameter(description = "Índice do funcionário na lista") @PathVariable Long indice,
             @Parameter(description = "Objeto do funcionário com dados atualizados") @RequestBody @Valid Funcionario funcionarioAtualizado) {
-        if (indice >= 0 && indice < funcionarios.size()) {
-            funcionarios.set(indice, funcionarioAtualizado);
-            return ResponseEntity.status(200).body(funcionarioAtualizado);
+        if (repository.existsById(indice)) {
+            funcionarioAtualizado.setId(indice);
+            repository.save(funcionarioAtualizado);
+            return status(200).body(funcionarioAtualizado);
         }
-        return ResponseEntity.status(404).build();
+        return status(404).build();
     }
 
     @Operation(summary = "Remove um funcionário da lista pelo índice")
@@ -83,11 +88,29 @@ public class FuncionarioController {
     })
     @DeleteMapping("/{indice}")
     public ResponseEntity<Void> removerFuncionario(
-            @Parameter(description = "Índice do funcionário na lista para remoção") @PathVariable int indice) {
-        if (indice >= 0 && indice < funcionarios.size()) {
-            funcionarios.remove(indice);
-            return ResponseEntity.status(200).build();
+            @Parameter(description = "Índice do funcionário na lista para remoção") @PathVariable Long indice) {
+        if (repository.existsById(indice)) {
+            repository.deleteById(indice);
+            return status(204).build();
         }
-        return ResponseEntity.status(404).build();
+        return status(404).build();
     }
+
+    @Operation(summary = "Lista os funcionários em ordem alfabética")
+    @GetMapping("/lista-funcionario")
+    public ResponseEntity<List<Funcionario>> listarFuncionariosOrdenados() {
+        List<Funcionario> funcionarios = service.ordenacaoQuickSort(repository.findAll().toArray(new Funcionario[0])
+                , 0, repository.findAll().size() - 1).getBody();
+        return status(200).body(funcionarios);
+    }
+
+    @Operation(summary = "Ordena os funcionários por Função")
+    @GetMapping("/lista-funcao")
+    public ResponseEntity<List<Funcionario>> listarFuncionariosPorCargo() {
+        List<Funcionario> funcionarios = repository.findAllByOrderByFuncaoAsc();
+        return funcionarios.isEmpty()
+                ? status(204).build()
+                : status(200).body(funcionarios);
+    }
+
 }
