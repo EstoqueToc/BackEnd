@@ -67,11 +67,7 @@ public class FonecedorController implements IUpDate {
             fornecedores.set(indice, fornecedor);
             return status(200).body("Fornecedor atualizado com sucesso.");
         } else {
-<<<<<<< HEAD
-            return ResponseEntity.status(404).body("Índice inválido");
-=======
             return status(404).body("Índice fora dos limites da lista.");
->>>>>>> 4b4d713db7d8784e613e4f7b0333a567eca48312
         }
     }
 
@@ -109,8 +105,6 @@ public class FonecedorController implements IUpDate {
             return status(404).body("Fornecedor não encontrado ou percentual de desconto inválido.");
         }
     }
-<<<<<<< HEAD
-=======
 
     @Operation(summary = "Pesquisa fornecedores por nome")
     @GetMapping("/fornecedor/{nome}")
@@ -131,6 +125,4 @@ public class FonecedorController implements IUpDate {
     public ResponseEntity<Fornecedor> getFornecedorById(@PathVariable @Parameter(description = "ID do fornecedor para busca") Long id) {
         return of(repository.findById(id));
     }
-
->>>>>>> 4b4d713db7d8784e613e4f7b0333a567eca48312
 }

@@ -17,12 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-<<<<<<< HEAD
-=======
 import static org.springframework.http.ResponseEntity.*;
 
-
->>>>>>> 4b4d713db7d8784e613e4f7b0333a567eca48312
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
@@ -30,15 +26,12 @@ public class ProdutoController {
     @Autowired
     private ProdutoRepository repository;
 
-<<<<<<< HEAD
-=======
     private ProdutoService service;
 
->>>>>>> 4b4d713db7d8784e613e4f7b0333a567eca48312
     @Operation(summary = "Cria um novo produto")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Produto criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content)
     })
     @PostMapping
     public ResponseEntity<Produto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid Produto novoProduto) {
@@ -202,8 +195,5 @@ public class ProdutoController {
         List<Produto> produtos = repository.findByNomeContainsIgnoreCase(nome);
         return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
-
-
-
 
 }
