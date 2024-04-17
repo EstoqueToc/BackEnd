@@ -97,6 +97,10 @@ public class FuncionarioController {
     }
 
     @Operation(summary = "Lista os funcionários em ordem alfabética")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Funcionários listados em ordem alfabética com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum funcionário para listar", content = @Content)
+    })
     @GetMapping("/lista-funcionario")
     public ResponseEntity<List<Funcionario>> listarFuncionariosOrdenados() {
         List<Funcionario> funcionarios = service.ordenacaoQuickSort(repository.findAll().toArray(new Funcionario[0])
@@ -105,6 +109,10 @@ public class FuncionarioController {
     }
 
     @Operation(summary = "Ordena os funcionários por Função")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Funcionários ordenados por função com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum funcionário para ordenar por função", content = @Content)
+    })
     @GetMapping("/lista-funcao")
     public ResponseEntity<List<Funcionario>> listarFuncionariosPorCargo() {
         List<Funcionario> funcionarios = repository.findAllByOrderByFuncaoAsc();
