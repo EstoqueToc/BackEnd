@@ -4,6 +4,9 @@ import com.example.crud.Model.Produto;
 import com.example.crud.repository.ProdutoRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -13,14 +16,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
 
     @Autowired
     private ProdutoRepository repository;
+
     @Operation(summary = "Cria um novo produto")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Produto criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+    })
     @PostMapping
     public ResponseEntity<Produto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid Produto novoProduto) {
         repository.save(novoProduto);
@@ -28,6 +35,10 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Retorna todos os produtos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos listados com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto disponível", content = @Content)
+    })
     @GetMapping
     public ResponseEntity<List<Produto>> getProdutos() {
         var lista = repository.findAll();
@@ -35,6 +46,10 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Busca produtos com quantidade em estoque maior ou igual ao valor especificado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos filtrados com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto encontrado com o estoque especificado", content = @Content)
+    })
     @GetMapping("/estoque/{qtdEstoque}")
     public ResponseEntity<List<Produto>> buscarPorEstoque(
             @Parameter(description = "Quantidade de estoque para filtrar os produtos") @PathVariable int qtdEstoque) {
@@ -43,6 +58,10 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Busca um produto pelo seu ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produto encontrado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Produto> listarProdutoPorId(
             @Parameter(description = "ID do produto para busca") @PathVariable Long id) {
@@ -50,6 +69,10 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Busca produtos por uma categoria específica")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos encontrados com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto encontrado na categoria especificada", content = @Content)
+    })
     @GetMapping("/categoria/{categoria}")
     public ResponseEntity<List<Produto>> getProdutosPorCategoria(
             @Parameter(description = "Nome da categoria para filtrar os produtos") @PathVariable String categoria) {
@@ -58,6 +81,11 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Busca produtos dentro de uma faixa de preço")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos encontrados dentro da faixa de preço"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto encontrado dentro da faixa de preço especificada", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Dados de preço inválidos ou inconsistências nos valores fornecidos", content = @Content)
+    })
     @GetMapping("/preco")
     public ResponseEntity<List<Produto>> buscarPorFaixaPreco(
             @Parameter(description = "Preço mínimo para a filtragem de produtos") @RequestParam("minimo") @PositiveOrZero Double precoMinimo,
@@ -70,6 +98,10 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Adiciona estoque ao produto pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Quantidade em estoque atualizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
+    })
     @PutMapping("/{id}/estoque")
     public ResponseEntity<String> adicionarEstoque(
             @Parameter(description = "ID do produto para adicionar estoque") @PathVariable Long id,
@@ -86,6 +118,10 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Atualiza os dados de um produto pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
+    })
     @PutMapping("/{id}")
     public ResponseEntity<Produto> alterarProduto(
             @Parameter(description = "ID do produto para atualização") @PathVariable Long id,
@@ -99,6 +135,10 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Deleta um produto pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Produto excluído com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @Parameter(description = "ID do produto para exclusão") @PathVariable Long id) {
@@ -109,4 +149,3 @@ public class ProdutoController {
         return ResponseEntity.status(404).build();
     }
 }
-
