@@ -1,10 +1,10 @@
 package com.example.crud.Controller;
 
 import com.example.crud.Interface.IUpDate;
-import com.example.crud.Model.Categoria;
 import com.example.crud.Model.Fornecedor;
 import com.example.crud.repository.FornecedorRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.Parameter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +106,10 @@ public class FonecedorController implements IUpDate {
     }
 
     @Operation(summary = "Pesquisa fornecedores por nome")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Fornecedores encontrados com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum fornecedor encontrado com o nome fornecido", content = @Content)
+    })
     @GetMapping("/fornecedor/{nome}")
     public ResponseEntity<List<Fornecedor>> getFornecedorPorNome(@PathVariable @Parameter(description = "Nome do fornecedor para pesquisa") String nome) {
         List<Fornecedor> fornecedores = repository.findByNomeContainsIgnoreCase(nome);
@@ -114,6 +117,10 @@ public class FonecedorController implements IUpDate {
     }
 
     @Operation(summary = "Ordena os fornecedores por nome")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Fornecedores ordenados com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum fornecedor disponível para ordenação", content = @Content)
+    })
     @GetMapping("/ordenar-fornecedor")
     public ResponseEntity<List<Fornecedor>> listarFornecedor() {
         var lista = repository.findAllByOrderByNomeAsc();
@@ -121,6 +128,10 @@ public class FonecedorController implements IUpDate {
     }
 
     @Operation(summary = "Retorna um fornecedor pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Fornecedor encontrado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Fornecedor com o ID fornecido não encontrado", content = @Content)
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Fornecedor> getFornecedorById(@PathVariable @Parameter(description = "ID do fornecedor para busca") Long id) {
         return of(repository.findById(id));

@@ -155,6 +155,10 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Lista os produtos em ordem alfabética")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos listados em ordem alfabética com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto disponível para listar", content = @Content)
+    })
     @GetMapping("/lista-produto")
     public ResponseEntity<List<Produto>> listarProdutos() {
         var listaOrdenada = repository.findAllByOrderByNomeAsc();
@@ -162,6 +166,10 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Ordena os produtos por preço de venda")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos ordenados por preço de venda com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto disponível para ordenação por preço", content = @Content)
+    })
     @GetMapping("/ordenar-preco")
     public ResponseEntity<List<Produto>> ordenarPorPreco() {
         List<Produto> produtos = repository.findAllByOrderByPrecoDeVendaAsc();
@@ -169,6 +177,10 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Lista os produtos por data de validade")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos listados por data de validade com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto disponível para listar por data de validade", content = @Content)
+    })
     @GetMapping("/ordenar-validade")
     public ResponseEntity<List<Produto>> listarPorValidade() {
         List<Produto> produtos = repository.findAllByOrderByDataDeValidadeAsc();
@@ -176,6 +188,10 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Lista os produtos por data de entrada")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos listados por data de entrada com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto disponível para listar por data de entrada", content = @Content)
+    })
     @GetMapping("/ordenar-entrada")
     public ResponseEntity<List<Produto>> listarPorDataEntrada() {
         List<Produto> produtos = repository.findAllByOrderByDataDeEntradaAsc();
@@ -183,6 +199,10 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Lista os produtos por quantidade de estoque")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos listados por quantidade de estoque com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto disponível para listar por quantidade de estoque", content = @Content)
+    })
     @GetMapping("/ordenar-estoque")
     public ResponseEntity<List<Produto>> listarPorEstoque() {
         List<Produto> produtos = repository.findAllByOrderByQtdEstoqueAsc();
@@ -190,6 +210,10 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Pesquisa produtos por nome")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos encontrados com o nome especificado"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto encontrado com o nome especificado", content = @Content)
+    })
     @GetMapping("/pesquisa-produto/{nome}")
     public ResponseEntity<List<Produto>> pesquisarProdutoPorNome(@Parameter(description = "Nome do produto para pesquisa") @PathVariable String nome) {
         List<Produto> produtos = repository.findByNomeContainsIgnoreCase(nome);
