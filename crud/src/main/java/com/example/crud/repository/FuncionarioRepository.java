@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> {
     List<Funcionario> findAllByOrderByFuncaoAsc();
+    Boolean existsByEmailAndSenha(String email, String senha);
 }
