@@ -121,4 +121,13 @@ public class FuncionarioController {
                 : status(200).body(funcionarios);
     }
 
+    @Operation(summary = "Valida se o funcionário existe para login")
+    @GetMapping("/login/{email}/{senha}")
+    public ResponseEntity<Boolean> validarFuncionario(@PathVariable String email, @PathVariable String senha) {
+        boolean funcionario = repository.existsByEmailAndSenha(email, senha);
+
+        return status(200).body(funcionario);
+    }
+
+
 }
