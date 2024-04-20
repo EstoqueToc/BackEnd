@@ -11,14 +11,27 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Categoria {
+public class Logradouro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoria_id;
-    @NotBlank
-    private String nome;
-    @NotBlank
-    private String descricao;
+    protected Long id;
 
+    @NotBlank
+    private String rua;
+    @NotBlank
+    private String numero;
+    @NotBlank
+    private String complemento;
+    @NotBlank
+    private String cidade;
+    @NotBlank
+    private String estado;
+    @NotBlank
+    private String cep;
+    @NotBlank
+    private String pais;
+
+    public Logradouro() {
+    }
 }

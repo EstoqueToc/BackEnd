@@ -9,7 +9,7 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/funcionarios/login/**") // Ajuste o caminho conforme necessário
+        registry.addMapping("/**") // Ajuste o caminho conforme necessário
                 .allowedOrigins("http://localhost:3000") // Permite solicitações apenas de localhost:3000
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // Métodos permitidos
                 .allowedHeaders("*"); // Todos os cabeçalhos permitidos

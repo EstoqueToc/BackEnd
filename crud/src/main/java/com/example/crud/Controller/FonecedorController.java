@@ -35,7 +35,7 @@ public class FonecedorController implements IUpDate {
     @PostMapping
     public ResponseEntity<Fornecedor> adicionarFornecedor(
             @Parameter(description = "Objeto de fornecedor com os dados para criação") @Valid @RequestBody Fornecedor novoFornecedor) {
-        fornecedores.add(novoFornecedor);
+        repository.save(novoFornecedor);
         return status(201).body(novoFornecedor);
     }
 

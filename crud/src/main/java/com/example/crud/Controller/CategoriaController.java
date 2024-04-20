@@ -31,7 +31,7 @@ public class CategoriaController {
 
     @Operation(summary = "Retorna uma categoria pelo ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Categoria> getCategoriaById(@PathVariable @Parameter(description = "ID da categoria para busca") Long id) {
+    public ResponseEntity<Categoria> getCategoriaById(@Parameter(description = "ID da categoria para busca") @PathVariable Long id) {
         return of(repository.findById(id));
     }
 
@@ -44,18 +44,18 @@ public class CategoriaController {
 
     @Operation(summary = "Atualiza uma categoria pelo ID")
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> atualizarCategoria(@PathVariable @Parameter(description = "ID do produto para atualização") Long id, @RequestBody @Valid Categoria categoriaAtualizada) {
+    public ResponseEntity<Categoria> atualizarCategoria(@Parameter(description = "ID do produto para atualização") @PathVariable Long id, @RequestBody @Valid Categoria categoriaAtualizada) {
         if (!repository.existsById(id)) {
             return status(404).build();
         }
-        categoriaAtualizada.setId(id);
+        categoriaAtualizada.setCategoria_id(id);
         repository.save(categoriaAtualizada);
         return status(200).body(categoriaAtualizada);
     }
 
     @Operation(summary = "Deleta uma categoria pelo ID")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarCategoria(@PathVariable @Parameter(description = "ID da categoria para exclusão") Long id) {
+    public ResponseEntity<Void> deletarCategoria(@Parameter(description = "ID da categoria para exclusão") @PathVariable Long id) {
         if (!repository.existsById(id)) {
             return status(404).build();
         }
@@ -72,7 +72,7 @@ public class CategoriaController {
 
     @Operation(summary = "Pesquisa categorias por nome")
     @GetMapping("/pesquisar/{nome}")
-    public ResponseEntity<List<Categoria>> pesquisarCategoriaPorNome(@PathVariable String nome) {
+    public ResponseEntity<List<Categoria>> pesquisarCategoriaPorNome(@Parameter(description = "Nome da categoria para pesquisar") @PathVariable String nome) {
         var categorias = repository.findByNomeContainsIgnoreCase(nome);
         return categorias.isEmpty() ? status(204).build() : status(200).body(categorias);
     }
