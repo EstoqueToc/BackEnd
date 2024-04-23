@@ -56,4 +56,6 @@ public class FonecedorController implements IUpDate {
             return ResponseEntity.status(404).body("Fornecedor não encontrado ou percentual de desconto inválido.");
         }
     }
+
+    //fazer um endpoint que faça a apuração de dados
 }
