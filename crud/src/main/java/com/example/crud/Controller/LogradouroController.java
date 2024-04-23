@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/logradouros")
 public class LogradouroController {
@@ -18,7 +20,7 @@ public class LogradouroController {
 
     @Operation(summary = "Retorna logradouros")
     @GetMapping
-    public ResponseEntity<List<Logradouro>>  logradouros(){
-
+    public ResponseEntity<List<Logradouro>> logradouros(){
+        return null;
     }
 }
