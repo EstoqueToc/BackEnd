@@ -1,159 +1,223 @@
 package com.example.crud.Controller;
 
-import com.example.crud.Interface.IUpDate;
 import com.example.crud.Model.Produto;
+import com.example.crud.repository.ProdutoRepository;
+import com.example.crud.service.ProdutoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
-
+import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/produtos")
-public class ProdutoController implements IUpDate {
-    private List<Produto> produtos = new ArrayList<>();
+public class ProdutoController {
 
+    @Autowired
+    private ProdutoRepository repository;
+
+    private ProdutoService service;
+
+    @Operation(summary = "Cria um novo produto")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Produto criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content)
+    })
     @PostMapping
-    public ResponseEntity<Produto> criarProduto(@Valid @RequestBody Produto novoProduto) {
-        produtos.add(novoProduto);
-        return ResponseEntity.status(201).body(novoProduto);
+    public ResponseEntity<Produto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid Produto novoProduto) {
+        repository.save(novoProduto);
+        return status(201).body(novoProduto);
     }
 
+    @Operation(summary = "Retorna todos os produtos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos listados com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto disponível", content = @Content)
+    })
     @GetMapping
     public ResponseEntity<List<Produto>> getProdutos() {
-        if (produtos.isEmpty()) {
-            return ResponseEntity.status(204).build();
-        }
-        return ResponseEntity.status(200).body(produtos);
+        var lista = repository.findAll();
+        return lista.isEmpty() ? status(204).build() : status(200).body(lista);
     }
 
-
+    @Operation(summary = "Busca produtos com quantidade em estoque maior ou igual ao valor especificado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos filtrados com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto encontrado com o estoque especificado", content = @Content)
+    })
     @GetMapping("/estoque/{qtdEstoque}")
-    public List<Produto> buscarPorEstoque(
-            @PathVariable int qtdEstoque) {
-        return produtos
-                .stream().
-                filter(produtodaVez -> produtodaVez.getQtdEstoque() >= qtdEstoque).toList();
+    public ResponseEntity<List<Produto>> buscarPorEstoque(
+            @Parameter(description = "Quantidade de estoque para filtrar os produtos") @PathVariable int qtdEstoque) {
+        var produtos = repository.findByQtdEstoqueGreaterThanEqual(qtdEstoque);
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
 
-    @GetMapping("/{indice}")
-    public ResponseEntity<Produto> get(@PathVariable int indice) {
-        if (indice >=0 && indice < produtos.size()) {
-            return ResponseEntity.status(200).body(produtos.get(indice));
-        }
-        return ResponseEntity.status(404).build();
+    @Operation(summary = "Busca um produto pelo seu ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produto encontrado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<Produto> listarProdutoPorId(
+            @Parameter(description = "ID do produto para busca") @PathVariable Long id) {
+        return of(repository.findById(id));
     }
 
+    @Operation(summary = "Busca produtos por uma categoria específica")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos encontrados com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto encontrado na categoria especificada", content = @Content)
+    })
     @GetMapping("/categoria/{categoria}")
-    public List<Produto> getProdutosPorCategoria(@PathVariable String categoria) {
-        return produtos.stream()
-                .filter(produto -> produto.getCategoria().equalsIgnoreCase(categoria)).collect(Collectors.toList());
+    public ResponseEntity<List<Produto>> getProdutosPorCategoria(
+            @Parameter(description = "Nome da categoria para filtrar os produtos") @PathVariable String categoria) {
+        List<Produto> produtos = repository.findByCategoriaNomeIgnoreCase(categoria);
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
 
-
+    @Operation(summary = "Busca produtos dentro de uma faixa de preço")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos encontrados dentro da faixa de preço"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto encontrado dentro da faixa de preço especificada", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Dados de preço inválidos ou inconsistências nos valores fornecidos", content = @Content)
+    })
     @GetMapping("/preco")
-    public ResponseEntity<List<Produto>> buscarPorFaixaPreco(@RequestParam("minimo") @PositiveOrZero Double precoMinimo,
-            @RequestParam("maximo") @PositiveOrZero Double precoMaximo) {
+    public ResponseEntity<List<Produto>> buscarPorFaixaPreco(
+            @Parameter(description = "Preço mínimo para a filtragem de produtos") @RequestParam("minimo") @PositiveOrZero Double precoMinimo,
+            @Parameter(description = "Preço máximo para a filtragem de produtos") @RequestParam("maximo") @PositiveOrZero Double precoMaximo) {
         if (precoMinimo == null || precoMaximo == null || precoMinimo > precoMaximo) {
-
-            return ResponseEntity.status(400).build();
+            return status(400).build();
         }
-
-        List<Produto> produtosNaFaixa = produtos.stream()
-                .filter(produto -> produto.getPreceDeVenda() >= precoMinimo && produto.getPreceDeVenda() <= precoMaximo)
-                .collect(Collectors.toList());
-
-        if (produtosNaFaixa.isEmpty()) {
-
-            return ResponseEntity.status(404).build();
-        }
-        return ResponseEntity.status(200).body(produtosNaFaixa);
+        List<Produto> produtosNaFaixa = repository.findByPrecoDeVendaBetween(precoMinimo, precoMaximo);
+        return produtosNaFaixa.isEmpty() ? status(204).build() : status(200).body(produtosNaFaixa);
     }
 
-
-//    @GetMapping("/preco")
-//    public ResponseEntity<List<Produto>> buscarPorFaixaPreco(@RequestParam("minimo") @PositiveOrZero Double precoMinimo,
-//                                                             @RequestParam("maximo") @PositiveOrZero Double precoMaximo) {
-//        if (precoMinimo == null || precoMaximo == null || precoMinimo > precoMaximo) {
-//            return ResponseEntity.status(400).build();
-//        }
-//
-//        List<Produto> produtosNaFaixa = produtos.stream()
-//                .filter(produto -> produto.getPreceDeVenda() >= precoMinimo && produto.getPreceDeVenda() <= precoMaximo)
-//                .collect(Collectors.toList());
-//
-//        if (produtosNaFaixa.isEmpty()) {
-//            return ResponseEntity.status(404).build();
-//        }
-//        return ResponseEntity.status(200).body(produtosNaFaixa);
-//    }
-
-
-
-
-
-//misericordia fiz cagada
-
-    @PutMapping("/{indice}/estoque")
-    public ResponseEntity<String> adicionarEstoque(@PathVariable int indice,
-                                                   @RequestParam("qtdEstoque") @NotNull @PositiveOrZero Integer quantidadeAdicional) {
-        if (indice >= 0 && indice < produtos.size()) {
-            Produto produto = produtos.get(indice);
+    @Operation(summary = "Adiciona estoque ao produto pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Quantidade em estoque atualizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
+    })
+    @PutMapping("/{id}/estoque")
+    public ResponseEntity<String> adicionarEstoque(
+            @Parameter(description = "ID do produto para adicionar estoque") @PathVariable Long id,
+            @Parameter(description = "Quantidade de estoque a ser adicionada") @RequestParam("qtdEstoque") @NotNull @PositiveOrZero Integer quantidadeAdicional) {
+        var produtoOpt = repository.findById(id);
+        if (produtoOpt.isPresent()) {
+            Produto produto = produtoOpt.get();
             int quantidadeAtual = produto.getQtdEstoque();
             produto.setQtdEstoque(quantidadeAtual + quantidadeAdicional);
-            return ResponseEntity.status(200).body("Quantidade em estoque atualizada com sucesso.");
-        } else {
-            return ResponseEntity.status(404).body("Produto não encontrado.");
+            repository.save(produto);
+            return ok("Quantidade em estoque atualizada com sucesso.");
         }
+        return status(404).body("Produto não encontrado.");
     }
 
-
-    //IDÉIA PARA DEVOLUÇÃO
-    // SE QUEBROU, VENCEU, PERDA DE PRODUTO
-
-//    @PutMapping("/{indice}/estoque")
-//    public ResponseEntity<String> tirarEstoque(@PathVariable int indice,
-//                                                   @RequestParam("qtdEstoque") @NotNull @PositiveOrZero Integer quantidadeAdicional) {
-//        if (indice >= 0 && indice < produtos.size()) {
-//            Produto produto = produtos.get(indice);
-//            int quantidadeAtual = produto.getQtdEstoque();
-//            produto.setQtdEstoque(quantidadeAtual + quantidadeAdicional);
-//            return ResponseEntity.status(200).body("Quantidade em estoque atualizada com sucesso.");
-//        } else {
-//            return ResponseEntity.status(404).body("Produto não encontrado.");
-//        }
-//    }
-
-
-
-
-    @PutMapping("/{indice}")
-    public ResponseEntity<String> atualizarProduto(@PathVariable int indice,@Valid @RequestBody Produto produto) {
-            produtos.set(indice, produto);
-            return ResponseEntity.status(200).body("Produto atualizado com sucesso.");
-    }
-
-    @DeleteMapping("/{indice}")
-    public Produto delete(@PathVariable int indice){
-        return produtos.remove(indice);
-    }
-
-    //Atualizar o valor/desconto
-    @Override
-    public ResponseEntity<String> aplicarDesconto(@PathVariable int indice, @RequestParam ("percentualDesconto") double percentualDesconto) {
-        if (indice >= 0 && indice < produtos.size() && percentualDesconto >= 0) {
-            Produto produto = produtos.get(indice);
-            double precoComDesconto = produto.getPreceDeVenda() * (1 - percentualDesconto / 100);
-            produto.setPrecoDeVenda(precoComDesconto);
-            return ResponseEntity.status(200).body("Desconto aplicado com sucesso.");
-        } else {
-            return ResponseEntity.status(404).body("Produto não encontrado ou percentual de desconto inválido.");
+    @Operation(summary = "Atualiza os dados de um produto pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
+    })
+    @PutMapping("/{id}")
+    public ResponseEntity<Produto> alterarProduto(
+            @Parameter(description = "ID do produto para atualização") @PathVariable Long id,
+            @Parameter(description = "Objeto do produto com dados atualizados") @Valid @RequestBody Produto produtoAtualizado) {
+        if (repository.existsById(id)) {
+            produtoAtualizado.setId(id);
+            repository.save(produtoAtualizado);
+            return status(200).body(produtoAtualizado);
         }
+        return status(404).build();
     }
+
+    @Operation(summary = "Deleta um produto pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Produto excluído com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "ID do produto para exclusão") @PathVariable Long id) {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return status(204).build();
+        }
+        return status(404).build();
+    }
+
+    @Operation(summary = "Lista os produtos em ordem alfabética")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos listados em ordem alfabética com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto disponível para listar", content = @Content)
+    })
+    @GetMapping("/lista-produto")
+    public ResponseEntity<List<Produto>> listarProdutos() {
+        var listaOrdenada = repository.findAllByOrderByNomeAsc();
+        return listaOrdenada.isEmpty() ? status(204).build() : status(200).body(listaOrdenada);
+    }
+
+    @Operation(summary = "Ordena os produtos por preço de venda")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos ordenados por preço de venda com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto disponível para ordenação por preço", content = @Content)
+    })
+    @GetMapping("/ordenar-preco")
+    public ResponseEntity<List<Produto>> ordenarPorPreco() {
+        List<Produto> produtos = repository.findAllByOrderByPrecoDeVendaAsc();
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
+    }
+
+    @Operation(summary = "Lista os produtos por data de validade")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos listados por data de validade com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto disponível para listar por data de validade", content = @Content)
+    })
+    @GetMapping("/ordenar-validade")
+    public ResponseEntity<List<Produto>> listarPorValidade() {
+        List<Produto> produtos = repository.findAllByOrderByDataDeValidadeAsc();
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
+    }
+
+    @Operation(summary = "Lista os produtos por data de entrada")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos listados por data de entrada com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto disponível para listar por data de entrada", content = @Content)
+    })
+    @GetMapping("/ordenar-entrada")
+    public ResponseEntity<List<Produto>> listarPorDataEntrada() {
+        List<Produto> produtos = repository.findAllByOrderByDataDeEntradaAsc();
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
+    }
+
+    @Operation(summary = "Lista os produtos por quantidade de estoque")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos listados por quantidade de estoque com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto disponível para listar por quantidade de estoque", content = @Content)
+    })
+    @GetMapping("/ordenar-estoque")
+    public ResponseEntity<List<Produto>> listarPorEstoque() {
+        List<Produto> produtos = repository.findAllByOrderByQtdEstoqueAsc();
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
+    }
+
+    @Operation(summary = "Pesquisa produtos por nome")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produtos encontrados com o nome especificado"),
+            @ApiResponse(responseCode = "204", description = "Nenhum produto encontrado com o nome especificado", content = @Content)
+    })
+    @GetMapping("/pesquisa-produto/{nome}")
+    public ResponseEntity<List<Produto>> pesquisarProdutoPorNome(@Parameter(description = "Nome do produto para pesquisa") @PathVariable String nome) {
+        List<Produto> produtos = repository.findByNomeContainsIgnoreCase(nome);
+        return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
+    }
+
 }
-
