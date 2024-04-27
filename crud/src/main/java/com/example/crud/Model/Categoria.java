@@ -21,4 +21,12 @@ public class Categoria {
     @NotBlank
     private String descricao;
 
+    public Categoria() {
+    }
+
+    public Categoria(Long categoria_id, String nome, String descricao) {
+        this.categoria_id = categoria_id;
+        this.nome = nome;
+        this.descricao = descricao;
+    }
 }

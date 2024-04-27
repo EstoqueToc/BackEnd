@@ -34,4 +34,15 @@ public class Logradouro {
 
     public Logradouro() {
     }
+
+    public Logradouro(Long id, String rua, String numero, String complemento, String cidade, String estado, String cep, String pais) {
+        this.id = id;
+        this.rua = rua;
+        this.numero = numero;
+        this.complemento = complemento;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.cep = cep;
+        this.pais = pais;
+    }
 }

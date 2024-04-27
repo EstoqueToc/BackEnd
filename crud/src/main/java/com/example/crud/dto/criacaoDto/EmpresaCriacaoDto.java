@@ -1,22 +1,17 @@
-package com.example.crud.Model;
+package com.example.crud.dto.criacaoDto;
 
-import jakarta.persistence.*;
+import com.example.crud.Model.Logradouro;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.validator.constraints.br.CNPJ;
 
-@Entity
 @Getter
-@Setter
-public class Empresa {
+public class EmpresaCriacaoDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long empresa_id;
     @NotBlank
     private String nome;
     @NotBlank
@@ -34,17 +29,4 @@ public class Empresa {
     @NotNull
     private boolean ativo;
 
-    public Empresa() {
-    }
-
-    public Empresa(Long empresa_id, String nome, String razaoSocial, String CNPJ, String telefone, String email, Logradouro logradouro, boolean ativo) {
-        this.empresa_id = empresa_id;
-        this.nome = nome;
-        this.razaoSocial = razaoSocial;
-        this.CNPJ = CNPJ;
-        this.telefone = telefone;
-        this.email = email;
-        this.logradouro = logradouro;
-        this.ativo = ativo;
-    }
 }

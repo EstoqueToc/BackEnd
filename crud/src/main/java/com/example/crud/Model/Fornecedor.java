@@ -33,6 +33,11 @@ public class Fornecedor {
     private Boolean parceria;
 
 
+    public Fornecedor() {
+
+    }
+
+
     public Fornecedor(String nome, String nomeFantasia, String razaoSocial , String telefone, String email, String cnpj, Double preco ,Boolean parceria) {
         this.nome = nome;
         this.nomeFantasia = nomeFantasia;
@@ -45,8 +50,5 @@ public class Fornecedor {
         this.parceria = parceria;
     }
 
-    public Fornecedor() {
-
-    }
 
 }

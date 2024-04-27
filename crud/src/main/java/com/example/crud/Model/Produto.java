@@ -49,6 +49,20 @@ public class Produto {
 
     private LocalDate dataDeValidade;
 
-    //marca
+    public Produto() {
+    }
 
+    public Produto(Long id, String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, LocalDate dataDeValidade) {
+        this.id = id;
+        this.nome = nome;
+        this.precoDeVenda = precoDeVenda;
+        this.precoDeCompra = precoDeCompra;
+        this.dataDeEntrada = dataDeEntrada;
+        this.unidadeDeMedida = unidadeDeMedida;
+        this.descricao = descricao;
+        this.categoria = categoria;
+        this.fornecedor = fornecedor;
+        this.qtdEstoque = qtdEstoque;
+        this.dataDeValidade = dataDeValidade;
+    }
 }

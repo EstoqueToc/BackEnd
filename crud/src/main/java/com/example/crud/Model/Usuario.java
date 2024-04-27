@@ -46,6 +46,20 @@ public class Usuario {
     @NotNull
     private boolean acesso;
 
+    public Usuario() {
+    }
+
+    public Usuario(Long id, String nome, String CPF, String email, String senha, LocalDate dtNascimento, String funcao, boolean acesso) {
+        this.id = id;
+        this.nome = nome;
+        this.CPF = CPF;
+        this.email = email;
+        this.senha = senha;
+        this.dtNascimento = dtNascimento;
+        this.funcao = funcao;
+        this.acesso = acesso;
+    }
+
     public long getIdade() {
         LocalDate hoje = LocalDate.now();
         return ChronoUnit.YEARS.between(dtNascimento, hoje);
