@@ -16,7 +16,7 @@ public class Empresa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long empresa_id;
+    private Long id;
     @NotBlank
     private String nome;
     @NotBlank
@@ -28,10 +28,10 @@ public class Empresa {
     @Size(min = 13, max = 16)
     private String telefone; /* (99) 99999-9999 | (99)99999-9999 | (99) 9 9999-9999 | 99 99999-9999 | 99 9 9999-9999*/
     @Email
-    private String email;
+    private String emailCorporativo;
     @ManyToOne
     private Logradouro logradouro;
-    @NotNull
+
     private boolean ativo;
 
     public Empresa() {
