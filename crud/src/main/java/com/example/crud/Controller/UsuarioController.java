@@ -1,5 +1,7 @@
 package com.example.crud.Controller;
 
+import com.example.crud.GerenciadorArquivo.UsuarioCSV;
+import com.example.crud.Helpers.ListaObj;
 import com.example.crud.Model.Usuario;
 import com.example.crud.repository.UsuarioRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +25,7 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository repository;
+    private UsuarioCSV usuarioCSV;
 
     @Operation(summary = "Lista todos os usuários")
     @ApiResponses(value = {
@@ -129,4 +132,28 @@ public class UsuarioController {
                 : status(200).body(usuario);
     }
 
+    //endpoints para consumir as classes 'UsuarioCSV'
+    @Operation(summary = "Grava arquivo CSV de Usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Arquivo CSV de Usuário gravado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Erro ao gravar arquivo CSV de Usuário", content = @Content)
+    })
+    @PostMapping("/csv/usuario")
+    public ResponseEntity<String> gravaArquivoCsvUsuario() {
+        ListaObj<Usuario> lista = new ListaObj<>(100);
+        lista.adicionaLista(repository.findAll());
+        UsuarioCSV.gravaArquivoCsv(lista, "usuarios");
+        return ok("Gravando arquivo CSV de Usuário");
+    }
+
+    @Operation(summary = "Lê arquivo CSV de Usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Arquivo CSV de Usuário lido com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Erro ao ler arquivo CSV de Usuário", content = @Content)
+    })
+    @GetMapping("/csv/usuario")
+    public ResponseEntity<String> leArquivoCsvUsuario() {
+        UsuarioCSV.lerArquivoCsv("usuarios");
+        return ok("Lendo arquivo CSV de Usuário");
+    }
 }

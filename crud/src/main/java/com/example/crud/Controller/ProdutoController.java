@@ -1,8 +1,11 @@
 package com.example.crud.Controller;
 
+import com.example.crud.GerenciadorArquivo.ProdutoCSV;
+import com.example.crud.GerenciadorArquivo.UsuarioCSV;
+import com.example.crud.Helpers.ListaObj;
 import com.example.crud.Model.Produto;
+import com.example.crud.Model.Usuario;
 import com.example.crud.repository.ProdutoRepository;
-import com.example.crud.service.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,7 +29,7 @@ public class ProdutoController {
     @Autowired
     private ProdutoRepository repository;
 
-    private ProdutoService service;
+    private ProdutoCSV produtoCSV;
 
     @Operation(summary = "Cria um novo produto")
     @ApiResponses(value = {
@@ -218,6 +221,31 @@ public class ProdutoController {
     public ResponseEntity<List<Produto>> pesquisarProdutoPorNome(@Parameter(description = "Nome do produto para pesquisa") @PathVariable String nome) {
         List<Produto> produtos = repository.findByNomeContainsIgnoreCase(nome);
         return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
+    }
+
+    //endpoints para consumir as classes 'UsuarioCSV'
+    @Operation(summary = "Grava arquivo CSV de Produtos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Arquivo CSV de Produtos gravado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Erro ao gravar arquivo CSV de Produtos", content = @Content)
+    })
+    @PostMapping("/csv/produto")
+    public ResponseEntity<String> gravaArquivoCsvUsuario() {
+        ListaObj<Produto> lista = new ListaObj<>(100);
+        lista.adicionaLista(repository.findAll());
+        ProdutoCSV.gravaArquivoCsv(lista, "produtos");
+        return ok("Gravando arquivo CSV de Produtos");
+    }
+
+    @Operation(summary = "Lê arquivo CSV de Produtos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Arquivo CSV de Produtos lido com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Erro ao ler arquivo CSV de Produtos", content = @Content)
+    })
+    @GetMapping("/csv/produto")
+    public ResponseEntity<String> leArquivoCsvUsuario() {
+        ProdutoCSV.lerArquivoCsv("produtos");
+        return ok("Lendo arquivo CSV de Produtos");
     }
 
 }

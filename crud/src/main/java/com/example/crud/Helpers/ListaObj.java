@@ -1,4 +1,6 @@
-package Helpers;
+package com.example.crud.Helpers;
+
+import java.util.List;
 
 public class ListaObj <T> {
     private T[] vetor;
@@ -16,6 +18,12 @@ public class ListaObj <T> {
         }
         else {
             vetor[nroElem++] = elemento;
+        }
+    }
+
+    public void adicionaLista(List<T> lista) {
+        for (T elemento : lista) {
+            adiciona(elemento);
         }
     }
 
