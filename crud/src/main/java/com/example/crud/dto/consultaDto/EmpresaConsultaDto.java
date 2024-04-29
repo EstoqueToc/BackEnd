@@ -18,12 +18,12 @@ public class EmpresaConsultaDto {
     private boolean ativo;
 
     public EmpresaConsultaDto(Empresa empresa) {
-        this.empresa_id = empresa.getEmpresa_id();
+        this.empresa_id = empresa.getId();
         this.nome = empresa.getNome();
         this.razaoSocial = empresa.getRazaoSocial();
         this.CNPJ = empresa.getCNPJ();
         this.telefone = empresa.getTelefone();
-        this.email = empresa.getEmail();
+        this.email = empresa.getEmailCorporativo();
         this.logradouro = empresa.getLogradouro();
         this.ativo = empresa.isAtivo();
     }

@@ -38,12 +38,12 @@ public class Empresa {
     }
 
     public Empresa(Long empresa_id, String nome, String razaoSocial, String CNPJ, String telefone, String email, Logradouro logradouro, boolean ativo) {
-        this.empresa_id = empresa_id;
+        this.id = empresa_id;
         this.nome = nome;
         this.razaoSocial = razaoSocial;
         this.CNPJ = CNPJ;
         this.telefone = telefone;
-        this.email = email;
+        this.emailCorporativo = email;
         this.logradouro = logradouro;
         this.ativo = ativo;
     }
