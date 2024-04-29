@@ -12,7 +12,7 @@ public class EmpresaMapper {
         empresa.setRazaoSocial(empresaCriacaoDto.getRazaoSocial());
         empresa.setCNPJ(empresaCriacaoDto.getCNPJ());
         empresa.setTelefone(empresaCriacaoDto.getTelefone());
-        empresa.setEmail(empresaCriacaoDto.getEmail());
+        empresa.setEmailCorporativo(empresaCriacaoDto.getEmail());
         empresa.setLogradouro(empresaCriacaoDto.getLogradouro());
         empresa.setAtivo(empresaCriacaoDto.isAtivo());
         return empresa;
