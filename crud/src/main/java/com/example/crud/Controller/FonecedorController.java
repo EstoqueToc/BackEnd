@@ -2,6 +2,8 @@ package com.example.crud.Controller;
 
 import com.example.crud.Interface.IUpDate;
 import com.example.crud.Model.Fornecedor;
+import com.example.crud.dto.consultaDto.FornecedorConsultaDto;
+import com.example.crud.dto.criacaoDto.FornecedorCriacaoDto;
 import com.example.crud.repository.FornecedorRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -9,12 +11,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.of;
 import static org.springframework.http.ResponseEntity.status;
@@ -27,16 +31,21 @@ public class FonecedorController implements IUpDate {
     @Autowired
     private FornecedorRepository repository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Operation(summary = "Adiciona um novo fornecedor à lista")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Fornecedor adicionado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content)
     })
     @PostMapping
-    public ResponseEntity<Fornecedor> adicionarFornecedor(
-            @Parameter(description = "Objeto de fornecedor com os dados para criação") @Valid @RequestBody Fornecedor novoFornecedor) {
+    public ResponseEntity<FornecedorConsultaDto> adicionarFornecedor(
+            @Parameter(description = "Objeto de fornecedor com os dados para criação") @Valid @RequestBody FornecedorCriacaoDto novoFornecedorDto) {
+        Fornecedor novoFornecedor = modelMapper.map(novoFornecedorDto, Fornecedor.class);
         repository.save(novoFornecedor);
-        return status(201).body(novoFornecedor);
+        FornecedorConsultaDto fornecedorCriadoDto = modelMapper.map(novoFornecedor, FornecedorConsultaDto.class);
+        return status(201).body(fornecedorCriadoDto);
     }
 
     @Operation(summary = "Retorna a lista de fornecedores")
@@ -45,11 +54,12 @@ public class FonecedorController implements IUpDate {
             @ApiResponse(responseCode = "204", description = "Nenhum fornecedor disponível", content = @Content)
     })
     @GetMapping
-    public ResponseEntity<List<Fornecedor>> getFornecedores() {
-        if (fornecedores.isEmpty()) {
-            return status(204).build();
-        }
-        return status(200).body(fornecedores);
+    public ResponseEntity<List<FornecedorConsultaDto>> getFornecedores() {
+        List<Fornecedor> fornecedores = repository.findAll();
+        List<FornecedorConsultaDto> fornecedoresDto = fornecedores.stream()
+                .map(fornecedor -> modelMapper.map(fornecedor, FornecedorConsultaDto.class))
+                .collect(Collectors.toList());
+        return fornecedores.isEmpty() ? status(204).build() : status(200).body(fornecedoresDto);
     }
 
     @Operation(summary = "Atualiza os dados de um fornecedor pelo índice")
@@ -59,15 +69,17 @@ public class FonecedorController implements IUpDate {
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content)
     })
     @PutMapping("/{indice}")
-    public ResponseEntity<String> atualizarFornecedor(
-            @Parameter(description = "Índice do fornecedor na lista") @PathVariable int indice,
-            @Parameter(description = "Dados do fornecedor para atualização") @Valid @RequestBody Fornecedor fornecedor) {
-        if (indice >= 0 && indice < fornecedores.size()) {
-            fornecedores.set(indice, fornecedor);
-            return status(200).body("Fornecedor atualizado com sucesso.");
-        } else {
-            return status(404).body("Índice fora dos limites da lista.");
+    public ResponseEntity<FornecedorConsultaDto> atualizarFornecedor(
+            @Parameter(description = "Indice do fornecedor a ser atualizado") @PathVariable Long id,
+            @Parameter(description = "Dados do fornecedor para atualização") @Valid @RequestBody FornecedorCriacaoDto fornecedorDto) {
+        if (repository.existsById(id)) {
+            Fornecedor fornecedor = modelMapper.map(fornecedorDto, Fornecedor.class);
+            fornecedor.setId(id);
+            repository.save(fornecedor);
+            FornecedorConsultaDto fornecedorAtualizadoDto = modelMapper.map(fornecedor, FornecedorConsultaDto.class);
+            return status(200).body(fornecedorAtualizadoDto);
         }
+        return status(404).build();
     }
 
     @Operation(summary = "Remove um fornecedor da lista pelo índice")
