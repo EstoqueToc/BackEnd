@@ -3,10 +3,7 @@ package com.example.crud.Controller;
 import com.example.crud.GerenciadorArquivo.UsuarioCSV;
 import com.example.crud.Helpers.ListaObj;
 import com.example.crud.Model.Usuario;
-<<<<<<< HEAD
-=======
 import com.example.crud.dto.consultaDto.UsuarioConsultaDto;
->>>>>>> dedabff19706399f4ada794d34817c4fff945e2e
 import com.example.crud.dto.criacaoDto.UsuarioCriacaoDto;
 import com.example.crud.repository.UsuarioRepository;
 import com.example.crud.service.usuario.UsuarioService;
@@ -157,7 +154,17 @@ public class UsuarioController {
                 : status(200).body(usuarios);
     }
 
-    @Operation(summary = "Valida se o usuário existe para login")
+    @Operation(summary = "Valida se o usuário existe para realizar o login")
+    @GetMapping("/login/{email}/{senha}")
+    public ResponseEntity<UsuarioTokenDto> login(@PathVariable String email, @PathVariable String senha) {
+        UsuarioLoginDto usuarioLoginDto = new UsuarioLoginDto();
+        usuarioLoginDto.setEmail(email);
+        usuarioLoginDto.setSenha(senha);
+        UsuarioTokenDto usuarioTokenDto = this.usuarioService.autenticar(usuarioLoginDto);
+        return status(200).body(usuarioTokenDto);
+    }
+
+    @Operation(summary = "Valida se o usuário existe para realizar o login")
     @PostMapping("/login")
     public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDto) {
         UsuarioTokenDto usuarioTokenDto = this.usuarioService.autenticar(usuarioLoginDto);
