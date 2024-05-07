@@ -17,6 +17,9 @@ public class EmpresaConsultaDto {
     private Logradouro logradouro;
     private boolean ativo;
 
+    public EmpresaConsultaDto() {
+    }
+
     public EmpresaConsultaDto(Empresa empresa) {
         this.empresa_id = empresa.getId();
         this.nome = empresa.getNome();

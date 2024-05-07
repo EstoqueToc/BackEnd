@@ -16,6 +16,9 @@ public class UsuarioConsultaDto {
     private String funcao;
     private boolean acesso;
 
+    public UsuarioConsultaDto() {
+    }
+
     public UsuarioConsultaDto(Usuario usuario) {
         this.nome = usuario.getNome();
         this.CPF = usuario.getCPF();

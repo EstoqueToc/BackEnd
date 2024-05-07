@@ -24,6 +24,9 @@ public class FornecedorConsultaDto {
     private Double preco;
     private Boolean parceria;
 
+    public FornecedorConsultaDto() {
+    }
+
     public FornecedorConsultaDto(Fornecedor fornecedor) {
         this.id = fornecedor.getId();
         this.nome = fornecedor.getNome();

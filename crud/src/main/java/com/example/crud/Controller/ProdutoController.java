@@ -55,6 +55,7 @@ public class ProdutoController {
             @ApiResponse(responseCode = "200", description = "Produtos listados com sucesso"),
             @ApiResponse(responseCode = "204", description = "Nenhum produto disponível", content = @Content)
     })
+    @GetMapping
     public ResponseEntity<List<ProdutoConsultaDto>> getProdutos() {
         var lista = repository.findAll();
         List<ProdutoConsultaDto> listaDto = lista.stream()

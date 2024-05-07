@@ -4,9 +4,12 @@ import com.example.crud.Model.Categoria;
 import com.example.crud.Model.Fornecedor;
 import com.example.crud.Model.Produto;
 import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
 @Getter
+@Setter
 public class ProdutoConsultaDto {
 
 
@@ -22,6 +25,8 @@ public class ProdutoConsultaDto {
     private Integer qtdEstoque;
     private LocalDate dataDeValidade;
 
+    public ProdutoConsultaDto() {
+    }
 
     public ProdutoConsultaDto(Produto produto) {
         this.id = produto.getId();

@@ -31,9 +31,22 @@ public class ProdutoCSV {
 
         // Bloco try-catch para gravar o arquivo
         try {
+            saida.format("%-5S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S\n",
+                    "ID", "Nome", "Preço de Venda", "Preço de Compra", "Data de Entrada", "Unidade de Medida", "Descrição", "Categoria", "Fornecedor", "Quantidade em Estoque", "Data de Validade");
             for (int i = 0; i < lista.getTamanho(); i++) {
                 Produto produto = lista.getElemento(i);
-                saida.format("%d;%s;%.2f;%.2f;%s;%s;%s;%s;%d;%s\n", produto.getId(), produto.getNome(), produto.getPrecoDeVenda(), produto.getPrecoDeCompra(), produto.getDataDeEntrada(), produto.getUnidadeDeMedida(), produto.getDescricao(), produto.getCategoria(), produto.getFornecedor(), produto.getQtdEstoque(), produto.getDataDeValidade());
+                saida.format("%05d;%-20s;%20.2f;%20.2f;%-20s;%-20s;%-20s;%-20s;%-20s;%20d;%-20s\n",
+                        produto.getId(),
+                        produto.getNome(),
+                        produto.getPrecoDeVenda(),
+                        produto.getPrecoDeCompra(),
+                        produto.getDataDeEntrada(),
+                        produto.getUnidadeDeMedida(),
+                        produto.getDescricao(),
+                        produto.getCategoria().getNome(),
+                        produto.getFornecedor().getNome(),
+                        produto.getQtdEstoque(),
+                        produto.getDataDeValidade());
             }
         } catch (FormatterClosedException erro) {
             System.out.println("Erro ao gravar o arquivo");
@@ -72,12 +85,12 @@ public class ProdutoCSV {
         // Bloco try-catch para ler o arquivo
         try {
             //cabeçalho
-            System.out.println("ID;Nome;Preço de Venda;Preço de Compra;Data de Entrada;Unidade de Medida;Descrição;Categoria;Fornecedor;Quantidade em Estoque;Data de Validade");
+            System.out.println("Nome;Preço de Venda;Preço de Compra;Data de Entrada;Unidade de Medida;Descrição;Categoria;Fornecedor;Quantidade em Estoque;Data de Validade");
 
             while (entrada.hasNext()) {
                 String linha = entrada.nextLine();
                 String[] campos = linha.split(";");
-                System.out.println("ID: " + campos[0]);
+//                System.out.println("ID: " + campos[0]);
                 System.out.println("Nome: " + campos[1]);
                 System.out.println("Preço de Venda: " + campos[2]);
                 System.out.println("Preço de Compra: " + campos[3]);

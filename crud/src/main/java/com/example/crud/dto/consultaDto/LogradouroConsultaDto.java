@@ -15,6 +15,9 @@ public class LogradouroConsultaDto {
     private String cep;
     private String pais;
 
+    public LogradouroConsultaDto() {
+    }
+
     public LogradouroConsultaDto(Logradouro logradouro) {
         this.id = logradouro.getId();
         this.rua = logradouro.getRua();
