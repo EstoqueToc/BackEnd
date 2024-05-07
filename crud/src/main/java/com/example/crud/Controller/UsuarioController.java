@@ -155,12 +155,10 @@ public class UsuarioController {
 
     @Operation(summary = "Valida se o usuário existe para realizar o login")
     @GetMapping("/login/{email}/{senha}")
-    public ResponseEntity<UsuarioTokenDto> login(@PathVariable String email, @PathVariable String senha) {
-        UsuarioLoginDto usuarioLoginDto = new UsuarioLoginDto();
-        usuarioLoginDto.setEmail(email);
-        usuarioLoginDto.setSenha(senha);
-        UsuarioTokenDto usuarioTokenDto = this.usuarioService.autenticar(usuarioLoginDto);
-        return status(200).body(usuarioTokenDto);
+    public ResponseEntity<Boolean> autenticarSenha(
+            @Parameter(description = "Email do usuário") @PathVariable String email,
+            @Parameter(description = "Senha do usuário") @PathVariable String senha) {
+        return status(200).body(this.usuarioService.autenticarSenha(email, senha));
     }
 
     @Operation(summary = "Valida se o usuário existe para realizar o login")

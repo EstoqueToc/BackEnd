@@ -61,4 +61,16 @@ public class UsuarioService {
         final String token = gerenciadorTokenJwt.generateToken(authentication);
         return UsuarioMapper.of(usuarioAutenticado, token);
     }
+
+    public Boolean autenticarSenha(String email, String senha) {
+        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(email, senha);
+        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+
+        Usuario usuarioAutenticado = usuarioRepository.findByEmail(email)
+                .orElseThrow(
+                        () -> new ResponseStatusException(404, "Email do usuário não cadastrado", null)
+                );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return true;
+    }
 }
