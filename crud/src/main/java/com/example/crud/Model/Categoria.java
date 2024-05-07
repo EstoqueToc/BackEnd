@@ -15,18 +15,12 @@ public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoria_id;
+    private Long id;
     @NotBlank
     private String nome;
     @NotBlank
     private String descricao;
 
     public Categoria() {
-    }
-
-    public Categoria(Long categoria_id, String nome, String descricao) {
-        this.categoria_id = categoria_id;
-        this.nome = nome;
-        this.descricao = descricao;
     }
 }

@@ -39,7 +39,6 @@ public class UsuarioController {
 
     private UsuarioCSV usuarioCSV;
 
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -78,7 +77,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "201", description = "Usuário cadastrado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content(schema = @Schema(hidden = true)))
     })
-    @PostMapping
+    @PostMapping("/cadastro")
     @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Void> cadastrar(
             @Parameter(description = "Objeto do usuário com dados para cadastro") @RequestBody @Valid UsuarioCriacaoDto usuarioCriacaoDto) {

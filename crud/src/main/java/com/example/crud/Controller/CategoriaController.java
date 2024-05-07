@@ -70,7 +70,7 @@ public class CategoriaController {
         return repository.findById(id)
                 .map(categoria -> {
                     modelMapper.map(categoriaAtualizadaDto, categoria);
-                    categoria.setCategoria_id(id);
+                    categoria.setId(id);
                     repository.save(categoria);
                     return status(200).body(modelMapper.map(categoria, CategoriaConsultaDto.class));
                 })
