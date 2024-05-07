@@ -5,6 +5,8 @@ import com.example.crud.GerenciadorArquivo.UsuarioCSV;
 import com.example.crud.Helpers.ListaObj;
 import com.example.crud.Model.Produto;
 import com.example.crud.Model.Usuario;
+import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
+import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
 import com.example.crud.repository.ProdutoRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,11 +16,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.*;
 
@@ -29,6 +33,8 @@ public class ProdutoController {
     @Autowired
     private ProdutoRepository repository;
 
+    @Autowired
+    private ModelMapper modelMapper;
     private ProdutoCSV produtoCSV;
 
     @Operation(summary = "Cria um novo produto")
@@ -37,9 +43,11 @@ public class ProdutoController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content)
     })
     @PostMapping
-    public ResponseEntity<Produto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid Produto novoProduto) {
+    public ResponseEntity<ProdutoConsultaDto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid ProdutoCriacaoDto novoProdutoDto) {
+        Produto novoProduto = modelMapper.map(novoProdutoDto, Produto.class);
         repository.save(novoProduto);
-        return status(201).body(novoProduto);
+        ProdutoConsultaDto produtoCriadoDto = modelMapper.map(novoProduto, ProdutoConsultaDto.class);
+        return status(201).body(produtoCriadoDto);
     }
 
     @Operation(summary = "Retorna todos os produtos")
@@ -47,10 +55,12 @@ public class ProdutoController {
             @ApiResponse(responseCode = "200", description = "Produtos listados com sucesso"),
             @ApiResponse(responseCode = "204", description = "Nenhum produto disponível", content = @Content)
     })
-    @GetMapping
-    public ResponseEntity<List<Produto>> getProdutos() {
+    public ResponseEntity<List<ProdutoConsultaDto>> getProdutos() {
         var lista = repository.findAll();
-        return lista.isEmpty() ? status(204).build() : status(200).body(lista);
+        List<ProdutoConsultaDto> listaDto = lista.stream()
+                .map(produto -> modelMapper.map(produto, ProdutoConsultaDto.class))
+                .collect(Collectors.toList());
+        return lista.isEmpty() ? status(204).build() : status(200).body(listaDto);
     }
 
     @Operation(summary = "Busca produtos com quantidade em estoque maior ou igual ao valor especificado")
@@ -70,10 +80,11 @@ public class ProdutoController {
             @ApiResponse(responseCode = "200", description = "Produto encontrado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
     })
-    @GetMapping("/{id}")
-    public ResponseEntity<Produto> listarProdutoPorId(
+    public ResponseEntity<ProdutoConsultaDto> listarProdutoPorId(
             @Parameter(description = "ID do produto para busca") @PathVariable Long id) {
-        return of(repository.findById(id));
+        var produtoOpt = repository.findById(id);
+        return produtoOpt.map(produto -> status(200).body(modelMapper.map(produto, ProdutoConsultaDto.class)))
+                .orElseGet(() -> status(404).build());
     }
 
     @Operation(summary = "Busca produtos por uma categoria específica")
