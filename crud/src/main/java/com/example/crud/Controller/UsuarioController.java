@@ -3,12 +3,17 @@ package com.example.crud.Controller;
 import com.example.crud.GerenciadorArquivo.UsuarioCSV;
 import com.example.crud.Helpers.ListaObj;
 import com.example.crud.Model.Usuario;
+import com.example.crud.dto.criacaoDto.UsuarioCriacaoDto;
 import com.example.crud.repository.UsuarioRepository;
+import com.example.crud.service.usuario.UsuarioService;
+import com.example.crud.service.usuario.autenticacao.dto.UsuarioLoginDto;
+import com.example.crud.service.usuario.autenticacao.dto.UsuarioTokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +30,10 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository repository;
+
+    @Autowired
+    private UsuarioService usuarioService;
+
     private UsuarioCSV usuarioCSV;
 
     @Operation(summary = "Lista todos os usuários")
@@ -57,10 +66,11 @@ public class UsuarioController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content(schema = @Schema(hidden = true)))
     })
     @PostMapping
-    public ResponseEntity<Usuario> cadastrar(
-            @Parameter(description = "Objeto do usuário com dados para cadastro") @RequestBody @Valid Usuario usuarioNovo) {
-        repository.save(usuarioNovo);
-        return status(201).body(usuarioNovo);
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Void> cadastrar(
+            @Parameter(description = "Objeto do usuário com dados para cadastro") @RequestBody @Valid UsuarioCriacaoDto usuarioCriacaoDto) {
+        this.usuarioService.criar(usuarioCriacaoDto);
+        return status(201).build();
     }
 
     @Operation(summary = "Atualiza os dados de um usuário pelo índice")
@@ -123,13 +133,10 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Valida se o usuário existe para login")
-    @GetMapping("/login/{email}/{senha}")
-    public ResponseEntity<Boolean> validarUsuario(@PathVariable String email, @PathVariable String senha) {
-        Boolean usuario = repository.existsByEmailAndSenha(email, senha);
-
-        return usuario == false
-                ? status(404).build()
-                : status(200).body(usuario);
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDto) {
+        UsuarioTokenDto usuarioTokenDto = this.usuarioService.autenticar(usuarioLoginDto);
+        return status(200).body(usuarioTokenDto);
     }
 
     //endpoints para consumir as classes 'UsuarioCSV'

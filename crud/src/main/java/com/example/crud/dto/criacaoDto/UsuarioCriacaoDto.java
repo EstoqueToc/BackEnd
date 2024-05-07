@@ -2,11 +2,13 @@ package com.example.crud.dto.criacaoDto;
 
 import jakarta.validation.constraints.*;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 
 @Getter
+@Setter
 public class UsuarioCriacaoDto {
 
     @NotBlank

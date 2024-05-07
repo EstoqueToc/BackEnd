@@ -32,7 +32,7 @@ public class Usuario {
     @NotBlank
     private String email;
 
-    @Size(min = 7, max = 14)
+
     @NotBlank
     private String senha;
 
