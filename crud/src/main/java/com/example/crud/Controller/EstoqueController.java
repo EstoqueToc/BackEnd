@@ -1,6 +1,8 @@
 package com.example.crud.Controller;
 
 import com.example.crud.service.usuario.EstoqueService;
+import com.example.crud.slack.Slack;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,4 +43,5 @@ public class EstoqueController {
     public ResponseEntity<Map<LocalDate, Integer>> getProdutosPorDataDeValidade() {
         return estoqueService.getProdutosPorDataDeValidade();
     }
+
 }

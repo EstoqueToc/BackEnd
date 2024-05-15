@@ -1,13 +1,14 @@
 package com.example.crud.service.usuario;
 
 import com.example.crud.Model.Produto;
-
 import com.example.crud.repository.ProdutoRepository;
+import com.example.crud.slack.Slack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class EstoqueService {
     public ResponseEntity<Integer> getTotalProdutosEmEstoque() {
         List<Produto> produtos = produtoRepository.findAll();
         int total = produtos.stream().mapToInt(Produto::getQtdEstoque).sum();
-        return new ResponseEntity<>(total, HttpStatus.OK);
+        return ResponseEntity.ok(total);
     }
 
     // Método para obter a quantidade de produtos por categoria
@@ -64,4 +65,32 @@ public class EstoqueService {
         ));
         return new ResponseEntity<>(produtosPorDataDeValidade, HttpStatus.OK);
     }
+
+    // Método para verificar e enviar alertas
+    public void verificarAlertas() {
+        ResponseEntity<Integer> responseEntity = getTotalProdutosEmEstoque();
+        int total = responseEntity.getBody();
+
+        List<Produto> produtos = produtoRepository.findAll();
+        produtos.forEach(produto -> {
+            int estoqueProduto = produto.getQtdEstoque();
+            // Verifica se chegou a 50% do total
+            if (estoqueProduto <= total / 2) {
+                try {
+                    Slack.sendMessage("{\"text\": \"Alerta: O produto " + produto.getNome() + " chegou na metade do estoque!\"}");
+                } catch (IOException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            // Verifica se chegou a 20% do total
+            if (estoqueProduto <= total * 0.2) {
+                try {
+                    Slack.sendMessage("{\"text\": \"Alerta Crítico: O produto " + produto.getNome() + " chegou a 20% do estoque!\"}");
+                } catch (IOException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
+
 }
