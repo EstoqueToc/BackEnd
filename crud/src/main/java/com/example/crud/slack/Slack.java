@@ -15,13 +15,11 @@ public class Slack {
     private static final String URL = "https://hooks.slack.com/services/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";
 
     public static void sendMessage(@NotBlank String content) throws IOException, InterruptedException {
-
         HttpRequest request = HttpRequest.newBuilder(
                         URI.create(URL))
                 .header("accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(content.toString()))
                 .build();
-
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
  }
 

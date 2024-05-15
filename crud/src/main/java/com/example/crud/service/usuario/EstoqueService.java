@@ -67,7 +67,7 @@ public class EstoqueService {
     }
 
     // Método para verificar e enviar alertas
-    public void verificarAlertas() {
+    public boolean verificarAlertas() {
         ResponseEntity<Integer> responseEntity = getTotalProdutosEmEstoque();
         int total = responseEntity.getBody();
 
@@ -91,6 +91,7 @@ public class EstoqueService {
                 }
             }
         });
+        return false;
     }
 
 }

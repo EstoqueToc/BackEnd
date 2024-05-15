@@ -46,14 +46,7 @@ public class EstoqueController {
     }
 
     @GetMapping("/slack/send")
-    public ResponseEntity<String> enviarMensagemSlack() {
-        try {
-            Slack.sendMessage("Mensagem de teste");
-            return ResponseEntity.ok("Mensagem enviada com sucesso");
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body("Erro ao enviar mensagem no Slack");
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+    public ResponseEntity<String> verificarAlertas() {
+        return estoqueService.verificarAlertas() ? ResponseEntity.ok("Alerta de estoque baixo!") : ResponseEntity.ok("Estoque normal");
     }
 }
