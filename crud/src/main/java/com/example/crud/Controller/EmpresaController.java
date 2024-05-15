@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.ResponseEntity.of;
 import static org.springframework.http.ResponseEntity.status;
 
 @RestController
