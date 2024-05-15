@@ -1,2 +1,7 @@
 ID   ;NOME                ;PREÇO DE VENDA      ;PREÇO DE COMPRA     ;DATA DE ENTRADA     ;UNIDADE DE MEDIDA   ;DESCRIÇÃO           ;CATEGORIA           ;FORNECEDOR          ;QUANTIDADE EM ESTOQUE;DATA DE VALIDADE    
 00003;nome_883edcd58be0   ;                0,00;                0,00;2024-05-07          ;unidadeDeMedida_94a7d4dccc5b;descricao_9ef6b8aac7b6;nome_f90bfd468df5   ;nome_3aff72e0873b   ;                   0;2024-05-07          
+00012;Calça               ;              149,99;              120,50;2024-05-08          ;unidade             ;Calça               ;Roupas              ;nome_3aff72e0873b   ;                  25;2024-12-31          
+00013;Regata              ;               99,99;               80,50;2024-05-08          ;unidade             ;Regata              ;Roupas              ;nome_3aff72e0873b   ;                  25;2024-12-31          
+00014;Camiseta            ;               99,99;               80,50;2024-05-08          ;unidade             ;Camiseta Algodão    ;Roupas              ;nome_3aff72e0873b   ;                  25;2024-12-31          
+00015;Camise Polo         ;               99,99;               80,50;2024-05-08          ;unidade             ;Camisa Polo Algodão ;Roupas              ;nome_3aff72e0873b   ;                  25;2024-12-31          
+00016;Tenis               ;              199,99;               99,50;2024-05-08          ;unidade             ;Tenis               ;Roupas              ;nome_3aff72e0873b   ;                  25;2024-12-31          

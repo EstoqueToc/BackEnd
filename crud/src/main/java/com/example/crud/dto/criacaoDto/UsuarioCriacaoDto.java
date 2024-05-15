@@ -11,29 +11,27 @@ import java.time.LocalDate;
 @Setter
 public class UsuarioCriacaoDto {
 
-    @NotBlank
+//    @NotBlank
     private String nome;
 
-    @CPF
-    @NotBlank
+//    @CPF
+//    @NotBlank
     private String CPF;
 
-    @Email
-    @NotBlank
+//    @Email
+//    @NotBlank
     private String email;
 
-    @Size(min = 7, max = 14)
-    @NotBlank
+//    @Size(min = 7, max = 14)
+//    @NotBlank
     private String senha;
 
-    @Past
-    @NotNull
+//    @Past
+//    @NotNull
     private LocalDate dtNascimento;
 
-    @NotBlank
     private String funcao;
 
-    @NotNull
     private boolean acesso;
 
 }

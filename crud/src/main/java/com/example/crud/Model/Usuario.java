@@ -21,29 +21,26 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+//    @NotBlank
     private String nome;
 
-    @CPF
-    @NotBlank
+//    @CPF
+//    @NotBlank
     private String CPF;
 
-    @Email
-    @NotBlank
+//    @Email
+//    @NotBlank
     private String email;
 
-
-    @NotBlank
+//    @NotBlank
     private String senha;
 
-    @Past
-    @NotNull
+//    @Past
+//    @NotNull
     private LocalDate dtNascimento;
 
-    @NotBlank
     private String funcao;
 
-    @NotNull
     private boolean acesso;
 
     public Usuario() {

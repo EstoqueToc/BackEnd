@@ -8,11 +8,11 @@ public class EmpresaMapper {
 
     public static Empresa toEntity(EmpresaCriacaoDto empresaCriacaoDto) {
         Empresa empresa = new Empresa();
-        empresa.setNome(empresaCriacaoDto.getNome());
+        empresa.setNomeEmpresa(empresaCriacaoDto.getNomeEmpresa());
         empresa.setRazaoSocial(empresaCriacaoDto.getRazaoSocial());
         empresa.setCNPJ(empresaCriacaoDto.getCNPJ());
         empresa.setTelefone(empresaCriacaoDto.getTelefone());
-        empresa.setEmailCorporativo(empresaCriacaoDto.getEmail());
+        empresa.setEmailCorporativo(empresaCriacaoDto.getEmailCorpotativo());
         empresa.setLogradouro(empresaCriacaoDto.getLogradouro());
         empresa.setAtivo(empresaCriacaoDto.isAtivo());
         return empresa;

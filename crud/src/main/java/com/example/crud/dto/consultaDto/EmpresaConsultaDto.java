@@ -8,12 +8,13 @@ import lombok.Getter;
 public class EmpresaConsultaDto {
 
 
-    private Long empresa_id;
-    private String nome;
+    private Long id;
+    private String nomeEmpresa;
     private String razaoSocial;
     private String CNPJ; /* 52.254.752/0001-82 */
     private String telefone; /* (99) 99999-9999 | (99)99999-9999 | (99) 9 9999-9999 | 99 99999-9999 | 99 9 9999-9999*/
-    private String email;
+    private String emailCorporativo;
+    private String senhaEmpresa;
     private Logradouro logradouro;
     private boolean ativo;
 
@@ -21,12 +22,13 @@ public class EmpresaConsultaDto {
     }
 
     public EmpresaConsultaDto(Empresa empresa) {
-        this.empresa_id = empresa.getId();
-        this.nome = empresa.getNome();
+        this.id = empresa.getId();
+        this.nomeEmpresa = empresa.getNomeEmpresa();
         this.razaoSocial = empresa.getRazaoSocial();
         this.CNPJ = empresa.getCNPJ();
         this.telefone = empresa.getTelefone();
-        this.email = empresa.getEmailCorporativo();
+        this.emailCorporativo = empresa.getEmailCorporativo();
+        this.senhaEmpresa = empresa.getSenhaEmpresa();
         this.logradouro = empresa.getLogradouro();
         this.ativo = empresa.isAtivo();
     }

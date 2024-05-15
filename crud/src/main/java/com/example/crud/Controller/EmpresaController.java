@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +55,12 @@ public class EmpresaController {
 
     @Operation(summary = "Cria uma nova empresa")
     @ApiResponse(responseCode = "201", description = "Empresa criada com sucesso")
-    @PostMapping
-    public ResponseEntity<EmpresaConsultaDto> criarEmpresa(@Parameter(description = "Objeto da empresa a ser criado") @Valid @RequestBody EmpresaCriacaoDto novaEmpresaDto) {
+    @PostMapping("/cadastro")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<Empresa> criarEmpresa(@Parameter(description = "Objeto da empresa a ser criado") @Valid @RequestBody Empresa novaEmpresaDto) {
         Empresa novaEmpresa = modelMapper.map(novaEmpresaDto, Empresa.class);
         repository.save(novaEmpresa);
-        return status(201).body(modelMapper.map(novaEmpresa, EmpresaConsultaDto.class));
+        return status(201).body(novaEmpresa);
     }
 
     @Operation(summary = "Atualiza uma empresa pelo ID")

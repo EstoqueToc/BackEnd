@@ -12,21 +12,23 @@ import org.hibernate.validator.constraints.br.CNPJ;
 @Getter
 public class EmpresaCriacaoDto {
 
-    @NotBlank
-    private String nome;
-    @NotBlank
+//    @NotBlank
+    private String nomeEmpresa;
+
     private String razaoSocial;
-    @CNPJ
-    @Size(min = 18, max = 18)
+//    @CNPJ
+//    @Size(min = 18, max = 18)
     private String CNPJ; /* 52.254.752/0001-82 */
-    @NotBlank
-    @Size(min = 13, max = 16)
+
+//    @Size(min = 13, max = 16)
     private String telefone; /* (99) 99999-9999 | (99)99999-9999 | (99) 9 9999-9999 | 99 99999-9999 | 99 9 9999-9999*/
-    @Email
-    private String email;
+//    @Email
+    private String emailCorpotativo;
+
+    private String senhaEmpresa;
     @ManyToOne
     private Logradouro logradouro;
-    @NotNull
+
     private boolean ativo;
 
 }
