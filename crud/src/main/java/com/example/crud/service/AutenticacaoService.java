@@ -1,8 +1,8 @@
-package com.example.crud.service.usuario.autenticacao;
+package com.example.crud.service;
 
 import com.example.crud.Model.Usuario;
 import com.example.crud.repository.UsuarioRepository;
-import com.example.crud.service.usuario.autenticacao.dto.UsuarioDetalhesDto;
+import com.example.crud.service.dto.UsuarioDetalhesDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

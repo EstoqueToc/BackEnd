@@ -1,4 +1,4 @@
-package com.example.crud.service.usuario.autenticacao.dto;
+package com.example.crud.service.dto;
 
 import lombok.Getter;
 import lombok.Setter;

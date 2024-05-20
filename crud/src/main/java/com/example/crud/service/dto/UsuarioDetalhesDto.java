@@ -1,4 +1,4 @@
-package com.example.crud.service.usuario.autenticacao.dto;
+package com.example.crud.service.dto;
 
 import com.example.crud.Model.Usuario;
 import org.springframework.security.core.GrantedAuthority;

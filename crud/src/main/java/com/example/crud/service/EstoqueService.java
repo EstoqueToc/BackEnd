@@ -1,12 +1,15 @@
-package com.example.crud.service.usuario;
+package com.example.crud.service;
 
 import com.example.crud.Model.Produto;
+import com.example.crud.excecoes.RecursoNaoEncontradoException;
 import com.example.crud.repository.ProdutoRepository;
 import com.example.crud.slack.Slack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -16,8 +19,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class EstoqueService {
+
+    private final ProdutoRepository produtoRepository;
+
     @Autowired
-    private ProdutoRepository produtoRepository;
+    public EstoqueService(ProdutoRepository produtoRepository) {
+        this.produtoRepository = produtoRepository;
+    }
 
     // Método para obter a quantidade total de produtos no estoque
     public ResponseEntity<Integer> getTotalProdutosEmEstoque() {
@@ -93,5 +101,37 @@ public class EstoqueService {
         });
         return false;
     }
+
+    void validarCodigoProduto(Long codigo) {
+        if (!produtoRepository.existsById(codigo))   {
+            throw new RecursoNaoEncontradoException("Produto", codigo);
+        }
+    }
+
+   /* public void criar(UsuarioCriacaoDto usuarioCriacaoDto) {
+        final Produto produto = ProdutoMapper.toEntity(ProdutoCriacaoDto);
+        this.produtoRepository.save(produto);
+    }*/
+
+    public Produto getUm(Long codigo) {
+        validarCodigoProduto(codigo);
+        return produtoRepository.findById(codigo).get();
+    }
+
+    public void excluirUm(Long codigo) {
+        validarCodigoProduto(codigo);
+        produtoRepository.deleteById(codigo);
+    }
+
+    public List<Produto> getAll() {
+        List<Produto> lista = produtoRepository.findAll();
+
+        if (lista.isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(204));
+        }
+
+        return lista;
+    }
+
 
 }

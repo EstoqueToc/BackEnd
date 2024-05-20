@@ -1,7 +1,6 @@
 package com.example.crud.Controller;
 
-import com.example.crud.service.usuario.EstoqueService;
-import com.example.crud.slack.Slack;
+import com.example.crud.service.EstoqueService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
 
