@@ -100,5 +100,37 @@ public class UsuarioService {
         if (!usuarioRepository.existsById(codigo)) {
             throw new RecursoNaoEncontradoException("Funcionário", codigo);
         }
+
+//    public void testListar() {
+//        List<Usuario> expectedUsuarios = new ArrayList<>();
+//        expectedUsuarios.add(usuario);
+//
+//        when(usuarioRepository.findAll()).thenReturn(expectedUsuarios);
+//
+//        List<Usuario> actualUsuarios = usuarioService.listar();
+//
+//        assertEquals(expectedUsuarios.size(), actualUsuarios.size());
+//        assertEquals(expectedUsuarios.get(0), actualUsuarios.get(0));
+//    }
+//        @Test
+//        public void testAutenticarSenha() {
+//            String email = "test@example.com";
+//            String senha = "testPassword";
+//
+//            when(usuarioRepository.findByEmail(email)).thenReturn(Optional.of(usuario));
+//            when(authenticationManager.authenticate(any())).thenReturn(mock(Authentication.class));
+//
+//            assertTrue(usuarioService.autenticarSenha(email, senha));
+//        }
+//
+//        @Test
+//        public void testExcluirUmNotFound() {
+//            Long codigo = 1L;
+//            when(usuarioRepository.existsById(codigo)).thenReturn(false);
+//
+//            assertThrows(RecursoNaoEncontradoException.class, () -> usuarioService.excluirUm(codigo));
+//        }
+
+
     }
 }

@@ -147,8 +147,12 @@
 			<artifactId>jansi</artifactId>
 			<version>1.18</version>
 		</dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>

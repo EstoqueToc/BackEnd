@@ -3,6 +3,7 @@ package com.example.crud.dto.consultaDto;
 import com.example.crud.Model.Categoria;
 import com.example.crud.Model.Fornecedor;
 import com.example.crud.Model.Produto;
+import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,8 +11,8 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class ProdutoConsultaDto {
-
 
     private Long id;
     private String nome;
@@ -24,9 +25,6 @@ public class ProdutoConsultaDto {
     private Fornecedor fornecedor;
     private Integer qtdEstoque;
     private LocalDate dataDeValidade;
-
-    public ProdutoConsultaDto() {
-    }
 
     public ProdutoConsultaDto(Produto produto) {
         this.id = produto.getId();

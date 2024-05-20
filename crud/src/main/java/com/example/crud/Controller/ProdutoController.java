@@ -7,7 +7,10 @@ import com.example.crud.Model.Produto;
 import com.example.crud.Model.Usuario;
 import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
 import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
+import com.example.crud.excecoes.RecursoNaoEncontradoException;
+import com.example.crud.excecoes.ValidacaoException;
 import com.example.crud.repository.ProdutoRepository;
+import com.example.crud.service.EstoqueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,6 +39,9 @@ public class ProdutoController {
     @Autowired
     private ModelMapper modelMapper;
     private ProdutoCSV produtoCSV;
+
+    private EstoqueService estoqueService; // Injeção do EstoqueService
+
 
     @Operation(summary = "Cria um novo produto")
     @ApiResponses(value = {
@@ -142,23 +148,7 @@ public class ProdutoController {
             @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<Produto> alterarProduto(
-            @Parameter(description = "ID do produto para atualização") @PathVariable Long id,
-            @Parameter(description = "Objeto do produto com dados atualizados") @Valid @RequestBody Produto produtoAtualizado) {
-        if (repository.existsById(id)) {
-            produtoAtualizado.setId(id);
-            repository.save(produtoAtualizado);
-            return status(200).body(produtoAtualizado);
-        }
-        return status(404).build();
-    }
 
-    @Operation(summary = "Deleta um produto pelo ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Produto excluído com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
-    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @Parameter(description = "ID do produto para exclusão") @PathVariable Long id) {
@@ -259,5 +249,23 @@ public class ProdutoController {
         ProdutoCSV.lerArquivoCsv("produtos");
         return ok("Lendo arquivo CSV de Produtos");
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> atualizarProduto(
+            @Parameter(description = "ID do produto para atualização") @PathVariable Long id,
+            @Parameter(description = "Objeto do produto com dados atualizados") @Valid @RequestBody Produto produtoAtualizado) {
+        try {
+            if (repository.existsById(id)) {
+                produtoAtualizado.setId(id); // Garante que o ID do produto seja o mesmo do path da requisição
+                repository.save(produtoAtualizado);
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (ValidacaoException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 
 }

@@ -4,12 +4,14 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Produto {
 
     @Id
@@ -64,5 +66,8 @@ public class Produto {
         this.fornecedor = fornecedor;
         this.qtdEstoque = qtdEstoque;
         this.dataDeValidade = dataDeValidade;
+    }
+
+    public Produto(long l, String s, int i, Categoria categoria, Fornecedor fornecedor, LocalDate now, LocalDate localDate) {
     }
 }
