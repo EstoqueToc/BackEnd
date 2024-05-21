@@ -14,13 +14,15 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Month;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class EstoqueService {
-
+    @Autowired
     private final ProdutoRepository produtoRepository;
 
     @Autowired
@@ -29,12 +31,10 @@ public class EstoqueService {
     }
 
     // Método para obter a quantidade total de produtos no estoque
-    public ResponseEntity<Integer> getTotalProdutosEmEstoque() {
+       public ResponseEntity<Integer> getTotalProdutosEmEstoque() {
         List<Produto> produtos = produtoRepository.findAll();
-        int total = produtos.stream()
-                .mapToInt(produto -> produto.getQtdEstoque() != null ? produto.getQtdEstoque() : 0) // Tratar quantidade nula como 0
-                .sum();
-        return ResponseEntity.ok(total);
+        int totalProdutos = produtos.size(); // ou qualquer lógica para calcular o total de produtos
+        return ResponseEntity.ok(totalProdutos);
     }
 
     // Método para obter a quantidade de produtos por categoria
@@ -51,39 +51,29 @@ public class EstoqueService {
     public ResponseEntity<Map<String, Integer>> getProdutosPorFornecedor() {
         List<Produto> produtos = produtoRepository.findAll();
         Map<String, Integer> produtosPorFornecedor = produtos.stream()
-                .filter(produto -> produto.getFornecedor() != null) // Filtrar produtos com fornecedor não nulo
-                .collect(Collectors.groupingBy(
-                        produto -> produto.getFornecedor().getNome(),
-                        Collectors.summingInt(Produto::getQtdEstoque)
-                ));
-        return new ResponseEntity<>(produtosPorFornecedor, HttpStatus.OK);
+                .collect(Collectors.groupingBy(produto -> produto.getFornecedor().getNome(), Collectors.summingInt(produto -> 1)));
+        return ResponseEntity.ok(produtosPorFornecedor);
     }
 
-
-    // Método para obter a quantidade de produtos por data de entrada
-    public ResponseEntity<Map<LocalDate, Integer>> getProdutosPorDataDeEntrada() {
-        List<Produto> produtos = produtoRepository.findAll();
-        Map<LocalDate, Integer> produtosPorDataDeEntrada = produtos.stream()
-                .filter(produto -> produto.getDataDeEntrada() != null) // Filtrar produtos com data de entrada não nula
-                .collect(Collectors.groupingBy(
-                        Produto::getDataDeEntrada,
-                        Collectors.summingInt(Produto::getQtdEstoque)
-                ));
-        return new ResponseEntity<>(produtosPorDataDeEntrada, HttpStatus.OK);
-    }
 
 
     // Método para obter a quantidade de produtos por data de validade
     public ResponseEntity<Map<LocalDate, Integer>> getProdutosPorDataDeValidade() {
         List<Produto> produtos = produtoRepository.findAll();
-        Map<LocalDate, Integer> produtosPorDataDeValidade = produtos.stream()
-                .filter(produto -> produto.getDataDeValidade() != null) // Filtrar produtos com data de validade não nula
-                .collect(Collectors.groupingBy(
-                        Produto::getDataDeValidade,
-                        Collectors.summingInt(Produto::getQtdEstoque)
-                ));
-        return new ResponseEntity<>(produtosPorDataDeValidade, HttpStatus.OK);
+
+        // Filtrar os produtos pela data de validade desejada
+        LocalDate dataValidadeDesejada = LocalDate.of(2024, Month.MAY, 20);
+        long produtosComDataDesejada = produtos.stream()
+                .filter(produto -> produto.getDataValidade().equals(dataValidadeDesejada))
+                .count();
+
+        // Criar o mapa com a contagem dos produtos por data de validade
+        Map<LocalDate, Integer> produtosPorDataDeValidade = new HashMap<>();
+        produtosPorDataDeValidade.put(dataValidadeDesejada, (int) produtosComDataDesejada);
+
+        return ResponseEntity.ok(produtosPorDataDeValidade);
     }
+
 
 
     // Método para verificar e enviar alertas
@@ -172,5 +162,12 @@ public class EstoqueService {
         produtoExistente.setDataDeValidade(produto.getDataDeValidade());
 
         produtoRepository.save(produtoExistente);
+    }
+
+    public ResponseEntity<Map<LocalDate, Integer>> getProdutosPorDataDeEntrada() {
+        List<Produto> produtos = produtoRepository.findAll();
+        Map<LocalDate, Integer> produtosPorDataDeEntrada = produtos.stream()
+                .collect(Collectors.groupingBy(Produto::getDataEntrada, Collectors.summingInt(produto -> 1)));
+        return ResponseEntity.ok(produtosPorDataDeEntrada);
     }
 }
