@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CNPJ;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Setter
@@ -39,5 +41,26 @@ public class Empresa {
     private boolean ativo;
 
     public Empresa() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Empresa empresa = (Empresa) o;
+        return Objects.equals(id, empresa.id) &&
+                Objects.equals(nomeEmpresa, empresa.nomeEmpresa) &&
+                Objects.equals(razaoSocial, empresa.razaoSocial) &&
+                Objects.equals(CNPJ, empresa.CNPJ) &&
+                Objects.equals(telefone, empresa.telefone) &&
+                Objects.equals(emailCorporativo, empresa.emailCorporativo) &&
+                Objects.equals(senhaEmpresa, empresa.senhaEmpresa) &&
+                Objects.equals(logradouro, empresa.logradouro) &&
+                Objects.equals(ativo, empresa.ativo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nomeEmpresa, razaoSocial, CNPJ, telefone, emailCorporativo, senhaEmpresa, logradouro, ativo);
     }
 }
