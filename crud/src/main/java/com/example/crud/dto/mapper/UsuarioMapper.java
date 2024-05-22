@@ -3,7 +3,7 @@ package com.example.crud.dto.mapper;
 import com.example.crud.Model.Usuario;
 import com.example.crud.dto.consultaDto.UsuarioConsultaDto;
 import com.example.crud.dto.criacaoDto.UsuarioCriacaoDto;
-import com.example.crud.service.usuario.autenticacao.dto.UsuarioTokenDto;
+import com.example.crud.service.dto.UsuarioTokenDto;
 
 public class UsuarioMapper {
 

@@ -1,15 +1,18 @@
 package com.example.crud.Model;
 
+import com.example.crud.service.dto.UsuarioDetalhesDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Produto {
 
     @Id
@@ -65,4 +68,104 @@ public class Produto {
         this.qtdEstoque = qtdEstoque;
         this.dataDeValidade = dataDeValidade;
     }
+
+    public Produto(long l, String s, int i, Categoria categoria, Fornecedor fornecedor, LocalDate now, LocalDate localDate) {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Double getPrecoDeVenda() {
+        return precoDeVenda;
+    }
+
+    public void setPrecoDeVenda(Double precoDeVenda) {
+        this.precoDeVenda = precoDeVenda;
+    }
+
+    public double getPrecoDeCompra() {
+        return precoDeCompra;
+    }
+
+    public void setPrecoDeCompra(double precoDeCompra) {
+        this.precoDeCompra = precoDeCompra;
+    }
+
+    public LocalDate getDataDeEntrada() {
+        return dataDeEntrada;
+    }
+
+    public void setDataDeEntrada(LocalDate dataDeEntrada) {
+        this.dataDeEntrada = dataDeEntrada;
+    }
+
+    public String getUnidadeDeMedida() {
+        return unidadeDeMedida;
+    }
+
+    public void setUnidadeDeMedida(String unidadeDeMedida) {
+        this.unidadeDeMedida = unidadeDeMedida;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public Fornecedor getFornecedor() {
+        return fornecedor;
+    }
+
+    public void setFornecedor(Fornecedor fornecedor) {
+        this.fornecedor = fornecedor;
+    }
+
+    public Integer getQtdEstoque() {
+        return qtdEstoque;
+    }
+
+    public void setQtdEstoque(Integer qtdEstoque) {
+        this.qtdEstoque = qtdEstoque;
+    }
+
+    public LocalDate getDataDeValidade() {
+        return dataDeValidade;
+    }
+
+    public void setDataDeValidade(LocalDate dataDeValidade) {
+        this.dataDeValidade = dataDeValidade;
+    }
+
+    public LocalDate getDataValidade() {
+        return dataDeValidade;
+    }
+
+    public LocalDate getDataEntrada() {
+        return dataDeEntrada;
+    }
 }
+

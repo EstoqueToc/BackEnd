@@ -3,7 +3,11 @@ package com.example.crud.dto.mapper;
 import com.example.crud.Model.Produto;
 import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
 import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
+import lombok.experimental.UtilityClass;
+import org.modelmapper.internal.bytebuddy.asm.Advice;
+import org.springframework.web.servlet.tags.Param;
 
+@UtilityClass // indicar que essa classe é uma classe de utilitário e deve ter um construtor privado
 public class ProdutoMapper {
 
     public static Produto toEntity(ProdutoCriacaoDto produtoCriacaoDto) {

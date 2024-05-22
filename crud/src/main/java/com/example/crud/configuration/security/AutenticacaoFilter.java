@@ -1,7 +1,7 @@
 package com.example.crud.configuration.security;
 
 import com.example.crud.configuration.security.jwt.GerenciadorTokenJwt;
-import com.example.crud.service.usuario.autenticacao.AutenticacaoService;
+import com.example.crud.service.AutenticacaoService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

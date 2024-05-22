@@ -1,7 +1,7 @@
 package com.example.crud.configuration.security;
 
 import com.example.crud.configuration.security.jwt.GerenciadorTokenJwt;
-import com.example.crud.service.usuario.autenticacao.AutenticacaoService;
+import com.example.crud.service.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
