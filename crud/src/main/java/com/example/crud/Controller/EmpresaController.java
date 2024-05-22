@@ -51,7 +51,6 @@ public class EmpresaController {
     @Operation(summary = "Cria uma nova empresa")
     @ApiResponse(responseCode = "201", description = "Empresa criada com sucesso")
     @PostMapping("/cadastro")
-    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<EmpresaConsultaDto> criarEmpresa(@Parameter(description = "Objeto da empresa a ser criado") @Valid @RequestBody EmpresaCriacaoDto novaEmpresaDto) {
         Empresa novaEmpresa = empresaService.criarEmpresa(novaEmpresaDto);
         EmpresaConsultaDto novaEmpresaConsultaDto = modelMapper.map(novaEmpresa, EmpresaConsultaDto.class);

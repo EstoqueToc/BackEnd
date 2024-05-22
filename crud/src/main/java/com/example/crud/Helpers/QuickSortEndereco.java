@@ -1,4 +1,4 @@
-package Helpers;
+package com.example.crud.Helpers;
 
 import com.example.crud.dto.EnderecoDto;
 

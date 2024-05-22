@@ -11,82 +11,26 @@ import java.time.LocalDate;
 @Setter
 public class UsuarioCriacaoDto {
 
-//    @NotBlank
+    @NotBlank(message = "Nome do usuário é obrigatório")
     private String nome;
 
-//    @CPF
-//    @NotBlank
+    @CPF(message = "CPF inválido")
+    @NotBlank(message = "CPF é obrigatório")
     private String CPF;
 
-//    @Email
-//    @NotBlank
+    @Email(message = "Email inválido")
+    @NotBlank(message = "Email é obrigatório")
     private String email;
 
-//    @Size(min = 7, max = 14)
-//    @NotBlank
+    @Size(min = 7, max = 14, message = "Senha deve ter entre 7 e 14 caracteres")
+    @NotBlank(message = "Senha é obrigatória")
     private String senha;
 
-//    @Past
-//    @NotNull
+    @Past(message = "Data de nascimento deve estar no passado")
+    @NotNull(message = "Data de nascimento é obrigatória")
     private LocalDate dtNascimento;
 
     private String funcao;
 
     private boolean acesso;
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCPF() {
-        return CPF;
-    }
-
-    public void setCPF(String CPF) {
-        this.CPF = CPF;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public LocalDate getDtNascimento() {
-        return dtNascimento;
-    }
-
-    public void setDtNascimento(LocalDate dtNascimento) {
-        this.dtNascimento = dtNascimento;
-    }
-
-    public String getFuncao() {
-        return funcao;
-    }
-
-    public void setFuncao(String funcao) {
-        this.funcao = funcao;
-    }
-
-    public boolean isAcesso() {
-        return acesso;
-    }
-
-    public void setAcesso(boolean acesso) {
-        this.acesso = acesso;
-    }
 }

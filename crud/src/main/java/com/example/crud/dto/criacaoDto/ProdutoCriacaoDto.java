@@ -14,54 +14,35 @@ import java.time.LocalDate;
 @Setter
 public class ProdutoCriacaoDto {
 
-    @NotBlank
+    @NotBlank(message = "Nome do produto é obrigatório")
     private String nome;
 
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "Preço de venda é obrigatório")
+    @PositiveOrZero(message = "Preço de venda deve ser maior ou igual a zero")
     private Double precoDeVenda;
 
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "Preço de compra é obrigatório")
+    @PositiveOrZero(message = "Preço de compra deve ser maior ou igual a zero")
     private double precoDeCompra;
 
-    @NotNull
+    @NotNull(message = "Data de entrada é obrigatória")
     private LocalDate dataDeEntrada;
 
-    @NotBlank
+    @NotBlank(message = "Unidade de medida é obrigatória")
     private String unidadeDeMedida;
 
-    @NotBlank
+    @NotBlank(message = "Descrição é obrigatória")
     private String descricao;
 
-    @NotNull
+    @NotNull(message = "Categoria é obrigatória")
     private Categoria categoria;
 
-    @NotNull
+    @NotNull(message = "Fornecedor é obrigatório")
     private Fornecedor fornecedor;
 
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "Quantidade em estoque é obrigatória")
+    @PositiveOrZero(message = "Quantidade em estoque deve ser maior ou igual a zero")
     private Integer qtdEstoque;
 
     private LocalDate dataDeValidade;
-
-    // Construtor com argumentos para inicializar todos os campos
-    public ProdutoCriacaoDto(String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada,
-                             String unidadeDeMedida, String descricao, Categoria categoria,
-                             Fornecedor fornecedor, Integer qtdEstoque, LocalDate dataDeValidade) {
-        this.nome = nome;
-        this.precoDeVenda = precoDeVenda;
-        this.precoDeCompra = precoDeCompra;
-        this.dataDeEntrada = dataDeEntrada;
-        this.unidadeDeMedida = unidadeDeMedida;
-        this.descricao = descricao;
-        this.categoria = categoria;
-        this.fornecedor = fornecedor;
-        this.qtdEstoque = qtdEstoque;
-        this.dataDeValidade = dataDeValidade;
-    }
-
-    // Construtor padrão sem argumentos
-    public ProdutoCriacaoDto() {}
 }

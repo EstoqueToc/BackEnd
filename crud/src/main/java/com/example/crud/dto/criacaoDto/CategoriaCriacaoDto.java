@@ -2,13 +2,16 @@ package com.example.crud.dto.criacaoDto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class CategoriaCriacaoDto {
 
-    @NotBlank
+    @NotBlank(message = "Nome da categoria é obrigatório")
     private String nome;
-    @NotBlank
+
+    @NotBlank(message = "Descrição da categoria é obrigatória")
     private String descricao;
 
 }
