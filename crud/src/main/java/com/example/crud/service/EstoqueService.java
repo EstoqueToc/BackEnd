@@ -55,7 +55,15 @@ public class EstoqueService {
         return ResponseEntity.ok(produtosPorFornecedor);
     }
 
-
+    // Método para obter a quantidade de produtos por data de entrada
+    public ResponseEntity<Map<LocalDate, Integer>> getProdutosPorDataDeEntrada() {
+        List<Produto> produtos = produtoRepository.findAll();
+        Map<LocalDate, Integer> produtosPorDataDeEntrada = produtos.stream().collect(Collectors.groupingBy(
+                Produto::getDataDeEntrada,
+                Collectors.summingInt(Produto::getQtdEstoque)
+        ));
+        return new ResponseEntity<>(produtosPorDataDeEntrada, HttpStatus.OK);
+    }
 
     // Método para obter a quantidade de produtos por data de validade
     public ResponseEntity<Map<LocalDate, Integer>> getProdutosPorDataDeValidade() {
@@ -163,11 +171,12 @@ public class EstoqueService {
 
         produtoRepository.save(produtoExistente);
     }
-
+    /*
     public ResponseEntity<Map<LocalDate, Integer>> getProdutosPorDataDeEntrada() {
         List<Produto> produtos = produtoRepository.findAll();
         Map<LocalDate, Integer> produtosPorDataDeEntrada = produtos.stream()
                 .collect(Collectors.groupingBy(Produto::getDataEntrada, Collectors.summingInt(produto -> 1)));
         return ResponseEntity.ok(produtosPorDataDeEntrada);
     }
+    */
 }

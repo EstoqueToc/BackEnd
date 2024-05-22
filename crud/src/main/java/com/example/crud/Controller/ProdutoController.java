@@ -1,16 +1,15 @@
 package com.example.crud.Controller;
 
 import com.example.crud.GerenciadorArquivo.ProdutoCSV;
-import com.example.crud.GerenciadorArquivo.UsuarioCSV;
 import com.example.crud.Helpers.ListaObj;
 import com.example.crud.Model.Produto;
-import com.example.crud.Model.Usuario;
 import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
 import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
 import com.example.crud.excecoes.RecursoNaoEncontradoException;
 import com.example.crud.excecoes.ValidacaoException;
 import com.example.crud.repository.ProdutoRepository;
 import com.example.crud.service.EstoqueService;
+import com.example.crud.service.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.*;
@@ -34,11 +34,9 @@ import static org.springframework.http.ResponseEntity.*;
 public class ProdutoController {
 
     @Autowired
-    private ProdutoRepository repository;
-
+    private ProdutoService produtoService;
     @Autowired
     private ModelMapper modelMapper;
-    private ProdutoCSV produtoCSV;
 
     private EstoqueService estoqueService; // Injeção do EstoqueService
 
@@ -50,9 +48,7 @@ public class ProdutoController {
     })
     @PostMapping
     public ResponseEntity<ProdutoConsultaDto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid ProdutoCriacaoDto novoProdutoDto) {
-        Produto novoProduto = modelMapper.map(novoProdutoDto, Produto.class);
-        repository.save(novoProduto);
-        ProdutoConsultaDto produtoCriadoDto = modelMapper.map(novoProduto, ProdutoConsultaDto.class);
+        ProdutoConsultaDto produtoCriadoDto = produtoService.criarProduto(novoProdutoDto);
         return status(201).body(produtoCriadoDto);
     }
 
@@ -63,11 +59,8 @@ public class ProdutoController {
     })
     @GetMapping
     public ResponseEntity<List<ProdutoConsultaDto>> getProdutos() {
-        var lista = repository.findAll();
-        List<ProdutoConsultaDto> listaDto = lista.stream()
-                .map(produto -> modelMapper.map(produto, ProdutoConsultaDto.class))
-                .collect(Collectors.toList());
-        return lista.isEmpty() ? status(204).build() : status(200).body(listaDto);
+        List<ProdutoConsultaDto> listaDto = produtoService.getProdutos();
+        return listaDto.isEmpty() ? status(204).build() : status(200).body(listaDto);
     }
 
     @Operation(summary = "Busca produtos com quantidade em estoque maior ou igual ao valor especificado")
@@ -78,7 +71,7 @@ public class ProdutoController {
     @GetMapping("/estoque/{qtdEstoque}")
     public ResponseEntity<List<Produto>> buscarPorEstoque(
             @Parameter(description = "Quantidade de estoque para filtrar os produtos") @PathVariable int qtdEstoque) {
-        var produtos = repository.findByQtdEstoqueGreaterThanEqual(qtdEstoque);
+        List<Produto> produtos = produtoService.buscarPorEstoque(qtdEstoque);
         return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
 
@@ -87,10 +80,11 @@ public class ProdutoController {
             @ApiResponse(responseCode = "200", description = "Produto encontrado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
     })
+    @GetMapping("/{id}")
     public ResponseEntity<ProdutoConsultaDto> listarProdutoPorId(
             @Parameter(description = "ID do produto para busca") @PathVariable Long id) {
-        var produtoOpt = repository.findById(id);
-        return produtoOpt.map(produto -> status(200).body(modelMapper.map(produto, ProdutoConsultaDto.class)))
+        Optional<ProdutoConsultaDto> produtoOpt = produtoService.listarProdutoPorId(id);
+        return produtoOpt.map(ResponseEntity::ok)
                 .orElseGet(() -> status(404).build());
     }
 
@@ -102,7 +96,7 @@ public class ProdutoController {
     @GetMapping("/categoria/{categoria}")
     public ResponseEntity<List<Produto>> getProdutosPorCategoria(
             @Parameter(description = "Nome da categoria para filtrar os produtos") @PathVariable String categoria) {
-        List<Produto> produtos = repository.findByCategoriaNomeIgnoreCase(categoria);
+        List<Produto> produtos = produtoService.getProdutosPorCategoria(categoria);
         return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
 
@@ -119,7 +113,7 @@ public class ProdutoController {
         if (precoMinimo == null || precoMaximo == null || precoMinimo > precoMaximo) {
             return status(400).build();
         }
-        List<Produto> produtosNaFaixa = repository.findByPrecoDeVendaBetween(precoMinimo, precoMaximo);
+        List<Produto> produtosNaFaixa = produtoService.buscarPorFaixaPreco(precoMinimo, precoMaximo);
         return produtosNaFaixa.isEmpty() ? status(204).build() : status(200).body(produtosNaFaixa);
     }
 
@@ -132,15 +126,9 @@ public class ProdutoController {
     public ResponseEntity<String> adicionarEstoque(
             @Parameter(description = "ID do produto para adicionar estoque") @PathVariable Long id,
             @Parameter(description = "Quantidade de estoque a ser adicionada") @RequestParam("qtdEstoque") @NotNull @PositiveOrZero Integer quantidadeAdicional) {
-        var produtoOpt = repository.findById(id);
-        if (produtoOpt.isPresent()) {
-            Produto produto = produtoOpt.get();
-            int quantidadeAtual = produto.getQtdEstoque();
-            produto.setQtdEstoque(quantidadeAtual + quantidadeAdicional);
-            repository.save(produto);
-            return ok("Quantidade em estoque atualizada com sucesso.");
-        }
-        return status(404).body("Produto não encontrado.");
+        Optional<Produto> produtoOpt = produtoService.adicionarEstoque(id, quantidadeAdicional);
+        return produtoOpt.map(produto -> ok("Quantidade em estoque atualizada com sucesso."))
+                .orElseGet(() -> status(404).body("Produto não encontrado."));
     }
 
     @Operation(summary = "Atualiza os dados de um produto pelo ID")
@@ -148,12 +136,19 @@ public class ProdutoController {
             @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content)
     })
+    @PutMapping("/{id}")
+    public ResponseEntity<Produto> alterarProduto(
+            @Parameter(description = "ID do produto para atualização") @PathVariable Long id,
+            @Parameter(description = "Objeto do produto com dados atualizados") @Valid @RequestBody Produto produtoAtualizado) {
+        Optional<Produto> produtoOpt = produtoService.alterarProduto(id, produtoAtualizado);
+        return produtoOpt.map(produto -> status(200).body(produto))
+                .orElseGet(() -> status(404).build());
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @Parameter(description = "ID do produto para exclusão") @PathVariable Long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
+        if (produtoService.deletarProduto(id)) {
             return status(204).build();
         }
         return status(404).build();
@@ -166,7 +161,7 @@ public class ProdutoController {
     })
     @GetMapping("/lista-produto")
     public ResponseEntity<List<Produto>> listarProdutos() {
-        var listaOrdenada = repository.findAllByOrderByNomeAsc();
+        List<Produto> listaOrdenada = produtoService.listarProdutos();
         return listaOrdenada.isEmpty() ? status(204).build() : status(200).body(listaOrdenada);
     }
 
@@ -177,7 +172,7 @@ public class ProdutoController {
     })
     @GetMapping("/ordenar-preco")
     public ResponseEntity<List<Produto>> ordenarPorPreco() {
-        List<Produto> produtos = repository.findAllByOrderByPrecoDeVendaAsc();
+        List<Produto> produtos = produtoService.ordenarPorPreco();
         return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
 
@@ -188,7 +183,7 @@ public class ProdutoController {
     })
     @GetMapping("/ordenar-validade")
     public ResponseEntity<List<Produto>> listarPorValidade() {
-        List<Produto> produtos = repository.findAllByOrderByDataDeValidadeAsc();
+        List<Produto> produtos = produtoService.listarPorValidade();
         return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
 
@@ -199,7 +194,7 @@ public class ProdutoController {
     })
     @GetMapping("/ordenar-entrada")
     public ResponseEntity<List<Produto>> listarPorDataEntrada() {
-        List<Produto> produtos = repository.findAllByOrderByDataDeEntradaAsc();
+        List<Produto> produtos = produtoService.listarPorDataEntrada();
         return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
 
@@ -210,7 +205,7 @@ public class ProdutoController {
     })
     @GetMapping("/ordenar-estoque")
     public ResponseEntity<List<Produto>> listarPorEstoque() {
-        List<Produto> produtos = repository.findAllByOrderByQtdEstoqueAsc();
+        List<Produto> produtos = produtoService.listarPorEstoque();
         return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
 
@@ -221,20 +216,22 @@ public class ProdutoController {
     })
     @GetMapping("/pesquisa-produto/{nome}")
     public ResponseEntity<List<Produto>> pesquisarProdutoPorNome(@Parameter(description = "Nome do produto para pesquisa") @PathVariable String nome) {
-        List<Produto> produtos = repository.findByNomeContainsIgnoreCase(nome);
+        List<Produto> produtos = produtoService.pesquisarProdutoPorNome(nome);
         return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
 
-    //endpoints para consumir as classes 'UsuarioCSV'
+    // Endpoints para consumir as classes 'ProdutoCSV'
     @Operation(summary = "Grava arquivo CSV de Produtos")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Arquivo CSV de Produtos gravado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Erro ao gravar arquivo CSV de Produtos", content = @Content)
     })
     @PostMapping("/csv/produto")
-    public ResponseEntity<String> gravaArquivoCsvUsuario() {
+    public ResponseEntity<String> gravaArquivoCsvProduto() {
         ListaObj<Produto> lista = new ListaObj<>(100);
-        lista.adicionaLista(repository.findAll());
+        lista.adicionaLista(produtoService.getProdutos().stream()
+                .map(dto -> modelMapper.map(dto, Produto.class))
+                .collect(Collectors.toList()));
         ProdutoCSV.gravaArquivoCsv(lista, "produtos");
         return ok("Gravando arquivo CSV de Produtos");
     }
@@ -245,12 +242,12 @@ public class ProdutoController {
             @ApiResponse(responseCode = "400", description = "Erro ao ler arquivo CSV de Produtos", content = @Content)
     })
     @GetMapping("/csv/produto")
-    public ResponseEntity<String> leArquivoCsvUsuario() {
+    public ResponseEntity<String> leArquivoCsvProduto() {
         ProdutoCSV.lerArquivoCsv("produtos");
         return ok("Lendo arquivo CSV de Produtos");
     }
 
-    @PutMapping("/{id}")
+   /* @PutMapping("/{id}")
     public ResponseEntity<Void> atualizarProduto(
             @Parameter(description = "ID do produto para atualização") @PathVariable Long id,
             @Parameter(description = "Objeto do produto com dados atualizados") @Valid @RequestBody Produto produtoAtualizado) {
@@ -265,7 +262,6 @@ public class ProdutoController {
         } catch (ValidacaoException e) {
             return ResponseEntity.badRequest().build();
         }
-    }
-
+    }*/
 
 }
