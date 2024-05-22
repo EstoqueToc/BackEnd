@@ -171,11 +171,12 @@ public class EstoqueService {
 
         produtoRepository.save(produtoExistente);
     }
-
+    /*
     public ResponseEntity<Map<LocalDate, Integer>> getProdutosPorDataDeEntrada() {
         List<Produto> produtos = produtoRepository.findAll();
         Map<LocalDate, Integer> produtosPorDataDeEntrada = produtos.stream()
                 .collect(Collectors.groupingBy(Produto::getDataEntrada, Collectors.summingInt(produto -> 1)));
         return ResponseEntity.ok(produtosPorDataDeEntrada);
     }
+    */
 }

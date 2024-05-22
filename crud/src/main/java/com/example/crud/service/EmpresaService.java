@@ -42,7 +42,6 @@ public class EmpresaService {
         return repository.findById(id)
                 .map(empresa -> {
                     modelMapper.map(empresaAtualizadaDto, empresa);
-                    empresa.setId(id);
                     repository.save(empresa);
                     return modelMapper.map(empresa, EmpresaConsultaDto.class);
                 });

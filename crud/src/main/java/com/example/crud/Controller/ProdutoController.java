@@ -9,6 +9,7 @@ import com.example.crud.excecoes.RecursoNaoEncontradoException;
 import com.example.crud.excecoes.ValidacaoException;
 import com.example.crud.repository.ProdutoRepository;
 import com.example.crud.service.EstoqueService;
+import com.example.crud.service.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -246,7 +247,7 @@ public class ProdutoController {
         return ok("Lendo arquivo CSV de Produtos");
     }
 
-    @PutMapping("/{id}")
+   /* @PutMapping("/{id}")
     public ResponseEntity<Void> atualizarProduto(
             @Parameter(description = "ID do produto para atualização") @PathVariable Long id,
             @Parameter(description = "Objeto do produto com dados atualizados") @Valid @RequestBody Produto produtoAtualizado) {
@@ -261,7 +262,6 @@ public class ProdutoController {
         } catch (ValidacaoException e) {
             return ResponseEntity.badRequest().build();
         }
-    }
-
+    }*/
 
 }

@@ -1,7 +1,6 @@
 package com.example.crud.Controller;
 
 import com.example.crud.service.EstoqueService;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
