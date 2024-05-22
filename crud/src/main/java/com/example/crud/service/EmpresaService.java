@@ -21,6 +21,9 @@ public class EmpresaService {
     @Autowired
     private ModelMapper modelMapper;
 
+    public EmpresaService(EmpresaRepository empresaRepository, ModelMapper modelMapper) {
+    }
+
     public List<EmpresaConsultaDto> getEmpresas() {
         List<Empresa> lista = repository.findAll();
         return lista.stream()

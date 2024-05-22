@@ -21,6 +21,11 @@ public class ProdutoService {
     @Autowired
     private ModelMapper modelMapper;
 
+    public ProdutoService(ProdutoRepository repository, ModelMapper modelMapper) {
+        this.repository = repository;
+        this.modelMapper = modelMapper;
+    }
+
     public ProdutoConsultaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {
         Produto novoProduto = modelMapper.map(novoProdutoDto, Produto.class);
         repository.save(novoProduto);
@@ -98,4 +103,6 @@ public class ProdutoService {
     public List<Produto> pesquisarProdutoPorNome(String nome) {
         return repository.findByNomeContainsIgnoreCase(nome);
     }
+
+
 }

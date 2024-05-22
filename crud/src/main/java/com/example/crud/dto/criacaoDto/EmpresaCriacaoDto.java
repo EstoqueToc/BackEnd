@@ -2,33 +2,84 @@ package com.example.crud.dto.criacaoDto;
 
 import com.example.crud.Model.Logradouro;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import org.hibernate.validator.constraints.br.CNPJ;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class EmpresaCriacaoDto {
 
-//    @NotBlank
     private String nomeEmpresa;
-
     private String razaoSocial;
-//    @CNPJ
-//    @Size(min = 18, max = 18)
-    private String CNPJ; /* 52.254.752/0001-82 */
-
-//    @Size(min = 13, max = 16)
-    private String telefone; /* (99) 99999-9999 | (99)99999-9999 | (99) 9 9999-9999 | 99 99999-9999 | 99 9 9999-9999*/
-//    @Email
+    private String CNPJ;
+    private String telefone;
     private String emailCorpotativo;
-
     private String senhaEmpresa;
     @ManyToOne
     private Logradouro logradouro;
-
     private boolean ativo;
 
+    public void setNomeEmpresa(String nomeEmpresa) {
+        this.nomeEmpresa = nomeEmpresa;
+    }
+
+    public String getNomeEmpresa() {
+        return nomeEmpresa;
+    }
+
+    public void setRazaoSocial(String razaoSocial) {
+        this.razaoSocial = razaoSocial;
+    }
+
+    public String getRazaoSocial() {
+        return razaoSocial;
+    }
+
+    public void setCNPJ(String CNPJ) {
+        this.CNPJ = CNPJ;
+    }
+
+    public String getCNPJ() {
+        return CNPJ;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setEmailCorpotativo(String emailCorpotativo) {
+        this.emailCorpotativo = emailCorpotativo;
+    }
+
+    public String getEmailCorpotativo() {
+        return emailCorpotativo;
+    }
+
+    public void setSenhaEmpresa(String senhaEmpresa) {
+        this.senhaEmpresa = senhaEmpresa;
+    }
+
+    public String getSenhaEmpresa() {
+        return senhaEmpresa;
+    }
+
+    public void setLogradouro(Logradouro logradouro) {
+        this.logradouro = logradouro;
+    }
+
+    public Logradouro getLogradouro() {
+        return logradouro;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
 }

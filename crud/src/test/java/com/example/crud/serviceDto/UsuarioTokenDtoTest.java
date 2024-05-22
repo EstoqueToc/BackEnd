@@ -1,4 +1,4 @@
-package com.example.crud.dto;
+package com.example.crud.serviceDto;
 
 import com.example.crud.service.dto.UsuarioTokenDto;
 import org.junit.jupiter.api.BeforeEach;

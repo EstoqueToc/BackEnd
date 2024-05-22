@@ -1,11 +1,10 @@
-package com.example.crud.dto;
+package com.example.crud.serviceDto;
 import com.example.crud.Model.Usuario;
 import com.example.crud.service.dto.UsuarioDetalhesDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDate;
 import java.util.Collection;

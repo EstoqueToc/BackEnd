@@ -63,4 +63,14 @@ public class Empresa {
     public int hashCode() {
         return Objects.hash(id, nomeEmpresa, razaoSocial, CNPJ, telefone, emailCorporativo, senhaEmpresa, logradouro, ativo);
     }
+
+    public String setNome(String novoNome) {
+        String nomeAntigo = this.nomeEmpresa;
+        this.nomeEmpresa = novoNome;
+        return nomeAntigo;
+    }
+
+    public String getNome() {
+        return nomeEmpresa;
+    }
 }

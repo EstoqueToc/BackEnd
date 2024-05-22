@@ -32,4 +32,8 @@ public class EmpresaConsultaDto {
         this.logradouro = empresa.getLogradouro();
         this.ativo = empresa.isAtivo();
     }
+    public String getNome() {
+        return nomeEmpresa;
+    }
+
 }
