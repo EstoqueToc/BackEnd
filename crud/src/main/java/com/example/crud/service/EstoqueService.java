@@ -1,4 +1,4 @@
-package com.example.crud.service.usuario;
+package com.example.crud.service;
 
 import com.example.crud.Model.Produto;
 

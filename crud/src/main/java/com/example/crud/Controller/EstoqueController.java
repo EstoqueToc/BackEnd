@@ -1,6 +1,6 @@
 package com.example.crud.Controller;
 
-import com.example.crud.service.usuario.EstoqueService;
+import com.example.crud.service.EstoqueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/estoque")
+@RequestMapping("/estoque")
 public class EstoqueController {
 
     @Autowired
