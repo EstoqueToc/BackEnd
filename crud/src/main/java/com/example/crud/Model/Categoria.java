@@ -33,7 +33,8 @@ public class Categoria {
         this.descricao = descricao;
     }
 
-    public Categoria(String s) {
+    public Categoria(String nome) {
+        this.nome = nome;
     }
 
     public Long getId() {

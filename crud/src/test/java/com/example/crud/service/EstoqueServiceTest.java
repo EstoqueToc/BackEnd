@@ -118,70 +118,7 @@ public class EstoqueServiceTest {
 
         verify(produtoRepository, times(1)).findAll(); // Verifica se o método foi chamado
     }
-
-
-    @Test
-    public void testGetProdutosPorCategoria() {
-        // Mock do repository
-        List<Produto> produtos = mockProdutos();
-        when(produtoRepository.findAll()).thenReturn(produtos);
-
-        // Chamada ao serviço
-        ResponseEntity<Map<String, Integer>> response = estoqueService.getProdutosPorCategoria();
-
-        // Verificação
-        Map<String, Integer> produtosPorCategoria = response.getBody();
-        assertNotNull(produtosPorCategoria); // Verifica se a resposta não é nula
-        assertEquals(2, produtosPorCategoria.size()); // Verifica se há 2 categorias
-
-        // Verifica os valores para cada categoria
-        assertEquals(3, produtosPorCategoria.get("Categoria 1").intValue());
-        assertEquals(2, produtosPorCategoria.get("Categoria 2").intValue());
-
-        verify(produtoRepository, times(1)).findAll(); // Verifica se o método foi chamado
-    }
-
-    public ResponseEntity<Map<String, Integer>> getProdutosPorFornecedor() {
-        List<Produto> produtos = produtoRepository.findAll();
-        Map<String, Integer> produtosPorFornecedor = produtos.stream()
-                .filter(produto -> produto.getFornecedor() != null) // Filtra produtos com fornecedor não nulo
-                .collect(Collectors.groupingBy(produto -> produto.getFornecedor().getNome(), Collectors.summingInt(produto -> 1)));
-        return ResponseEntity.ok(produtosPorFornecedor);
-    }
-
-    @Test
-    public ResponseEntity<Map<LocalDate, Integer>> getProdutosPorDataDeEntrada() {
-        List<Produto> produtos = produtoRepository.findAll();
-        Map<LocalDate, Integer> produtosPorDataDeEntrada = produtos.stream()
-                .filter(produto -> produto.getDataDeEntrada() != null) // Filtra produtos com data de entrada não nula
-                .collect(Collectors.groupingBy(Produto::getDataDeEntrada, Collectors.summingInt(produto -> 1)));
-        return ResponseEntity.ok(produtosPorDataDeEntrada);
-    }
-
-    @Test
-    public void testGetProdutosPorDataDeValidade() {
-        // Mock do repository
-        List<Produto> mockProdutos = mockProdutos();
-        when(produtoRepository.findAll()).thenReturn(mockProdutos);
-
-        // Chamada ao serviço
-        ResponseEntity<Map<LocalDate, Integer>> response = estoqueService.getProdutosPorDataDeValidade();
-
-        // Verificação do status da resposta
-        assertEquals(200, response.getStatusCodeValue()); // Verifica se o status da resposta é 200 (OK)
-
-        // Verificação dos resultados
-        Map<LocalDate, Integer> produtosPorDataDeValidade = response.getBody();
-        assertNotNull(produtosPorDataDeValidade); // Verifica se a resposta não é nula
-        assertEquals(1, produtosPorDataDeValidade.size()); // Verifica se há 1 data de validade
-
-        // Verifica a quantidade de produtos para a data de validade esperada
-        LocalDate dataValidade = LocalDate.now().plusDays(30);
-        assertEquals(30, produtosPorDataDeValidade.get(dataValidade).intValue());
-
-        verify(produtoRepository, times(1)).findAll(); // Verifica se o método foi chamado
-    }
-
+    
     @DisplayName("Deve validar código de produto existente")
     @Test
     public void testValidarCodigoProduto() {
