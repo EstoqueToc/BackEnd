@@ -72,7 +72,7 @@ public class EstoqueService {
         // Filtrar os produtos pela data de validade desejada
         LocalDate dataValidadeDesejada = LocalDate.of(2024, Month.MAY, 20);
         long produtosComDataDesejada = produtos.stream()
-                .filter(produto -> produto.getDataValidade().equals(dataValidadeDesejada))
+                .filter(produto -> produto.getDataDeValidade().equals(dataValidadeDesejada))
                 .count();
 
         // Criar o mapa com a contagem dos produtos por data de validade

@@ -2,23 +2,30 @@ package com.example.crud.dto.criacaoDto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class LogradouroCriacaoDto {
 
-    @NotBlank
+    @NotBlank(message = "Rua é obrigatória")
     private String rua;
-    @NotBlank
+
+    @NotBlank(message = "Número é obrigatório")
     private String numero;
-    @NotBlank
+
     private String complemento;
-    @NotBlank
+
+    @NotBlank(message = "Cidade é obrigatória")
     private String cidade;
-    @NotBlank
+
+    @NotBlank(message = "Estado é obrigatório")
     private String estado;
-    @NotBlank
+
+    @NotBlank(message = "CEP é obrigatório")
     private String cep;
-    @NotBlank
+
+    @NotBlank(message = "País é obrigatório")
     private String pais;
 
     public LogradouroCriacaoDto(String rua, String numero, String complemento, String cidade, String estado, String cep, String pais) {
@@ -34,4 +41,5 @@ public class LogradouroCriacaoDto {
     public LogradouroCriacaoDto() {
 
     }
+
 }

@@ -3,6 +3,8 @@ package com.example.crud.service;
 import com.example.crud.Model.Produto;
 import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
 import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
+import com.example.crud.repository.CategoriaRepository;
+import com.example.crud.repository.FornecedorRepository;
 import com.example.crud.repository.ProdutoRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,12 @@ public class ProdutoService {
     private ProdutoRepository repository;
 
     @Autowired
+    private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private FornecedorRepository fornecedorRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     public ProdutoService(ProdutoRepository repository, ModelMapper modelMapper) {
@@ -28,6 +36,9 @@ public class ProdutoService {
 
     public ProdutoConsultaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {
         Produto novoProduto = modelMapper.map(novoProdutoDto, Produto.class);
+//        novoProduto.setCategoria(categoriaRepository.findById(novoProdutoDto.getCategoria().getId()).get());
+        categoriaRepository.save(novoProduto.getCategoria());
+        fornecedorRepository.save(novoProduto.getFornecedor());
         repository.save(novoProduto);
         return modelMapper.map(novoProduto, ProdutoConsultaDto.class);
     }

@@ -1,6 +1,6 @@
 package com.example.crud.Controller;
 
-import Helpers.QuickSortEndereco;
+import com.example.crud.Helpers.QuickSortEndereco;
 import com.example.crud.dto.EnderecoApiExternaDto;
 import com.example.crud.dto.EnderecoDto;
 import io.swagger.v3.oas.annotations.Operation;
