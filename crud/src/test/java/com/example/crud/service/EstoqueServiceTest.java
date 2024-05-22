@@ -118,7 +118,7 @@ public class EstoqueServiceTest {
 
         verify(produtoRepository, times(1)).findAll(); // Verifica se o método foi chamado
     }
-    
+
     @DisplayName("Deve validar código de produto existente")
     @Test
     public void testValidarCodigoProduto() {
