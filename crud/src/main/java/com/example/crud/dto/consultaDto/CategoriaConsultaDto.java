@@ -2,9 +2,11 @@ package com.example.crud.dto.consultaDto;
 
 import com.example.crud.Model.Categoria;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
+@Setter
 @Getter
 public class CategoriaConsultaDto {
 
