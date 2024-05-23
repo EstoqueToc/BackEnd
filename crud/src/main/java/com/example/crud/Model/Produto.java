@@ -61,7 +61,7 @@ public class Produto {
     public Produto() {
     }
 
-   public Produto(Long id, String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, Empresa empresa) {
+    public Produto(Long id, String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, Empresa empresa) {
         this.id = id;
         this.nome = nome;
         this.precoDeVenda = precoDeVenda;
@@ -84,5 +84,4 @@ public class Produto {
         this.dataDeEntrada = dataDeEntrada;
         this.dataDeValidade = dataDeValidade;
     }
-
 }

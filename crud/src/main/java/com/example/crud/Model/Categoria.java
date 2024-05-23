@@ -19,10 +19,10 @@ public class Categoria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "não deve estar em branco")
     private String nome;
 
-    @NotBlank
+    @NotBlank(message = "não deve estar em branco")
     private String descricao;
 
     public Categoria() {

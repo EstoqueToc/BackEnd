@@ -16,16 +16,15 @@ import java.util.stream.Collectors;
 @Service
 public class EmpresaService {
 
-    @Autowired
-    private EmpresaRepository empresaRepository;
+    private final EmpresaRepository empresaRepository;
+    private final LogradouroRepository logradouroRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    private LogradouroRepository logradouroRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    public EmpresaService(EmpresaRepository empresaRepository, ModelMapper modelMapper) {
+    public EmpresaService(EmpresaRepository empresaRepository, LogradouroRepository logradouroRepository, ModelMapper modelMapper) {
+        this.empresaRepository = empresaRepository;
+        this.logradouroRepository = logradouroRepository;
+        this.modelMapper = modelMapper;
     }
 
     public List<EmpresaConsultaDto> getEmpresas() {

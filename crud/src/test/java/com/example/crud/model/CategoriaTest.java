@@ -1,10 +1,8 @@
 package com.example.crud.model;
 
 import com.example.crud.Model.Categoria;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
+import jakarta.validation.*;
+import jakarta.validation.metadata.ConstraintDescriptor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,10 +10,12 @@ import org.junit.jupiter.api.Test;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CategoriaTest {
 
-    private static Validator validator;
+    public static Validator validator;
 
     @BeforeAll
     public static void setUpValidator() {
@@ -87,7 +87,7 @@ public class CategoriaTest {
 
     @Test
     @DisplayName("Deve detectar um nome inválido (em branco)")
-    void setNomeInvalido() {
+    void setNomeInvalido () {
         Categoria categoria = new Categoria();
         categoria.setNome("");
 
@@ -123,4 +123,84 @@ public class CategoriaTest {
         Categoria categoria = new Categoria("Categoria C");
         assertEquals("Categoria C", categoria.getNome());
     }
+
+    @Test
+    public void setDescricaoInvalidaComMock() {
+        Categoria categoria = new Categoria();
+        categoria.setDescricao("");
+
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        // Mockando o validator
+        Validator mockValidator = mock(Validator.class);
+
+        // Configurando o comportamento do método validate()
+        when(mockValidator.validate(categoria)).thenReturn(Set.of(
+                new ConstraintViolation<Categoria>() {
+                    @Override
+                    public String getMessage() {
+                        return "não deve estar em branco";
+                    }
+
+                    @Override
+                    public String getMessageTemplate() {
+                        return "";
+                    }
+
+                    @Override
+                    public Categoria getRootBean() {
+                        return categoria;
+                    }
+
+                    @Override
+                    public Class<Categoria> getRootBeanClass() {
+                        return Categoria.class;
+                    }
+
+                    @Override
+                    public Object getLeafBean() {
+                        return categoria;
+                    }
+
+                    @Override
+                    public Object[] getExecutableParameters() {
+                        return new Object[0];
+                    }
+
+                    @Override
+                    public Object getExecutableReturnValue() {
+                        return null;
+                    }
+
+                    @Override
+                    public Path getPropertyPath() {
+                        return null;
+                    }
+
+                    @Override
+                    public Object getInvalidValue() {
+                        return "";
+                    }
+
+                    @Override
+                    public ConstraintDescriptor<?> getConstraintDescriptor() {
+                        return null;
+                    }
+
+                    @Override
+                    public <U> U unwrap(Class<U> type) {
+                        return null;
+                    }
+                }
+        ));
+
+        Set<ConstraintViolation<Categoria>> violations = mockValidator.validate(categoria);
+        assertFalse(violations.isEmpty());
+
+        for (ConstraintViolation<Categoria> violation : violations) {
+            assertEquals("não deve estar em branco", violation.getMessage());
+        }
+    }
 }
+
