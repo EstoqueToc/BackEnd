@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 public class ProdutoService {
 
     @Autowired
-    private ProdutoRepository repository;
+    private CategoriaRepository categoriaRepository;
 
     @Autowired
-    private CategoriaRepository categoriaRepository;
+    private final ProdutoRepository repository;
 
     @Autowired
     private FornecedorRepository fornecedorRepository;
@@ -29,8 +29,10 @@ public class ProdutoService {
     @Autowired
     private ModelMapper modelMapper;
 
+   @Autowired
     public ProdutoService(ProdutoRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
+        this.categoriaRepository = categoriaRepository;
         this.modelMapper = modelMapper;
     }
 

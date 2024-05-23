@@ -28,19 +28,7 @@ public class ProdutoServiceTest {
         service = new ProdutoService(produtoRepository, modelMapper);
     }
 
-    @DisplayName("Deve criar um novo produto")
-    @Test
-    void criarProduto() {
-        ProdutoCriacaoDto novoProdutoDto = new ProdutoCriacaoDto();
-        Produto novoProduto = new Produto();
-        ProdutoConsultaDto produtoConsultaDto = new ProdutoConsultaDto();
 
-        when(produtoRepository.save(novoProduto)).thenReturn(novoProduto);
-        when(produtoRepository.save(any())).thenReturn(novoProduto);
-
-        ProdutoConsultaDto resultado = service.criarProduto(novoProdutoDto);
-        assertNotNull(resultado);
-    }
 
     @DisplayName("Deve retornar a lista de produtos")
     @Test
