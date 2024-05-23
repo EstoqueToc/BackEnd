@@ -1,7 +1,9 @@
 package com.example.crud.dto.criacaoDto;
 
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.br.CNPJ;
 
 import java.time.LocalDate;
 
@@ -12,8 +14,8 @@ public class UsuarioCriacaoDto {
     @NotBlank(message = "Nome do usuário é obrigatório")
     private String nome;
 
-    @CPF(message = "CPF inválido")
-    @NotBlank(message = "CPF é obrigatório")
+    @CNPJ(message = "CNPJ inválido")
+    @NotBlank(message = "CNPJ é obrigatório")
     private String CPF;
 
     @Email(message = "Email inválido")

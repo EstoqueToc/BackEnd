@@ -5,11 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Setter;
 import org.hibernate.validator.constraints.br.CNPJ;
 
+
 @Getter
-@Setter
 @Setter
 public class FornecedorCriacaoDto {
 

@@ -45,4 +45,20 @@ public class ProdutoCriacaoDto {
     private Integer qtdEstoque;
 
     private LocalDate dataDeValidade;
+
+    public ProdutoCriacaoDto(String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, LocalDate dataDeValidade) {
+        this.nome = nome;
+        this.precoDeVenda = precoDeVenda;
+        this.precoDeCompra = precoDeCompra;
+        this.dataDeEntrada = dataDeEntrada;
+        this.unidadeDeMedida = unidadeDeMedida;
+        this.descricao = descricao;
+        this.categoria = categoria;
+        this.fornecedor = fornecedor;
+        this.qtdEstoque = qtdEstoque;
+        this.dataDeValidade = dataDeValidade;
+    }
+
+    public ProdutoCriacaoDto() {
+    }
 }

@@ -61,7 +61,7 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(Long id, String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, LocalDate dataDeValidade, Empresa empresa) {
+   public Produto(Long id, String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, Empresa empresa) {
         this.id = id;
         this.nome = nome;
         this.precoDeVenda = precoDeVenda;
@@ -72,7 +72,17 @@ public class Produto {
         this.categoria = categoria;
         this.fornecedor = fornecedor;
         this.qtdEstoque = qtdEstoque;
-        this.dataDeValidade = dataDeValidade;
         this.empresa = empresa;
     }
+
+    public Produto(Long id, String nome, double precoDeCompra, Categoria categoria, Fornecedor fornecedor, LocalDate dataDeEntrada, LocalDate dataDeValidade) {
+        this.id = id;
+        this.nome = nome;
+        this.precoDeCompra = precoDeCompra;
+        this.categoria = categoria;
+        this.fornecedor = fornecedor;
+        this.dataDeEntrada = dataDeEntrada;
+        this.dataDeValidade = dataDeValidade;
+    }
+
 }

@@ -1,3 +1,5 @@
+package com.example.crud.service;
+
 import com.example.crud.Model.Categoria;
 import com.example.crud.dto.consultaDto.CategoriaConsultaDto;
 import com.example.crud.repository.CategoriaRepository;

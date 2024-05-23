@@ -1,9 +1,14 @@
 package com.example.crud.dto.criacaoDto;
 
 import com.example.crud.Model.Logradouro;
-import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.br.CNPJ;
+
 
 @Getter
 @Setter
@@ -25,7 +30,7 @@ public class EmpresaCriacaoDto {
 
     @Email(message = "Email corporativo inválido")
     @NotBlank(message = "Email corporativo é obrigatório")
-    private String emailCorporativo;
+    private String emailCorpotativo;
 
     @NotBlank(message = "Senha da empresa é obrigatória")
     @Size(min = 8, message = "Senha deve ter no mínimo 8 caracteres")
@@ -34,6 +39,7 @@ public class EmpresaCriacaoDto {
     @NotNull(message = "Logradouro é obrigatório")
     private Logradouro logradouro;
     private boolean ativo;
+
 
     public void setNomeEmpresa(String nomeEmpresa) {
         this.nomeEmpresa = nomeEmpresa;
@@ -98,4 +104,7 @@ public class EmpresaCriacaoDto {
     public boolean isAtivo() {
         return ativo;
     }
+
+    public String getEmailCorporativo() {
+        return emailCorpotativo;}
 }
