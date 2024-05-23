@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.*;
@@ -59,7 +61,7 @@ public class EnderecoController {
                     return enderecoDto;
                 }).collect(Collectors.toList());
 
-                quickSortEndereco.quickSort(resposta);
+        resposta = quickSortEndereco.quickSort(resposta);
 
         return status(200).body(resposta);
     }

@@ -3,15 +3,18 @@ package Helpers;
 import com.example.crud.dto.EnderecoDto;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class QuickSortEndereco {
 
-    public void quickSort(List<EnderecoDto> enderecos) {
+    public List<EnderecoDto> quickSort(List<EnderecoDto> enderecos) {
         if (enderecos == null || enderecos.isEmpty()) {
-            return;
+            return new LinkedList<>();
         }
         quickSortHelper(enderecos, 0, enderecos.size() - 1);
+        return enderecos;
     }
 
     private void quickSortHelper(List<EnderecoDto> enderecos, int indInicio, int indFim) {
@@ -38,5 +41,13 @@ public class QuickSortEndereco {
         if (i < indFim) {
             quickSortHelper(enderecos, i, indFim);
         }
+    }
+
+    private Queue<EnderecoDto> adicionarNaFila(List<EnderecoDto> enderecos) {
+        Queue<EnderecoDto> filaOrdenada = new LinkedList<>();
+        for (EnderecoDto endereco : enderecos) {
+            filaOrdenada.add(endereco);
+        }
+        return filaOrdenada;
     }
 }
