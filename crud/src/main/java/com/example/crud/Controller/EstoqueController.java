@@ -1,13 +1,10 @@
 package com.example.crud.Controller;
 
-<<<<<<< HEAD
 import com.example.crud.Model.Produto;
 import com.example.crud.service.usuario.EstoqueService;
 import com.example.crud.slack.Slack;
 import org.json.JSONObject;
-=======
-import com.example.crud.service.EstoqueService;
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,14 +77,22 @@ public class EstoqueController {
         }
     }
 
+
     private void sendSlackMessage(String message) throws IOException, InterruptedException {
         JSONObject json = new JSONObject();
         json.put("text", message);
-        Slack.sendMessage(json);
+        Slack.sendMessage(json.toString()); // Convertendo JSONObject para String
     }
 
-    @GetMapping("/slack/send")
-    public ResponseEntity<String> verificarAlertas() {
-        return estoqueService.verificarAlertas() ? ResponseEntity.ok("Alerta de estoque baixo!") : ResponseEntity.ok("Estoque normal");
-    }
+
+//    private void sendSlackMessage(String message) throws IOException, InterruptedException {
+//        JSONObject json = new JSONObject();
+//        json.put("text", message);
+//        Slack.sendMessage(json);
+//    }
+
+//    @GetMapping("/slack/send")
+//    public ResponseEntity<String> verificarAlertas() {
+//        return estoqueService.verificarAlertas() ? ResponseEntity.ok("Alerta de estoque baixo!") : ResponseEntity.ok("Estoque normal");
+//    }
 }

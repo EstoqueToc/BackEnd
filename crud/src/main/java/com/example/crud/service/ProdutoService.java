@@ -1,5 +1,4 @@
-<<<<<<< HEAD:crud/src/main/java/com/example/crud/service/usuario/ProdutoService.java
-package com.example.crud.service.usuario;
+package com.example.crud.service;
 
 import com.example.crud.Model.Alerta;
 import com.example.crud.Model.Produto;
@@ -11,35 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
-public class ProdutoService {
-
-    private final ProdutoRepository produtoRepository;
-    private final AlertaRepository alertaRepository;
-    private final ModelMapper mapper;
-
-
-    public ProdutoRespostaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {
-        Produto novoProduto = mapper.map(novoProdutoDto, Produto.class);
-
-        // Configurar e salvar os alertas
-        if (novoProduto.getAlertaEstoque() != null) {
-            for (Alerta alerta : novoProduto.getAlertaEstoque()) {
-                alerta.setProduto(novoProduto);
-            }
-        }
-
-        // Salvar o produto (e os alertas devido ao CascadeType.ALL)
-        Produto produtoSalvo = produtoRepository.save(novoProduto);
-
-        // Mapear a entidade salva para o DTO de resposta
-        return mapper.map(produtoSalvo, ProdutoRespostaDto.class);
-    }
-
-}
-=======
-package com.example.crud.service;
 
 import com.example.crud.Model.Produto;
 import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
@@ -56,6 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ProdutoService {
 
     @Autowired
@@ -70,21 +41,45 @@ public class ProdutoService {
     @Autowired
     private ModelMapper modelMapper;
 
-   @Autowired
+    @Autowired
+    private AlertaRepository alertaRepository;
+
+    @Autowired
+    private ModelMapper mapper;
+
+
+    @Autowired
     public ProdutoService(ProdutoRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.categoriaRepository = categoriaRepository;
         this.modelMapper = modelMapper;
     }
 
-    public ProdutoConsultaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {
-        Produto novoProduto = modelMapper.map(novoProdutoDto, Produto.class);
-//        novoProduto.setCategoria(categoriaRepository.findById(novoProdutoDto.getCategoria().getId()).get());
-        categoriaRepository.save(novoProduto.getCategoria());
-        fornecedorRepository.save(novoProduto.getFornecedor());
-        repository.save(novoProduto);
-        return modelMapper.map(novoProduto, ProdutoConsultaDto.class);
+    public ProdutoRespostaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {
+        Produto novoProduto = mapper.map(novoProdutoDto, Produto.class);
+
+        // Configurar e salvar os alertas
+        if (novoProduto.getAlertaEstoque() != null) {
+            for (Alerta alerta : novoProduto.getAlertaEstoque()) {
+                alerta.setProduto(novoProduto);
+            }
+        }
+
+        // Salvar o produto (e os alertas devido ao CascadeType.ALL)
+        Produto produtoSalvo = repository.save(novoProduto);
+
+        // Mapear a entidade salva para o DTO de resposta
+        return mapper.map(produtoSalvo, ProdutoRespostaDto.class);
     }
+
+//    public ProdutoConsultaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {
+//        Produto novoProduto = modelMapper.map(novoProdutoDto, Produto.class);
+////        novoProduto.setCategoria(categoriaRepository.findById(novoProdutoDto.getCategoria().getId()).get());
+//        categoriaRepository.save(novoProduto.getCategoria());
+//        fornecedorRepository.save(novoProduto.getFornecedor());
+//        repository.save(novoProduto);
+//        return modelMapper.map(novoProduto, ProdutoConsultaDto.class);
+//    }
 
     public List<ProdutoConsultaDto> getProdutos() {
         List<Produto> lista = repository.findAll();
@@ -160,4 +155,3 @@ public class ProdutoService {
 
 
 }
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1:crud/src/main/java/com/example/crud/service/ProdutoService.java

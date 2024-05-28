@@ -2,10 +2,7 @@ package com.example.crud.dto.consultaDto;
 
 import com.example.crud.Model.Fornecedor;
 import lombok.Getter;
-<<<<<<< HEAD
 import lombok.Setter;
-=======
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
 
 @Getter
 @Setter

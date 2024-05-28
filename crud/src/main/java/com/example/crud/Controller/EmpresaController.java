@@ -4,12 +4,8 @@ import com.example.crud.Model.Empresa;
 import com.example.crud.Model.Logradouro;
 import com.example.crud.dto.consultaDto.EmpresaConsultaDto;
 import com.example.crud.dto.criacaoDto.EmpresaCriacaoDto;
-<<<<<<< HEAD
-import com.example.crud.repository.EmpresaRepository;
 import com.example.crud.repository.LogradouroRepository;
-=======
 import com.example.crud.service.EmpresaService;
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,11 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-<<<<<<< HEAD
 import static org.springframework.http.ResponseEntity.status;
-=======
-import static org.springframework.http.ResponseEntity.*;
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
 
 @RestController
 @RequestMapping("/empresas")
@@ -64,23 +56,12 @@ public class EmpresaController {
     @Operation(summary = "Cria uma nova empresa")
     @ApiResponse(responseCode = "201", description = "Empresa criada com sucesso")
     @PostMapping("/cadastro")
-<<<<<<< HEAD
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Empresa> criarEmpresa(@Parameter(description = "Objeto da empresa a ser criado") @Valid @RequestBody Empresa novaEmpresaDto) {
-        Empresa novaEmpresa = modelMapper.map(novaEmpresaDto, Empresa.class);
-        Logradouro logradouro = novaEmpresa.getLogradouro();
-        if (logradouro != null && logradouro.getId() == null) {
-            logradouroRepository.save(logradouro);
-        }
-        repository.save(novaEmpresa);
-        return status(201).body(novaEmpresa);
-=======
     public ResponseEntity<EmpresaConsultaDto> criarEmpresa(@Parameter(description = "Objeto da empresa a ser criado") @Valid @RequestBody EmpresaCriacaoDto novaEmpresaDto) {
         Empresa novaEmpresa = empresaService.criarEmpresa(novaEmpresaDto);
         EmpresaConsultaDto novaEmpresaConsultaDto = modelMapper.map(novaEmpresa, EmpresaConsultaDto.class);
         return status(201).body(novaEmpresaConsultaDto);
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
-    }
+ }
 
     @Operation(summary = "Atualiza uma empresa pelo ID")
     @ApiResponse(responseCode = "200", description = "Empresa atualizada com sucesso")

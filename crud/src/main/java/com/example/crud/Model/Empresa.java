@@ -10,10 +10,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.br.CNPJ;
 
 import java.util.List;
-<<<<<<< HEAD
-=======
 import java.util.Objects;
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
 
 @Entity
 @Getter
@@ -28,11 +25,8 @@ public class Empresa {
 
     private String razaoSocial;
 
-<<<<<<< HEAD
-=======
     @NotBlank(message = "CNPJ é obrigatório")
     @CNPJ(message = "CNPJ inválido")
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
     private String CNPJ;
 
     private String telefone;

@@ -3,14 +3,11 @@ package com.example.crud.dto.criacaoDto;
 import com.example.crud.Model.Alerta;
 import com.example.crud.Model.Categoria;
 import com.example.crud.Model.Fornecedor;
-<<<<<<< HEAD
 import com.example.crud.Model.Empresa;
 import jakarta.validation.constraints.*;
-=======
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,15 +25,10 @@ public class ProdutoCriacaoDto {
     @PositiveOrZero(message = "Preço de venda deve ser maior ou igual a zero")
     private Double precoDeVenda;
 
-<<<<<<< HEAD
-    @NotNull
-    @PositiveOrZero
-    private Double precoDeCompra;
-=======
+
     @NotNull(message = "Preço de compra é obrigatório")
     @PositiveOrZero(message = "Preço de compra deve ser maior ou igual a zero")
     private double precoDeCompra;
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
 
     @NotNull(message = "Data de entrada é obrigatória")
     private LocalDate dataDeEntrada;
@@ -47,17 +39,12 @@ public class ProdutoCriacaoDto {
     @NotBlank(message = "Descrição é obrigatória")
     private String descricao;
 
-<<<<<<< HEAD
-    @NotNull
-    private Categoria categoria;
 
-    @NotNull
-=======
+
     @NotNull(message = "Categoria é obrigatória")
     private Categoria categoria;
 
     @NotNull(message = "Fornecedor é obrigatório")
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
     private Fornecedor fornecedor;
 
     @NotNull(message = "Quantidade em estoque é obrigatória")
@@ -66,13 +53,10 @@ public class ProdutoCriacaoDto {
 
     private LocalDate dataDeValidade;
 
-<<<<<<< HEAD
     @NotNull
     private Empresa empresa;
 
     private List<Alerta> alertaEstoque;
-}
-=======
     public ProdutoCriacaoDto(String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, LocalDate dataDeValidade) {
         this.nome = nome;
         this.precoDeVenda = precoDeVenda;
@@ -89,4 +73,3 @@ public class ProdutoCriacaoDto {
     public ProdutoCriacaoDto() {
     }
 }
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1

@@ -7,14 +7,10 @@ import com.example.crud.Model.Produto;
 import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
 import com.example.crud.dto.consultaResposta.ProdutoRespostaDto;
 import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
-<<<<<<< HEAD
+
 import com.example.crud.repository.AlertaRepository;
-import com.example.crud.repository.ProdutoRepository;
-import com.example.crud.service.usuario.ProdutoService;
-=======
-import com.example.crud.service.EstoqueService;
 import com.example.crud.service.ProdutoService;
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
+import com.example.crud.service.usuario.EstoqueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -47,15 +43,8 @@ public class ProdutoController {
     @Autowired
     private ModelMapper modelMapper;
 
-<<<<<<< HEAD
     private ProdutoCSV produtoCSV;
-=======
-    private EstoqueService estoqueService; // Injeção do EstoqueService
-
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
-
-    @Autowired
-    private ProdutoService produtoService;
+    private EstoqueService estoqueService;
 
 
     @Operation(summary = "Cria um novo produto")
@@ -64,13 +53,8 @@ public class ProdutoController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content)
     })
     @PostMapping
-<<<<<<< HEAD
     public ResponseEntity<ProdutoRespostaDto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid ProdutoCriacaoDto novoProdutoDto) {
         ProdutoRespostaDto produtoCriadoDto = produtoService.criarProduto(novoProdutoDto);
-=======
-    public ResponseEntity<ProdutoConsultaDto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid ProdutoCriacaoDto novoProdutoDto) {
-        ProdutoConsultaDto produtoCriadoDto = produtoService.criarProduto(novoProdutoDto);
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
         return status(201).body(produtoCriadoDto);
     }
 

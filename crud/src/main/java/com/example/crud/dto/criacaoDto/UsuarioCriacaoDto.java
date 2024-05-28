@@ -1,11 +1,9 @@
 package com.example.crud.dto.criacaoDto;
 
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-<<<<<<< HEAD
-=======
 import org.hibernate.validator.constraints.br.CNPJ;
->>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
 
 import java.time.LocalDate;
 
