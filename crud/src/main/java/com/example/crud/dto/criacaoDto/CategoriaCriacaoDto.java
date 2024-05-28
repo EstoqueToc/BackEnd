@@ -8,9 +8,19 @@ import lombok.Setter;
 @Setter
 public class CategoriaCriacaoDto {
 
-    @NotBlank
+    @NotBlank(message = "Nome da categoria é obrigatório")
     private String nome;
-    @NotBlank
+
+    @NotBlank(message = "Descrição da categoria é obrigatória")
     private String descricao;
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
 
 }

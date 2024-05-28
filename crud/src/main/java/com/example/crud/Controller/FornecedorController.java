@@ -4,35 +4,28 @@ import com.example.crud.Interface.IUpDate;
 import com.example.crud.Model.Fornecedor;
 import com.example.crud.dto.consultaDto.FornecedorConsultaDto;
 import com.example.crud.dto.criacaoDto.FornecedorCriacaoDto;
-import com.example.crud.repository.FornecedorRepository;
+import com.example.crud.service.FornecedorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.http.ResponseEntity.of;
-import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/fornecedores")
-public class FonecedorController implements IUpDate {
-    private List<Fornecedor> fornecedores = new ArrayList<>();
+public class FornecedorController implements IUpDate {
+
+    List<Fornecedor> fornecedores = new ArrayList<>();
 
     @Autowired
-    private FornecedorRepository repository;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private FornecedorService fornecedorService;
 
     @Operation(summary = "Adiciona um novo fornecedor à lista")
     @ApiResponses(value = {
@@ -42,10 +35,7 @@ public class FonecedorController implements IUpDate {
     @PostMapping
     public ResponseEntity<FornecedorConsultaDto> adicionarFornecedor(
             @Parameter(description = "Objeto de fornecedor com os dados para criação") @Valid @RequestBody FornecedorCriacaoDto novoFornecedorDto) {
-        Fornecedor novoFornecedor = modelMapper.map(novoFornecedorDto, Fornecedor.class);
-        repository.save(novoFornecedor);
-        FornecedorConsultaDto fornecedorCriadoDto = modelMapper.map(novoFornecedor, FornecedorConsultaDto.class);
-        return status(201).body(fornecedorCriadoDto);
+        return fornecedorService.adicionarFornecedor(novoFornecedorDto);
     }
 
     @Operation(summary = "Retorna a lista de fornecedores")
@@ -55,11 +45,7 @@ public class FonecedorController implements IUpDate {
     })
     @GetMapping
     public ResponseEntity<List<FornecedorConsultaDto>> getFornecedores() {
-        List<Fornecedor> fornecedores = repository.findAll();
-        List<FornecedorConsultaDto> fornecedoresDto = fornecedores.stream()
-                .map(fornecedor -> modelMapper.map(fornecedor, FornecedorConsultaDto.class))
-                .collect(Collectors.toList());
-        return fornecedores.isEmpty() ? status(204).build() : status(200).body(fornecedoresDto);
+        return fornecedorService.getFornecedores();
     }
 
     @Operation(summary = "Atualiza os dados de um fornecedor pelo índice")
@@ -68,34 +54,21 @@ public class FonecedorController implements IUpDate {
             @ApiResponse(responseCode = "404", description = "Índice inválido", content = @Content),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content)
     })
-    @PutMapping("/{indice}")
+    @PutMapping("/{id}")
     public ResponseEntity<FornecedorConsultaDto> atualizarFornecedor(
-            @Parameter(description = "Indice do fornecedor a ser atualizado") @PathVariable Long id,
+            @Parameter(description = "ID do fornecedor a ser atualizado") @PathVariable Long id,
             @Parameter(description = "Dados do fornecedor para atualização") @Valid @RequestBody FornecedorCriacaoDto fornecedorDto) {
-        if (repository.existsById(id)) {
-            Fornecedor fornecedor = modelMapper.map(fornecedorDto, Fornecedor.class);
-            fornecedor.setId(id);
-            repository.save(fornecedor);
-            FornecedorConsultaDto fornecedorAtualizadoDto = modelMapper.map(fornecedor, FornecedorConsultaDto.class);
-            return status(200).body(fornecedorAtualizadoDto);
-        }
-        return status(404).build();
+        return fornecedorService.atualizarFornecedor(id, fornecedorDto);
     }
 
-    @Operation(summary = "Remove um fornecedor da lista pelo índice")
+    @Operation(summary = "Remove um fornecedor da lista pelo ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Fornecedor removido com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Índice inválido", content = @Content)
+            @ApiResponse(responseCode = "404", description = "ID inválido", content = @Content)
     })
-    @DeleteMapping("/{indice}")
-    public ResponseEntity<Void> delete(
-            @Parameter(description = "Índice do fornecedor na lista para remoção") @PathVariable int indice) {
-        if (indice >= 0 && indice < fornecedores.size()) {
-            fornecedores.remove(indice);
-            return status(200).build();
-        } else {
-            return status(404).build();
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@Parameter(description = "ID do fornecedor na lista para remoção") @PathVariable Long id) {
+        return fornecedorService.deletarFornecedor(id);
     }
 
     @Operation(summary = "Aplica um desconto ao preço de um fornecedor pelo índice")
@@ -107,14 +80,7 @@ public class FonecedorController implements IUpDate {
     public ResponseEntity<String> aplicarDesconto(
             @Parameter(description = "Índice do fornecedor na lista") @PathVariable int indice,
             @Parameter(description = "Percentual de desconto a ser aplicado ao preço do fornecedor") @RequestParam("percentualDesconto") double percentualDesconto) {
-        if (indice >= 0 && indice < fornecedores.size() && percentualDesconto >= 0) {
-            Fornecedor fornecedor = fornecedores.get(indice);
-            double novoPreco = fornecedor.getPreco() - (fornecedor.getPreco() * (percentualDesconto / 100.0));
-            fornecedor.setPreco(novoPreco);
-            return status(200).body("Desconto aplicado com sucesso.");
-        } else {
-            return status(404).body("Fornecedor não encontrado ou percentual de desconto inválido.");
-        }
+        return fornecedorService.aplicarDesconto(indice, percentualDesconto, fornecedores);
     }
 
     @Operation(summary = "Pesquisa fornecedores por nome")
@@ -124,8 +90,7 @@ public class FonecedorController implements IUpDate {
     })
     @GetMapping("/fornecedor/{nome}")
     public ResponseEntity<List<Fornecedor>> getFornecedorPorNome(@PathVariable @Parameter(description = "Nome do fornecedor para pesquisa") String nome) {
-        List<Fornecedor> fornecedores = repository.findByNomeContainsIgnoreCase(nome);
-        return fornecedores.isEmpty() ? status(204).build() : status(200).body(fornecedores);
+        return fornecedorService.getFornecedorPorNome(nome);
     }
 
     @Operation(summary = "Ordena os fornecedores por nome")
@@ -135,8 +100,7 @@ public class FonecedorController implements IUpDate {
     })
     @GetMapping("/ordenar-fornecedor")
     public ResponseEntity<List<Fornecedor>> listarFornecedor() {
-        var lista = repository.findAllByOrderByNomeAsc();
-        return lista.isEmpty() ? status(204).build() : status(200).body(lista);
+        return fornecedorService.listarFornecedorOrdenado();
     }
 
     @Operation(summary = "Retorna um fornecedor pelo ID")
@@ -146,8 +110,6 @@ public class FonecedorController implements IUpDate {
     })
     @GetMapping("/{id}")
     public ResponseEntity<Fornecedor> getFornecedorById(@PathVariable @Parameter(description = "ID do fornecedor para busca") Long id) {
-        return of(repository.findById(id));
+        return fornecedorService.getFornecedorById(id);
     }
-
-    //fazer um endpoint que faça a apuração de dados
 }

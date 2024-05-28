@@ -45,4 +45,21 @@ public class Logradouro {
         this.cep = cep;
         this.pais = pais;
     }
+
+    public void setEndereco(String ruaExemplo) {
+        String[] partesEndereco = ruaExemplo.split(", ");
+
+        if (partesEndereco.length == 4) {
+            this.rua = partesEndereco[0];
+            this.numero = partesEndereco[1];
+            this.complemento = partesEndereco[2];
+            String[] cidadeEstado = partesEndereco[3].split(" - ");
+            this.cidade = cidadeEstado[0];
+            this.estado = cidadeEstado[1];
+        } else {
+            // Lidar com um formato de endereço inválido
+            System.err.println("Formato de endereço inválido: " + ruaExemplo);
+        }
+    }
+
 }

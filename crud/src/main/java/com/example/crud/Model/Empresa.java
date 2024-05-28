@@ -10,6 +10,10 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.br.CNPJ;
 
 import java.util.List;
+<<<<<<< HEAD
+=======
+import java.util.Objects;
+>>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
 
 @Entity
 @Getter
@@ -24,6 +28,11 @@ public class Empresa {
 
     private String razaoSocial;
 
+<<<<<<< HEAD
+=======
+    @NotBlank(message = "CNPJ é obrigatório")
+    @CNPJ(message = "CNPJ inválido")
+>>>>>>> f11054b516eed028f8e5aee53dc094d77f2529e1
     private String CNPJ;
 
     private String telefone;
@@ -44,5 +53,36 @@ public class Empresa {
     private List<Alerta> alertas;
 
     public Empresa() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Empresa empresa = (Empresa) o;
+        return Objects.equals(id, empresa.id) &&
+                Objects.equals(nomeEmpresa, empresa.nomeEmpresa) &&
+                Objects.equals(razaoSocial, empresa.razaoSocial) &&
+                Objects.equals(CNPJ, empresa.CNPJ) &&
+                Objects.equals(telefone, empresa.telefone) &&
+                Objects.equals(emailCorporativo, empresa.emailCorporativo) &&
+                Objects.equals(senhaEmpresa, empresa.senhaEmpresa) &&
+                Objects.equals(logradouro, empresa.logradouro) &&
+                Objects.equals(ativo, empresa.ativo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nomeEmpresa, razaoSocial, CNPJ, telefone, emailCorporativo, senhaEmpresa, logradouro, ativo);
+    }
+
+    public String setNome(String novoNome) {
+        String nomeAntigo = this.nomeEmpresa;
+        this.nomeEmpresa = novoNome;
+        return nomeAntigo;
+    }
+
+    public String getNome() {
+        return nomeEmpresa;
     }
 }
