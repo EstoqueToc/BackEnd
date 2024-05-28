@@ -2,10 +2,12 @@ package com.example.crud.dto.consultaDto;
 
 import com.example.crud.Model.Usuario;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Getter
+@Setter
 public class UsuarioConsultaDto {
 
     private String nome;

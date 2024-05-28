@@ -1,16 +1,11 @@
 package com.example.crud.dto.consultaDto;
 
 import com.example.crud.Model.Fornecedor;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import org.hibernate.validator.constraints.br.CNPJ;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class FornecedorConsultaDto {
 
 

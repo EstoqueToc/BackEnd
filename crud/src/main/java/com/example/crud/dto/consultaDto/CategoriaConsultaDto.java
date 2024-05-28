@@ -2,8 +2,10 @@ package com.example.crud.dto.consultaDto;
 
 import com.example.crud.Model.Categoria;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class CategoriaConsultaDto {
 
     private Long id;

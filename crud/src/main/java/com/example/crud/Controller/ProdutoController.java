@@ -1,13 +1,15 @@
 package com.example.crud.Controller;
 
 import com.example.crud.GerenciadorArquivo.ProdutoCSV;
-import com.example.crud.GerenciadorArquivo.UsuarioCSV;
 import com.example.crud.Helpers.ListaObj;
+import com.example.crud.Model.Alerta;
 import com.example.crud.Model.Produto;
-import com.example.crud.Model.Usuario;
 import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
+import com.example.crud.dto.consultaResposta.ProdutoRespostaDto;
 import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
+import com.example.crud.repository.AlertaRepository;
 import com.example.crud.repository.ProdutoRepository;
+import com.example.crud.service.usuario.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,7 +26,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.ResponseEntity.*;
+import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/produtos")
@@ -34,8 +37,16 @@ public class ProdutoController {
     private ProdutoRepository repository;
 
     @Autowired
+    private AlertaRepository alertaRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
+
     private ProdutoCSV produtoCSV;
+
+    @Autowired
+    private ProdutoService produtoService;
+
 
     @Operation(summary = "Cria um novo produto")
     @ApiResponses(value = {
@@ -43,12 +54,12 @@ public class ProdutoController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content)
     })
     @PostMapping
-    public ResponseEntity<ProdutoConsultaDto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid ProdutoCriacaoDto novoProdutoDto) {
-        Produto novoProduto = modelMapper.map(novoProdutoDto, Produto.class);
-        repository.save(novoProduto);
-        ProdutoConsultaDto produtoCriadoDto = modelMapper.map(novoProduto, ProdutoConsultaDto.class);
+    public ResponseEntity<ProdutoRespostaDto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid ProdutoCriacaoDto novoProdutoDto) {
+        ProdutoRespostaDto produtoCriadoDto = produtoService.criarProduto(novoProdutoDto);
         return status(201).body(produtoCriadoDto);
     }
+
+
 
     @Operation(summary = "Retorna todos os produtos")
     @ApiResponses(value = {

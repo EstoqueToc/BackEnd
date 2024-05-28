@@ -1,5 +1,6 @@
 package com.example.crud.dto.consultaDto;
 
+import com.example.crud.Model.Alerta;
 import com.example.crud.Model.Categoria;
 import com.example.crud.Model.Fornecedor;
 import com.example.crud.Model.Produto;
@@ -12,11 +13,10 @@ import java.time.LocalDate;
 @Setter
 public class ProdutoConsultaDto {
 
-
     private Long id;
     private String nome;
     private Double precoDeVenda;
-    private double precoDeCompra;
+    private Double precoDeCompra;
     private LocalDate dataDeEntrada;
     private String unidadeDeMedida;
     private String descricao;
@@ -24,6 +24,7 @@ public class ProdutoConsultaDto {
     private Fornecedor fornecedor;
     private Integer qtdEstoque;
     private LocalDate dataDeValidade;
+    private Alerta alertaEstoque;
 
     public ProdutoConsultaDto() {
     }
@@ -40,5 +41,6 @@ public class ProdutoConsultaDto {
         this.fornecedor = produto.getFornecedor();
         this.qtdEstoque = produto.getQtdEstoque();
         this.dataDeValidade = produto.getDataDeValidade();
+        this.alertaEstoque = produto.getAlertaEstoque().isEmpty() ? null : produto.getAlertaEstoque().get(0); // Assumindo que há apenas um alerta por produto
     }
 }

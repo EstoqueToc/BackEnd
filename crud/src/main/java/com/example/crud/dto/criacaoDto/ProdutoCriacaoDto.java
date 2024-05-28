@@ -1,16 +1,18 @@
 package com.example.crud.dto.criacaoDto;
 
+import com.example.crud.Model.Alerta;
 import com.example.crud.Model.Categoria;
 import com.example.crud.Model.Fornecedor;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import com.example.crud.Model.Empresa;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
+@Setter
 public class ProdutoCriacaoDto {
 
     @NotBlank
@@ -22,7 +24,7 @@ public class ProdutoCriacaoDto {
 
     @NotNull
     @PositiveOrZero
-    private double precoDeCompra;
+    private Double precoDeCompra;
 
     @NotNull
     private LocalDate dataDeEntrada;
@@ -33,10 +35,10 @@ public class ProdutoCriacaoDto {
     @NotBlank
     private String descricao;
 
-    @ManyToOne
+    @NotNull
     private Categoria categoria;
 
-    @ManyToOne
+    @NotNull
     private Fornecedor fornecedor;
 
     @NotNull
@@ -45,5 +47,8 @@ public class ProdutoCriacaoDto {
 
     private LocalDate dataDeValidade;
 
+    @NotNull
+    private Empresa empresa;
 
+    private List<Alerta> alertaEstoque;
 }

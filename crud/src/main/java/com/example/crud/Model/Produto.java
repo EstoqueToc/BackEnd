@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,15 +33,16 @@ public class Produto {
 
     @NotBlank
     private String unidadeDeMedida;
-    //se vai ser em caixa, unidade, litros etc
 
     @NotBlank
     private String descricao;
 
     @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
     @ManyToOne
+    @JoinColumn(name = "fornecedor_id", nullable = false)
     private Fornecedor fornecedor;
 
     @NotNull
@@ -49,10 +51,17 @@ public class Produto {
 
     private LocalDate dataDeValidade;
 
+    @ManyToOne
+    @JoinColumn(name = "empresa_id", nullable = false)
+    private Empresa empresa;
+
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Alerta> alertaEstoque;
+
     public Produto() {
     }
 
-    public Produto(Long id, String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, LocalDate dataDeValidade) {
+    public Produto(Long id, String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, LocalDate dataDeValidade, Empresa empresa) {
         this.id = id;
         this.nome = nome;
         this.precoDeVenda = precoDeVenda;
@@ -64,5 +73,6 @@ public class Produto {
         this.fornecedor = fornecedor;
         this.qtdEstoque = qtdEstoque;
         this.dataDeValidade = dataDeValidade;
+        this.empresa = empresa;
     }
 }
