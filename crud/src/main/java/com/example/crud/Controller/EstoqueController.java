@@ -1,6 +1,7 @@
 package com.example.crud.Controller;
 
 import com.example.crud.service.EstoqueService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +13,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/estoque")
+@RequiredArgsConstructor
 public class EstoqueController {
 
-    @Autowired
-    private EstoqueService estoqueService;
+    private final EstoqueService estoqueService;
 
     @GetMapping("/total")
     public ResponseEntity<Integer> getTotalProdutosEmEstoque() {

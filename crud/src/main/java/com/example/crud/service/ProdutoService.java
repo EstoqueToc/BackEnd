@@ -6,6 +6,7 @@ import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
 import com.example.crud.repository.CategoriaRepository;
 import com.example.crud.repository.FornecedorRepository;
 import com.example.crud.repository.ProdutoRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,30 +16,20 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ProdutoService {
 
-    @Autowired
-    private CategoriaRepository categoriaRepository;
+    private final CategoriaRepository categoriaRepository;
 
-    @Autowired
     private final ProdutoRepository repository;
 
-    @Autowired
-    private FornecedorRepository fornecedorRepository;
+    private final FornecedorRepository fornecedorRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-   @Autowired
-    public ProdutoService(ProdutoRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
-        this.categoriaRepository = categoriaRepository;
-        this.modelMapper = modelMapper;
-    }
+    private final ModelMapper modelMapper;
 
     public ProdutoConsultaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {
         Produto novoProduto = modelMapper.map(novoProdutoDto, Produto.class);
-//        novoProduto.setCategoria(categoriaRepository.findById(novoProdutoDto.getCategoria().getId()).get());
+        novoProduto.setCategoria(categoriaRepository.findById(novoProdutoDto.getCategoria().getId()).get());
         categoriaRepository.save(novoProduto.getCategoria());
         fornecedorRepository.save(novoProduto.getFornecedor());
         repository.save(novoProduto);

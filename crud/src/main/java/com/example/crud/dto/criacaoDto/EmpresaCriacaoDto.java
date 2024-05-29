@@ -25,86 +25,13 @@ public class EmpresaCriacaoDto {
     @NotBlank(message = "CNPJ é obrigatório")
     private String CNPJ; /* 52.254.752/0001-82 */
 
-//    @Pattern(regexp = "\\(\\d{2}\\)\\d{4,5}-\\d{4}", message = "Telefone deve estar no formato (99) 99999-9999 ou (99) 9999-9999")
+    //    @Pattern(regexp = "\\(\\d{2}\\)\\d{4,5}-\\d{4}", message = "Telefone deve estar no formato (99) 99999-9999 ou (99) 9999-9999")
     private String telefone; /* (99) 99999-9999 | (99) 9999-9999 */
 
     @Email(message = "Email corporativo inválido")
-    @NotBlank(message = "Email corporativo é obrigatório")
-    private String emailCorpotativo;
+//    @NotBlank(message = "Email corporativo é obrigatório")
+    private String emailCorporativo;
 
-    @NotBlank(message = "Senha da empresa é obrigatória")
-    @Size(min = 8, message = "Senha deve ter no mínimo 8 caracteres")
-    private String senhaEmpresa;
-
-    @NotNull(message = "Logradouro é obrigatório")
-    private Logradouro logradouro;
     private boolean ativo;
-
-
-    public void setNomeEmpresa(String nomeEmpresa) {
-        this.nomeEmpresa = nomeEmpresa;
-    }
-
-    public String getNomeEmpresa() {
-        return nomeEmpresa;
-    }
-
-    public void setRazaoSocial(String razaoSocial) {
-        this.razaoSocial = razaoSocial;
-    }
-
-    public String getRazaoSocial() {
-        return razaoSocial;
-    }
-
-    public void setCNPJ(String CNPJ) {
-        this.CNPJ = CNPJ;
-    }
-
-    public String getCNPJ() {
-        return CNPJ;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setEmailCorpotativo(String emailCorpotativo) {
-        this.emailCorpotativo = emailCorpotativo;
-    }
-
-    public String getEmailCorpotativo() {
-        return emailCorpotativo;
-    }
-
-    public void setSenhaEmpresa(String senhaEmpresa) {
-        this.senhaEmpresa = senhaEmpresa;
-    }
-
-    public String getSenhaEmpresa() {
-        return senhaEmpresa;
-    }
-
-    public void setLogradouro(Logradouro logradouro) {
-        this.logradouro = logradouro;
-    }
-
-    public Logradouro getLogradouro() {
-        return logradouro;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
-    }
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public String getEmailCorporativo() {
-        return emailCorpotativo;}
 }
+

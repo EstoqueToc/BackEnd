@@ -5,6 +5,7 @@ import com.example.crud.excecoes.RecursoNaoEncontradoException;
 import com.example.crud.excecoes.ValidacaoException;
 import com.example.crud.repository.ProdutoRepository;
 import com.example.crud.slack.Slack;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -21,14 +22,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class EstoqueService {
-    @Autowired
-    private final ProdutoRepository produtoRepository;
 
-    @Autowired
-    public EstoqueService(ProdutoRepository produtoRepository) {
-        this.produtoRepository = produtoRepository;
-    }
+    private final ProdutoRepository produtoRepository;
 
     // Método para obter a quantidade total de produtos no estoque
        public ResponseEntity<Integer> getTotalProdutosEmEstoque() {

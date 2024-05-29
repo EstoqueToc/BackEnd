@@ -1,11 +1,19 @@
 package com.example.crud.dto.mapper;
 
 import com.example.crud.Model.Usuario;
+import com.example.crud.dto.consultaDto.EmpresaDetalhesConsulta;
 import com.example.crud.dto.consultaDto.UsuarioConsultaDto;
 import com.example.crud.dto.criacaoDto.UsuarioCriacaoDto;
+import com.example.crud.repository.EmpresaRepository;
 import com.example.crud.service.dto.UsuarioTokenDto;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 
+@RequiredArgsConstructor
 public class UsuarioMapper {
+
+    private final EmpresaRepository empresaRepository;
+    private final ModelMapper modelMapper;
 
     public static Usuario toEntity(UsuarioCriacaoDto usuarioCriacaoDto) {
         Usuario usuario = new Usuario();
@@ -29,6 +37,8 @@ public class UsuarioMapper {
         usuarioTokenDto.setNome(usuario.getNome());
         usuarioTokenDto.setEmail(usuario.getEmail());
         usuarioTokenDto.setToken(token);
+        usuarioTokenDto.setTipo(usuario.getFuncao());
+        usuarioTokenDto.setFkEmpresa(new EmpresaDetalhesConsulta(usuario.getFkEmpresa()));
         return usuarioTokenDto;
     }
 }

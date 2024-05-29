@@ -1,13 +1,20 @@
 package com.example.crud.service;
 
 import com.example.crud.Model.Usuario;
+import com.example.crud.ModelMapperConfig;
 import com.example.crud.configuration.security.jwt.GerenciadorTokenJwt;
+import com.example.crud.dto.consultaDto.UsuarioConsultaDto;
 import com.example.crud.dto.criacaoDto.UsuarioCriacaoDto;
 import com.example.crud.dto.mapper.UsuarioMapper;
 import com.example.crud.excecoes.RecursoNaoEncontradoException;
+import com.example.crud.repository.EmpresaRepository;
 import com.example.crud.repository.UsuarioRepository;
 import com.example.crud.service.dto.UsuarioLoginDto;
 import com.example.crud.service.dto.UsuarioTokenDto;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.modelmapper.internal.bytebuddy.description.method.MethodDescription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,14 +28,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
-
-    @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -38,6 +41,9 @@ public class UsuarioService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    private final ModelMapper mapper;
+    private final EmpresaRepository empresaRepository;
 
     //fazer metodo da service, para esse metodo 'listar' que esta na classe UsuarioController
     public List<Usuario> listar() {
@@ -69,20 +75,25 @@ public class UsuarioService {
         return true;
     }
 
-    public List<Usuario> getAll() {
+    public List<UsuarioConsultaDto> getAll() {
         List<Usuario> lista = usuarioRepository.findAll();
 
         if (lista.isEmpty()) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(204));
         }
 
-        return lista;
+        List<UsuarioConsultaDto> listaDtos = mapper.map(lista, new TypeToken<List<UsuarioConsultaDto>>() {
+        }.getType());
+        return listaDtos;
     }
 
     public void criar(UsuarioCriacaoDto usuarioCriacaoDto) {
         final Usuario usuario = UsuarioMapper.toEntity(usuarioCriacaoDto);
         String senhaCriptografada = passwordEncoder.encode(usuarioCriacaoDto.getSenha());
         usuario.setSenha(senhaCriptografada);
+        var empresa = empresaRepository.findById(usuarioCriacaoDto.getFkEmpresa().getId())
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Empresa", usuarioCriacaoDto.getFkEmpresa().getId()));
+        usuario.setFkEmpresa(empresa);
         this.usuarioRepository.save(usuario);
     }
 

@@ -25,7 +25,7 @@ public class UsuarioServiceTest
     void iniciar()
     {
         usuarioRepository = mock(UsuarioRepository.class);
-        service = new UsuarioService(usuarioRepository);
+//        service = new UsuarioService(usuarioRepository);
     }
 
     @DisplayName(

@@ -4,6 +4,7 @@ import com.example.crud.Model.Categoria;
 import com.example.crud.dto.consultaDto.CategoriaConsultaDto;
 import com.example.crud.dto.criacaoDto.CategoriaCriacaoDto;
 import com.example.crud.repository.CategoriaRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,13 +15,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CategoriaService {
 
-    @Autowired
-    private CategoriaRepository repository;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private final CategoriaRepository repository;
+    private final ModelMapper modelMapper;
 
     public ResponseEntity<List<CategoriaConsultaDto>> getAllCategorias() {
         List<Categoria> lista = repository.findAll();

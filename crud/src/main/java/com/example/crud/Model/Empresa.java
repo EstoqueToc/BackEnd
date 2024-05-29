@@ -1,13 +1,8 @@
 package com.example.crud.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.br.CNPJ;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,20 +20,13 @@ public class Empresa {
 
     private String razaoSocial;
 
-    @NotBlank(message = "CNPJ é obrigatório")
-    @CNPJ(message = "CNPJ inválido")
     private String CNPJ;
 
     private String telefone;
 
     private String emailCorporativo;
 
-    private String senhaEmpresa;
-
-    @ManyToOne
-    private Logradouro logradouro;
-
-    private boolean ativo;
+    private boolean ativo = true;
 
     @OneToMany(mappedBy = "empresa")
     private List<Produto> produtos;
@@ -60,14 +48,12 @@ public class Empresa {
                 Objects.equals(CNPJ, empresa.CNPJ) &&
                 Objects.equals(telefone, empresa.telefone) &&
                 Objects.equals(emailCorporativo, empresa.emailCorporativo) &&
-                Objects.equals(senhaEmpresa, empresa.senhaEmpresa) &&
-                Objects.equals(logradouro, empresa.logradouro) &&
                 Objects.equals(ativo, empresa.ativo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nomeEmpresa, razaoSocial, CNPJ, telefone, emailCorporativo, senhaEmpresa, logradouro, ativo);
+        return Objects.hash(id, nomeEmpresa, razaoSocial, CNPJ, telefone, emailCorporativo, ativo);
     }
 
     public String setNome(String novoNome) {
@@ -79,4 +65,6 @@ public class Empresa {
     public String getNome() {
         return nomeEmpresa;
     }
+
+
 }

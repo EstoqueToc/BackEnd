@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +29,14 @@ import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/produtos")
+@RequiredArgsConstructor
 public class ProdutoController {
 
-    @Autowired
-    private ProdutoService produtoService;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ProdutoService produtoService;
 
-    private EstoqueService estoqueService; // Injeção do EstoqueService
+    private final ModelMapper modelMapper;
+
+    private final EstoqueService estoqueService; // Injeção do EstoqueService
 
 
     @Operation(summary = "Cria um novo produto")

@@ -2,6 +2,7 @@ package com.example.crud.service;
 
 import com.example.crud.Model.Logradouro;
 import com.example.crud.repository.LogradouroRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -9,10 +10,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LogradouroService {
 
-    @Autowired
-    private LogradouroRepository repository;
+    private final LogradouroRepository repository;
 
     public ResponseEntity<List<Logradouro>> getLogradouros() {
         List<Logradouro> lista = repository.findAll();

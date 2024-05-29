@@ -1,6 +1,7 @@
 package com.example.crud.dto.criacaoDto;
 
 import com.example.crud.Model.Categoria;
+import com.example.crud.Model.Empresa;
 import com.example.crud.Model.Fornecedor;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -43,6 +44,9 @@ public class ProdutoCriacaoDto {
     @NotNull(message = "Quantidade em estoque é obrigatória")
     @PositiveOrZero(message = "Quantidade em estoque deve ser maior ou igual a zero")
     private Integer qtdEstoque;
+
+    @NotNull(message = "Empresa é obrigatória")
+    private Empresa empresaId;
 
     private LocalDate dataDeValidade;
 

@@ -3,6 +3,7 @@ package com.example.crud.Controller;
 import com.example.crud.Model.Logradouro;
 import com.example.crud.service.LogradouroService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/logradouros")
+@RequiredArgsConstructor
 public class LogradouroController {
 
-    @Autowired
-    private LogradouroService logradouroService;
+    private final LogradouroService logradouroService;
 
     @Operation(summary = "Retorna logradouros")
     @GetMapping

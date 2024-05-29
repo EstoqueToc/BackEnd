@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,18 +30,14 @@ import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/usuarios")
+@RequiredArgsConstructor
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioRepository repository;
+    private final UsuarioRepository repository;
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
-    private UsuarioCSV usuarioCSV;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     @Operation(summary = "Lista todos os usuários")
     @ApiResponses(value = {
@@ -48,15 +45,9 @@ public class UsuarioController {
             @ApiResponse(responseCode = "204", description = "Nenhum usuário disponível", content = @Content)
     })
     @GetMapping
+   @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<UsuarioConsultaDto>> listar() {
-        List<UsuarioConsultaDto> lista = repository.findAll()
-                .stream()
-                .map(usuario -> modelMapper.map(usuario, UsuarioConsultaDto.class))
-                .collect(Collectors.toList());
-
-        return lista.isEmpty()
-                ? status(204).build()
-                : status(200).body(lista);
+        return status(200).body(usuarioService.getAll());
     }
 
     @Operation(summary = "Pesquisa um usuário pelo índice na lista")
@@ -65,6 +56,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
     })
     @GetMapping("/{indice}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<UsuarioConsultaDto> pesquisarUsuario(
             @Parameter(description = "Índice do usuário na lista") @PathVariable Long indice) {
         return repository.findById(indice)
@@ -92,6 +84,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content(schema = @Schema(hidden = true)))
     })
     @PutMapping("/{indice}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<UsuarioConsultaDto> atualizarUsuario(
             @Parameter(description = "Índice do usuário na lista") @PathVariable Long indice,
             @Parameter(description = "Objeto do usuário com dados atualizados") @RequestBody @Valid UsuarioCriacaoDto usuarioAtualizadoDto) {
@@ -110,6 +103,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
     })
     @DeleteMapping("/{indice}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Void> removerUsuario(
             @Parameter(description = "Índice do usuário na lista para remoção") @PathVariable Long indice) {
         if (repository.existsById(indice)) {
@@ -125,6 +119,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "204", description = "Nenhum usuário para listar", content = @Content)
     })
     @GetMapping("/lista-usuario")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<UsuarioConsultaDto>> listarUsuariosOrdenados() {
         List<UsuarioConsultaDto> listaOrdenada = repository.findAllByOrderByNomeAsc()
                 .stream()
@@ -142,6 +137,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "204", description = "Nenhum usuário para ordenar por função", content = @Content)
     })
     @GetMapping("/lista-funcao")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<UsuarioConsultaDto>> listarUsuariosPorCargo() {
         List<UsuarioConsultaDto> usuarios = repository.findAllByOrderByFuncaoAsc()
                 .stream()
@@ -175,6 +171,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "400", description = "Erro ao gravar arquivo CSV de Usuário", content = @Content)
     })
     @PostMapping("/csv/usuario")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<String> gravaArquivoCsvUsuario() {
         ListaObj<Usuario> lista = new ListaObj<>(100);
         lista.adicionaLista(repository.findAll());
@@ -188,6 +185,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "400", description = "Erro ao ler arquivo CSV de Usuário", content = @Content)
     })
     @GetMapping("/csv/usuario")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<String> leArquivoCsvUsuario() {
         UsuarioCSV.lerArquivoCsv("usuarios");
         return ok("Lendo arquivo CSV de Usuário");

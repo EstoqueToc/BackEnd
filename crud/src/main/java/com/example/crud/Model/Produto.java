@@ -52,7 +52,7 @@ public class Produto {
     private LocalDate dataDeValidade;
 
     @ManyToOne
-    @JoinColumn(name = "empresa_id", nullable = false)
+    @JoinColumn(name = "fkEmpresa", nullable = false)
     private Empresa empresa;
 
     @OneToMany(mappedBy = "produto")

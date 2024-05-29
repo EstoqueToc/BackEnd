@@ -5,6 +5,7 @@ import com.example.crud.dto.consultaDto.EmpresaConsultaDto;
 import com.example.crud.dto.criacaoDto.EmpresaCriacaoDto;
 import com.example.crud.repository.EmpresaRepository;
 import com.example.crud.repository.LogradouroRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,18 +15,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class EmpresaService {
 
     private final EmpresaRepository empresaRepository;
     private final LogradouroRepository logradouroRepository;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public EmpresaService(EmpresaRepository empresaRepository, LogradouroRepository logradouroRepository, ModelMapper modelMapper) {
-        this.empresaRepository = empresaRepository;
-        this.logradouroRepository = logradouroRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public List<EmpresaConsultaDto> getEmpresas() {
         List<Empresa> lista = empresaRepository.findAll();
@@ -41,7 +36,6 @@ public class EmpresaService {
 
     public Empresa criarEmpresa(EmpresaCriacaoDto novaEmpresaDto) {
         Empresa novaEmpresa = modelMapper.map(novaEmpresaDto, Empresa.class);
-        logradouroRepository.save(novaEmpresa.getLogradouro());
         return empresaRepository.save(novaEmpresa);
     }
 

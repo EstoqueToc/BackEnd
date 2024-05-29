@@ -1,9 +1,12 @@
 package com.example.crud.dto.criacaoDto;
 
+import com.example.crud.Model.Empresa;
+import com.example.crud.dto.consultaDto.EmpresaDetalhesConsulta;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 
@@ -14,8 +17,8 @@ public class UsuarioCriacaoDto {
     @NotBlank(message = "Nome do usuário é obrigatório")
     private String nome;
 
-    @CNPJ(message = "CNPJ inválido")
-    @NotBlank(message = "CNPJ é obrigatório")
+    @CPF(message = "CPF inválido")
+//    @NotBlank(message = "CNPJ é obrigatório")
     private String CPF;
 
     @Email(message = "Email inválido")
@@ -27,10 +30,12 @@ public class UsuarioCriacaoDto {
     private String senha;
 
     @Past(message = "Data de nascimento deve estar no passado")
-    @NotNull(message = "Data de nascimento é obrigatória")
+//    @NotNull(message = "Data de nascimento é obrigatória")
     private LocalDate dtNascimento;
 
     private String funcao;
+
+    private Empresa fkEmpresa;
 
     private boolean acesso;
 }

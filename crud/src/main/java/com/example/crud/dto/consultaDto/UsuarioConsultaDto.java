@@ -18,6 +18,7 @@ public class UsuarioConsultaDto {
     private LocalDate dtNascimento;
     private String funcao;
     private boolean acesso;
+    private EmpresaDetalhesConsulta fkEmpresa;
 
     public UsuarioConsultaDto() {
     }
