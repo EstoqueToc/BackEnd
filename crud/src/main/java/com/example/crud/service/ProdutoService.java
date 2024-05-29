@@ -1,5 +1,16 @@
 package com.example.crud.service;
 
+import com.example.crud.Model.Alerta;
+import com.example.crud.Model.Produto;
+import com.example.crud.dto.consultaResposta.ProdutoRespostaDto;
+import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
+import com.example.crud.repository.AlertaRepository;
+import com.example.crud.repository.ProdutoRepository;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+
 import com.example.crud.Model.Produto;
 import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
 import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
@@ -25,16 +36,40 @@ public class ProdutoService {
 
     private final FornecedorRepository fornecedorRepository;
 
-    private final ModelMapper modelMapper;
+    @Autowired
+    private ModelMapper modelMapper;
 
-    public ProdutoConsultaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {
-        Produto novoProduto = modelMapper.map(novoProdutoDto, Produto.class);
-        novoProduto.setCategoria(categoriaRepository.findById(novoProdutoDto.getCategoria().getId()).get());
-        categoriaRepository.save(novoProduto.getCategoria());
-        fornecedorRepository.save(novoProduto.getFornecedor());
-        repository.save(novoProduto);
-        return modelMapper.map(novoProduto, ProdutoConsultaDto.class);
+    @Autowired
+    private AlertaRepository alertaRepository;
+
+    @Autowired
+    private ModelMapper mapper;
+
+    public ProdutoRespostaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {
+        Produto novoProduto = mapper.map(novoProdutoDto, Produto.class);
+
+        // Configurar e salvar os alertas
+        if (novoProduto.getAlertaEstoque() != null) {
+            for (Alerta alerta : novoProduto.getAlertaEstoque()) {
+                alerta.setProduto(novoProduto);
+            }
+        }
+
+        // Salvar o produto (e os alertas devido ao CascadeType.ALL)
+        Produto produtoSalvo = repository.save(novoProduto);
+
+        // Mapear a entidade salva para o DTO de resposta
+        return mapper.map(produtoSalvo, ProdutoRespostaDto.class);
     }
+
+//    public ProdutoConsultaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {
+//        Produto novoProduto = modelMapper.map(novoProdutoDto, Produto.class);
+////        novoProduto.setCategoria(categoriaRepository.findById(novoProdutoDto.getCategoria().getId()).get());
+//        categoriaRepository.save(novoProduto.getCategoria());
+//        fornecedorRepository.save(novoProduto.getFornecedor());
+//        repository.save(novoProduto);
+//        return modelMapper.map(novoProduto, ProdutoConsultaDto.class);
+//    }
 
     public List<ProdutoConsultaDto> getProdutos() {
         List<Produto> lista = repository.findAll();

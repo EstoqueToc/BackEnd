@@ -12,7 +12,7 @@ import java.net.http.HttpResponse;
 @Service
 public class Slack {
     private static HttpClient client = HttpClient.newHttpClient();
-    private static final String URL = "https://hooks.slack.com/services/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";
+    private static final String URL = "https://hooks.slack.com/services/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";
 
     public static void sendMessage(@NotBlank String content) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder(

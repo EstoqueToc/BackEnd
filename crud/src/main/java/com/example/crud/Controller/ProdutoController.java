@@ -2,11 +2,15 @@ package com.example.crud.Controller;
 
 import com.example.crud.GerenciadorArquivo.ProdutoCSV;
 import com.example.crud.Helpers.ListaObj;
+import com.example.crud.Model.Alerta;
 import com.example.crud.Model.Produto;
 import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
+import com.example.crud.dto.consultaResposta.ProdutoRespostaDto;
 import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
-import com.example.crud.service.EstoqueService;
+
+import com.example.crud.repository.AlertaRepository;
 import com.example.crud.service.ProdutoService;
+import com.example.crud.service.usuario.EstoqueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,7 +29,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.ResponseEntity.*;
+import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/produtos")
@@ -45,10 +50,12 @@ public class ProdutoController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content)
     })
     @PostMapping
-    public ResponseEntity<ProdutoConsultaDto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid ProdutoCriacaoDto novoProdutoDto) {
-        ProdutoConsultaDto produtoCriadoDto = produtoService.criarProduto(novoProdutoDto);
+    public ResponseEntity<ProdutoRespostaDto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid ProdutoCriacaoDto novoProdutoDto) {
+        ProdutoRespostaDto produtoCriadoDto = produtoService.criarProduto(novoProdutoDto);
         return status(201).body(produtoCriadoDto);
     }
+
+
 
     @Operation(summary = "Retorna todos os produtos")
     @ApiResponses(value = {

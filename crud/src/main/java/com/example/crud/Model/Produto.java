@@ -55,13 +55,15 @@ public class Produto {
     @JoinColumn(name = "fkEmpresa", nullable = false)
     private Empresa empresa;
 
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Alerta> alertaEstoque;
     @OneToMany(mappedBy = "produto")
     private List<Alerta> alertas;
 
     public Produto() {
     }
 
-    public Produto(Long id, String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, Empresa empresa) {
+    public Produto(Long id, String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, LocalDate dataDeValidade, Empresa empresa) {
         this.id = id;
         this.nome = nome;
         this.precoDeVenda = precoDeVenda;
@@ -75,13 +77,14 @@ public class Produto {
         this.empresa = empresa;
     }
 
-    public Produto(Long id, String nome, double precoDeCompra, Categoria categoria, Fornecedor fornecedor, LocalDate dataDeEntrada, LocalDate dataDeValidade) {
-        this.id = id;
-        this.nome = nome;
-        this.precoDeCompra = precoDeCompra;
-        this.categoria = categoria;
-        this.fornecedor = fornecedor;
-        this.dataDeEntrada = dataDeEntrada;
-        this.dataDeValidade = dataDeValidade;
-    }
+//    public Produto(Long id, String nome, double precoDeCompra, Categoria categoria, Fornecedor fornecedor, LocalDate dataDeEntrada, LocalDate dataDeValidade) {
+//        this.id = id;
+//        this.nome = nome;
+//        this.precoDeCompra = precoDeCompra;
+//        this.categoria = categoria;
+//        this.fornecedor = fornecedor;
+//        this.dataDeEntrada = dataDeEntrada;
+//        this.dataDeValidade = dataDeValidade;
+//        this.empresa = empresa;
+//    }
 }

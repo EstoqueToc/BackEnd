@@ -6,8 +6,8 @@ import lombok.Setter;
 
 import java.util.Objects;
 
-@Setter
 @Getter
+@Setter
 public class CategoriaConsultaDto {
 
     private Long id;

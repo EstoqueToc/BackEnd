@@ -14,6 +14,7 @@ import org.hibernate.validator.constraints.br.CNPJ;
 @Setter
 public class EmpresaCriacaoDto {
 
+
     @NotBlank(message = "Nome da empresa é obrigatório")
     @Size(max = 50, message = "Nome da empresa deve ter no máximo 50 caracteres")
     private String nomeEmpresa;

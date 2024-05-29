@@ -1,9 +1,11 @@
 package com.example.crud.Controller;
 
 import com.example.crud.Model.Empresa;
+import com.example.crud.Model.Logradouro;
 import com.example.crud.dto.consultaDto.EmpresaConsultaDto;
 import com.example.crud.dto.criacaoDto.EmpresaCriacaoDto;
 import com.example.crud.repository.EmpresaRepository;
+import com.example.crud.repository.LogradouroRepository;
 import com.example.crud.service.EmpresaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.http.ResponseEntity.*;
+import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("/empresas")
@@ -30,6 +32,9 @@ public class EmpresaController {
     private final EmpresaService empresaService;
     private final ModelMapper modelMapper;
     private final EmpresaRepository empresaRepository;
+
+    @Autowired
+    LogradouroRepository logradouroRepository;
 
     @Operation(summary = "Retorna todas as empresas")
     @ApiResponse(responseCode = "200", description = "Lista de empresas recuperada com sucesso")
