@@ -1,5 +1,6 @@
 package Helpers;
 
+import com.example.crud.Helpers.FilaObj;
 import com.example.crud.dto.EnderecoDto;
 
 import java.util.Collections;
@@ -43,10 +44,10 @@ public class QuickSortEndereco {
         }
     }
 
-    private Queue<EnderecoDto> adicionarNaFila(List<EnderecoDto> enderecos) {
-        Queue<EnderecoDto> filaOrdenada = new LinkedList<>();
+    private FilaObj<EnderecoDto> adicionarNaFila(List<EnderecoDto> enderecos) {
+        FilaObj<EnderecoDto> filaOrdenada = new FilaObj<>(enderecos.size());
         for (EnderecoDto endereco : enderecos) {
-            filaOrdenada.add(endereco);
+            filaOrdenada.insert(endereco);
         }
         return filaOrdenada;
     }
