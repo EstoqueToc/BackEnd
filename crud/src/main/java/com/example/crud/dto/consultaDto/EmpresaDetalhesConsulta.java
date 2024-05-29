@@ -13,6 +13,8 @@ public class EmpresaDetalhesConsulta {
     private String razaoSocial;
     private String CNPJ; /* 52.254.752/0001-82 */
 
+    public EmpresaDetalhesConsulta() {
+    }
 
     public EmpresaDetalhesConsulta(Empresa empresa) {
         this.id = empresa.getId();

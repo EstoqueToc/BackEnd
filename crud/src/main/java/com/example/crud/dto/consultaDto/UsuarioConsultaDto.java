@@ -1,5 +1,6 @@
 package com.example.crud.dto.consultaDto;
 
+import com.example.crud.Model.Empresa;
 import com.example.crud.Model.Usuario;
 import com.example.crud.dto.criacaoDto.UsuarioCriacaoDto;
 import lombok.Getter;
