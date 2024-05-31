@@ -88,13 +88,8 @@ public class UsuarioController {
     public ResponseEntity<UsuarioConsultaDto> atualizarUsuario(
             @Parameter(description = "Índice do usuário na lista") @PathVariable Long indice,
             @Parameter(description = "Objeto do usuário com dados atualizados") @RequestBody @Valid UsuarioCriacaoDto usuarioAtualizadoDto) {
-        if (repository.existsById(indice)) {
-            Usuario usuarioAtualizado = modelMapper.map(usuarioAtualizadoDto, Usuario.class);
-            usuarioAtualizado.setId(indice);
-            repository.save(usuarioAtualizado);
-            return status(200).body(modelMapper.map(usuarioAtualizado, UsuarioConsultaDto.class));
-        }
-        return status(404).build();
+        usuarioService.atualizar(indice, usuarioAtualizadoDto);
+        return status(200).body(modelMapper.map(repository.findById(indice).get(), UsuarioConsultaDto.class));
     }
 
     @Operation(summary = "Remove um usuário da lista pelo índice")

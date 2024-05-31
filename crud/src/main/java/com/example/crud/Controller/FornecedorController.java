@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/fornecedores")
 @RequiredArgsConstructor
-public class FornecedorController implements IUpDate {
+public class FornecedorController /*implements IUpDate*/ {
 
     List<Fornecedor> fornecedores = new ArrayList<>();
 
@@ -72,7 +72,7 @@ public class FornecedorController implements IUpDate {
         return fornecedorService.deletarFornecedor(id);
     }
 
-    @Operation(summary = "Aplica um desconto ao preço de um fornecedor pelo índice")
+    /*@Operation(summary = "Aplica um desconto ao preço de um fornecedor pelo índice")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Desconto aplicado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Fornecedor não encontrado ou percentual de desconto inválido", content = @Content)
@@ -82,7 +82,7 @@ public class FornecedorController implements IUpDate {
             @Parameter(description = "Índice do fornecedor na lista") @PathVariable int indice,
             @Parameter(description = "Percentual de desconto a ser aplicado ao preço do fornecedor") @RequestParam("percentualDesconto") double percentualDesconto) {
         return fornecedorService.aplicarDesconto(indice, percentualDesconto, fornecedores);
-    }
+    }*/
 
     @Operation(summary = "Pesquisa fornecedores por nome")
     @ApiResponses(value = {

@@ -36,14 +36,9 @@ public class ProdutoService {
 
     private final FornecedorRepository fornecedorRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final AlertaRepository alertaRepository;
 
-    @Autowired
-    private AlertaRepository alertaRepository;
-
-    @Autowired
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
     public ProdutoRespostaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {
         Produto novoProduto = mapper.map(novoProdutoDto, Produto.class);
@@ -54,6 +49,17 @@ public class ProdutoService {
                 alerta.setProduto(novoProduto);
             }
         }
+
+        var categoria = categoriaRepository.findById(novoProdutoDto.getCategoria().getId());
+        var fornecedor = fornecedorRepository.findById(novoProdutoDto.getFornecedor().getId());
+        if (categoria.isEmpty()) {
+            throw new IllegalArgumentException("Categoria não encontrada");
+        }
+        if (fornecedor.isEmpty()) {
+            throw new IllegalArgumentException("Fornecedor não encontrado");
+        }
+        novoProduto.setCategoria(categoria.get());
+        novoProduto.setFornecedor(fornecedor.get());
 
         // Salvar o produto (e os alertas devido ao CascadeType.ALL)
         Produto produtoSalvo = repository.save(novoProduto);
@@ -74,16 +80,16 @@ public class ProdutoService {
     public List<ProdutoConsultaDto> getProdutos() {
         List<Produto> lista = repository.findAll();
         return lista.stream()
-                .map(produto -> modelMapper.map(produto, ProdutoConsultaDto.class))
+                .map(produto -> mapper.map(produto, ProdutoConsultaDto.class))
                 .collect(Collectors.toList());
     }
 
     public List<Produto> buscarPorEstoque(int qtdEstoque) {
-        return repository.findByQtdEstoqueGreaterThanEqual(qtdEstoque);
+        return repository.findByQtdEntradaGreaterThanEqual(qtdEstoque);
     }
 
     public Optional<ProdutoConsultaDto> listarProdutoPorId(Long id) {
-        return repository.findById(id).map(produto -> modelMapper.map(produto, ProdutoConsultaDto.class));
+        return repository.findById(id).map(produto -> mapper.map(produto, ProdutoConsultaDto.class));
     }
 
     public List<Produto> getProdutosPorCategoria(String categoria) {
@@ -91,12 +97,13 @@ public class ProdutoService {
     }
 
     public List<Produto> buscarPorFaixaPreco(Double precoMinimo, Double precoMaximo) {
-        return repository.findByPrecoDeVendaBetween(precoMinimo, precoMaximo);
+        return repository.findByPrecoVendaProdutoBetween(precoMinimo, precoMaximo);
     }
 
     public Optional<Produto> adicionarEstoque(Long id, Integer quantidadeAdicional) {
         return repository.findById(id).map(produto -> {
-            produto.setQtdEstoque(produto.getQtdEstoque() + quantidadeAdicional);
+            produto.setQtdEntrada(produto.getQtdEntrada() + quantidadeAdicional);
+
             repository.save(produto);
             return produto;
         });
@@ -120,27 +127,27 @@ public class ProdutoService {
     }
 
     public List<Produto> listarProdutos() {
-        return repository.findAllByOrderByNomeAsc();
+        return repository.findAllByOrderByNomeProdutoAsc();
     }
 
     public List<Produto> ordenarPorPreco() {
-        return repository.findAllByOrderByPrecoDeVendaAsc();
+        return repository.findAllByOrderByPrecoVendaProdutoAsc();
     }
 
     public List<Produto> listarPorValidade() {
-        return repository.findAllByOrderByDataDeValidadeAsc();
+        return repository.findAllByOrderByDataValidadeAsc();
     }
 
     public List<Produto> listarPorDataEntrada() {
-        return repository.findAllByOrderByDataDeEntradaAsc();
+        return repository.findAllByOrderByDataEntradaAsc();
     }
 
     public List<Produto> listarPorEstoque() {
-        return repository.findAllByOrderByQtdEstoqueAsc();
+        return repository.findAllByOrderByQtdEntradaAsc();
     }
 
     public List<Produto> pesquisarProdutoPorNome(String nome) {
-        return repository.findByNomeContainsIgnoreCase(nome);
+        return repository.findByNomeProdutoContainsIgnoreCase(nome);
     }
 
 

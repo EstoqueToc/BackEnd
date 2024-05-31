@@ -1,5 +1,6 @@
 package com.example.crud.dto.criacaoDto;
 
+import com.example.crud.Model.Logradouro;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,9 +12,6 @@ import org.hibernate.validator.constraints.br.CNPJ;
 @Getter
 @Setter
 public class FornecedorCriacaoDto {
-
-    @NotBlank(message = "Nome do fornecedor é obrigatório")
-    private String nome;
 
     @NotBlank(message = "Nome fantasia é obrigatório")
     private String nomeFantasia;
@@ -32,11 +30,7 @@ public class FornecedorCriacaoDto {
     @CNPJ(message = "CNPJ inválido")
     private String cnpj;
 
-    @NotNull(message = "Preço é obrigatório")
-    private Double preco;
+    private boolean ativo;
 
-    @NotNull(message = "Parceria é obrigatória")
-    private Boolean parceria;
-
-    // Métodos set e get gerados automaticamente pelo Lombok
+    private Logradouro logradouro;
 }

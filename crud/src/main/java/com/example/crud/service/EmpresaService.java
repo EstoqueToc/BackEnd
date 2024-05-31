@@ -36,6 +36,10 @@ public class EmpresaService {
 
     public Empresa criarEmpresa(EmpresaCriacaoDto novaEmpresaDto) {
         Empresa novaEmpresa = modelMapper.map(novaEmpresaDto, Empresa.class);
+        var logradouro = logradouroRepository.findById(novaEmpresaDto.getLogradouro().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Logradouro não encontrado"));
+        novaEmpresa.setLogradouro(logradouro);
+
         return empresaRepository.save(novaEmpresa);
     }
 

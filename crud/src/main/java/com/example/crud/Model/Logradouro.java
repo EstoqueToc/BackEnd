@@ -14,41 +14,36 @@ public class Logradouro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-    private String rua;
-    private String numero;
-    private String complemento;
-    private String cidade;
-    private String estado;
-    private String cep;
-    private String pais;
-
-    @ManyToOne
-    private Empresa fkEmpresa;
+    private String ruaLogradouro;
+    private String numeroLogradouro;
+    private String complementoLogradouro;
+    private String cidadeLogradouro;
+    private String estadoLogradouro;
+    private String cepLogradouro;
 
     public Logradouro() {
     }
 
-    public Logradouro(Long id, String rua, String numero, String complemento, String cidade, String estado, String cep, String pais) {
+    public Logradouro(Long id, String rua, String numero, String complemento, String cidade, String estado, String cep) {
         this.id = id;
-        this.rua = rua;
-        this.numero = numero;
-        this.complemento = complemento;
-        this.cidade = cidade;
-        this.estado = estado;
-        this.cep = cep;
-        this.pais = pais;
+        this.ruaLogradouro = rua;
+        this.numeroLogradouro = numero;
+        this.complementoLogradouro = complemento;
+        this.cidadeLogradouro = cidade;
+        this.estadoLogradouro = estado;
+        this.cepLogradouro = cep;
     }
 
     public void setEndereco(String ruaExemplo) {
         String[] partesEndereco = ruaExemplo.split(", ");
 
         if (partesEndereco.length == 4) {
-            this.rua = partesEndereco[0];
-            this.numero = partesEndereco[1];
-            this.complemento = partesEndereco[2];
+            this.ruaLogradouro = partesEndereco[0];
+            this.numeroLogradouro = partesEndereco[1];
+            this.complementoLogradouro = partesEndereco[2];
             String[] cidadeEstado = partesEndereco[3].split(" - ");
-            this.cidade = cidadeEstado[0];
-            this.estado = cidadeEstado[1];
+            this.cidadeLogradouro = cidadeEstado[0];
+            this.estadoLogradouro = cidadeEstado[1];
         } else {
             // Lidar com um formato de endereço inválido
             System.err.println("Formato de endereço inválido: " + ruaExemplo);

@@ -1,42 +1,34 @@
 package com.example.crud.dto.criacaoDto;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class LogradouroCriacaoDto {
 
     @NotBlank(message = "Rua é obrigatória")
-    private String rua;
+    private String ruaLogradouro;
 
     @NotBlank(message = "Número é obrigatório")
-    private String numero;
+    private String numeroLogradouro;
 
-    private String complemento;
+    private String complementoLogradouro;
 
     @NotBlank(message = "Cidade é obrigatória")
-    private String cidade;
+    private String cidadeLogradouro;
 
     @NotBlank(message = "Estado é obrigatório")
-    private String estado;
+    private String estadoLogradouro;
 
     @NotBlank(message = "CEP é obrigatório")
-    private String cep;
+    private String cepLogradouro;
 
     @NotBlank(message = "País é obrigatório")
-    private String pais;
-
-    public LogradouroCriacaoDto(String rua, String numero, String complemento, String cidade, String estado, String cep, String pais) {
-        this.rua = rua;
-        this.numero = numero;
-        this.complemento = complemento;
-        this.cidade = cidade;
-        this.estado = estado;
-        this.cep = cep;
-        this.pais = pais;
-    }
+    private String paisLogradouro;
 
     public LogradouroCriacaoDto() {
 

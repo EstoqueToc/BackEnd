@@ -23,52 +23,43 @@ public class Usuario {
     private Long id;
 
     private String nome;
-
-    private String CPF;
-
+    private String cpf;
     private String email;
-
     private String senha;
-
-    private LocalDate dtNascimento;
-
+    private LocalDate dataNascimento;
     private String funcao;
-
-    private boolean acesso;
+    private int acesso;
+    private int ativo;
 
     @ManyToOne
-    private Empresa fkEmpresa;
+    @JoinColumn(name = "empresa", nullable = false)
+    private Empresa empresa;
 
-    @ElementCollection
-    private List<String> roles;
+//    @ElementCollection
+//    private List<String> roles;
     public Usuario() {
     }
 
-    public Usuario(Long id, String nome, String CPF, String email, String senha, LocalDate dtNascimento, String funcao, boolean acesso, Empresa fkEmpresa, String roles) {
+    public Usuario(Long id, String nome, String cpf, String email, String senha, LocalDate dataNascimento, String funcao, int acesso, int ativo, Empresa empresa, String roles) {
         this.id = id;
         this.nome = nome;
-        this.CPF = CPF;
+        this.cpf = cpf;
         this.email = email;
         this.senha = senha;
-        this.dtNascimento = dtNascimento;
+        this.dataNascimento = dataNascimento;
         this.funcao = funcao;
         this.acesso = acesso;
-        this.fkEmpresa = fkEmpresa;
-        this.roles = Arrays.asList(roles.split(","));
+        this.ativo = ativo;
+        this.empresa = empresa;
+//        this.roles = Arrays.asList(roles.split(","));
     }
 
+//    public List<String> getRolesList() {
+//        return roles;
+//    }
 
-    public long getIdade() {
-        LocalDate hoje = LocalDate.now();
-        return ChronoUnit.YEARS.between(dtNascimento, hoje);
-    }
-
-    public List<String> getRolesList() {
-        return roles;
-    }
-
-    public void setRolesList(List<String> rolesList) {
-        this.roles = rolesList;
-    }
+//    public void setRolesList(List<String> rolesList) {
+//        this.roles = rolesList;
+//    }
 
 }

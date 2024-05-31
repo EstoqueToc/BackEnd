@@ -37,16 +37,16 @@ public class ProdutoCSV {
                 Produto produto = lista.getElemento(i);
                 saida.format("%05d;%-20s;%20.2f;%20.2f;%-20s;%-20s;%-20s;%-20s;%-20s;%20d;%-20s\n",
                         produto.getId(),
-                        produto.getNome(),
-                        produto.getPrecoDeVenda(),
-                        produto.getPrecoDeCompra(),
-                        produto.getDataDeEntrada(),
-                        produto.getUnidadeDeMedida(),
-                        produto.getDescricao(),
+                        produto.getNomeProduto(),
+                        produto.getPrecoCompraProduto(),
+                        produto.getPrecoCompraProduto(),
+                        produto.getDataEntrada(),
+                        produto.getUnidadeMedida(),
+                        produto.getDescricaoProduto(),
                         produto.getCategoria().getNome(),
-                        produto.getFornecedor().getNome(),
-                        produto.getQtdEstoque(),
-                        produto.getDataDeValidade());
+                        produto.getFornecedor().getNomeFantasia(),
+                        produto.getQtdEntrada(),
+                        produto.getDataValidade());
             }
         } catch (FormatterClosedException erro) {
             System.out.println("Erro ao gravar o arquivo");

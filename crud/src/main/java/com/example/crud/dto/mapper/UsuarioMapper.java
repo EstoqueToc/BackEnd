@@ -18,12 +18,13 @@ public class UsuarioMapper {
     public static Usuario toEntity(UsuarioCriacaoDto usuarioCriacaoDto) {
         Usuario usuario = new Usuario();
         usuario.setNome(usuarioCriacaoDto.getNome());
-        usuario.setCPF(usuarioCriacaoDto.getCPF());
+        usuario.setCpf(usuarioCriacaoDto.getCpf());
         usuario.setEmail(usuarioCriacaoDto.getEmail());
         usuario.setSenha(usuarioCriacaoDto.getSenha());
-        usuario.setDtNascimento(usuarioCriacaoDto.getDtNascimento());
+        usuario.setDataNascimento(usuarioCriacaoDto.getDataNascimento());
         usuario.setFuncao(usuarioCriacaoDto.getFuncao());
-        usuario.setAcesso(usuarioCriacaoDto.isAcesso());
+        usuario.setAcesso(usuarioCriacaoDto.getAcesso());
+        usuario.setAtivo(usuarioCriacaoDto.getAtivo());
         return usuario;
     }
 
@@ -38,7 +39,7 @@ public class UsuarioMapper {
         usuarioTokenDto.setEmail(usuario.getEmail());
         usuarioTokenDto.setToken(token);
         usuarioTokenDto.setTipo(usuario.getFuncao());
-        usuarioTokenDto.setFkEmpresa(new EmpresaDetalhesConsulta(usuario.getFkEmpresa()));
+        usuarioTokenDto.setEmpresa(new EmpresaDetalhesConsulta(usuario.getEmpresa()));
         return usuarioTokenDto;
     }
 }

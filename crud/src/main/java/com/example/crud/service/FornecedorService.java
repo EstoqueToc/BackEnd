@@ -57,7 +57,7 @@ public class FornecedorService {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    public ResponseEntity<String> aplicarDesconto(int indice, double percentualDesconto, List<Fornecedor> fornecedores) {
+    /*public ResponseEntity<String> aplicarDesconto(int indice, double percentualDesconto, List<Fornecedor> fornecedores) {
         if (indice >= 0 && indice < fornecedores.size() && percentualDesconto >= 0) {
             Fornecedor fornecedor = fornecedores.get(indice);
             double novoPreco = fornecedor.getPreco() - (fornecedor.getPreco() * (percentualDesconto / 100.0));
@@ -66,15 +66,15 @@ public class FornecedorService {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Fornecedor não encontrado ou percentual de desconto inválido.");
         }
-    }
+    }*/
 
     public ResponseEntity<List<Fornecedor>> getFornecedorPorNome(String nome) {
-        List<Fornecedor> fornecedores = repository.findByNomeContainsIgnoreCase(nome);
+        List<Fornecedor> fornecedores = repository.findByNomeFantasiaContainsIgnoreCase(nome);
         return fornecedores.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).build() : ResponseEntity.ok(fornecedores);
     }
 
     public ResponseEntity<List<Fornecedor>> listarFornecedorOrdenado() {
-        var lista = repository.findAllByOrderByNomeAsc();
+        var lista = repository.findAllByOrderByNomeFantasiaAsc();
         return lista.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).build() : ResponseEntity.ok(lista);
     }
 

@@ -34,7 +34,7 @@ public class UsuarioCSV {
 
                 //Recupere um elemento da lista e formate aqui:
                 Usuario usuario = lista.getElemento(i);
-                saida.format("%d;%s;%s;%s;%s;%s;%s;%s\n", usuario.getId(), usuario.getNome(), usuario.getCPF(), usuario.getEmail(), usuario.getSenha(), usuario.getFuncao(), usuario.isAcesso());
+                saida.format("%d;%s;%s;%s;%s;%s;%s;%s\n", usuario.getId(), usuario.getNome(), usuario.getCpf(), usuario.getEmail(), usuario.getSenha(), usuario.getFuncao(), usuario.getAcesso());
             }
         } catch (FormatterClosedException erro) {
             System.out.println("Erro ao gravar o arquivo");

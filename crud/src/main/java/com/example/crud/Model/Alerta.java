@@ -18,10 +18,8 @@ public class Alerta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     private Integer alertaModerado;
 
-    @NotNull
     private Integer alertaGrave;
 
     @ManyToOne

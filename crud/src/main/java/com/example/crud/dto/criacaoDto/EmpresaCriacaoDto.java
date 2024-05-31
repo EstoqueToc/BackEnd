@@ -23,8 +23,7 @@ public class EmpresaCriacaoDto {
     private String razaoSocial;
 
     @CNPJ(message = "CNPJ inválido")
-    @NotBlank(message = "CNPJ é obrigatório")
-    private String CNPJ; /* 52.254.752/0001-82 */
+    private String cnpj; /* 52.254.752/0001-82 */
 
     //    @Pattern(regexp = "\\(\\d{2}\\)\\d{4,5}-\\d{4}", message = "Telefone deve estar no formato (99) 99999-9999 ou (99) 9999-9999")
     private String telefone; /* (99) 99999-9999 | (99) 9999-9999 */
@@ -32,6 +31,8 @@ public class EmpresaCriacaoDto {
     @Email(message = "Email corporativo inválido")
 //    @NotBlank(message = "Email corporativo é obrigatório")
     private String emailCorporativo;
+
+    private Logradouro logradouro;
 
     private boolean ativo;
 }

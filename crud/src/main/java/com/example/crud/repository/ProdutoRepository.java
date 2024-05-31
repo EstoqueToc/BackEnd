@@ -9,19 +9,19 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     List<Produto> findByCategoriaNomeIgnoreCase(String nome);
 
-    List<Produto> findByPrecoDeVendaBetween(Double precoMinimo, Double precoMaximo);
+    List<Produto> findByPrecoVendaProdutoBetween(Double precoMinimo, Double precoMaximo);
 
-    List<Produto> findByQtdEstoqueGreaterThanEqual(int qtdEstoque);
+    List<Produto> findByQtdEntradaGreaterThanEqual(int qtdEntrada);
 
-    List<Produto> findAllByOrderByNomeAsc();
+    List<Produto> findAllByOrderByNomeProdutoAsc();
 
-    List<Produto> findAllByOrderByPrecoDeVendaAsc();
+    List<Produto> findAllByOrderByPrecoVendaProdutoAsc();
 
-    List<Produto> findAllByOrderByDataDeValidadeAsc();
+    List<Produto> findAllByOrderByDataValidadeAsc();
 
-    List<Produto> findAllByOrderByDataDeEntradaAsc();
+    List<Produto> findAllByOrderByDataEntradaAsc();
 
-    List<Produto> findAllByOrderByQtdEstoqueAsc();
+    List<Produto> findAllByOrderByQtdEntradaAsc();
 
-    List<Produto> findByNomeContainsIgnoreCase(String nome);
+    List<Produto> findByNomeProdutoContainsIgnoreCase(String nome);
 }

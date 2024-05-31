@@ -16,30 +16,31 @@ import java.time.LocalDate;
 public class ProdutoConsultaDto {
 
     private Long id;
-    private String nome;
-    private Double precoDeVenda;
-    private Double precoDeCompra;
-    private LocalDate dataDeEntrada;
-    private String unidadeDeMedida;
-    private String descricao;
+    private String nomeProduto;
+    private String descricaoProduto;
+    private LocalDate dataValidade;
+    private Double precoCompraProduto;
+    private Double precoVendaProduto;
+    private LocalDate dataEntrada;
+    private String unidadeMedida;
+    private Integer qtdEntrada;
     private Categoria categoria;
     private Fornecedor fornecedor;
-    private Integer qtdEstoque;
-    private LocalDate dataDeValidade;
     private Alerta alertaEstoque;
 
     public ProdutoConsultaDto(Produto produto) {
         this.id = produto.getId();
-        this.nome = produto.getNome();
-        this.precoDeVenda = produto.getPrecoDeVenda();
-        this.precoDeCompra = produto.getPrecoDeCompra();
-        this.dataDeEntrada = produto.getDataDeEntrada();
-        this.unidadeDeMedida = produto.getUnidadeDeMedida();
-        this.descricao = produto.getDescricao();
+        this.nomeProduto = produto.getNomeProduto();
+        this.descricaoProduto = produto.getDescricaoProduto();
+        this.dataValidade = produto.getDataValidade();
+        this.precoCompraProduto = produto.getPrecoCompraProduto();
+        this.precoVendaProduto = produto.getPrecoVendaProduto();
+        this.dataEntrada = produto.getDataEntrada();
+        this.unidadeMedida = produto.getUnidadeMedida();
+        this.qtdEntrada = produto.getQtdEntrada();
         this.categoria = produto.getCategoria();
         this.fornecedor = produto.getFornecedor();
-        this.qtdEstoque = produto.getQtdEstoque();
-        this.dataDeValidade = produto.getDataDeValidade();
-        this.alertaEstoque = produto.getAlertaEstoque().isEmpty() ? null : produto.getAlertaEstoque().get(0); // Assumindo que há apenas um alerta por produto
+        this.alertaEstoque = produto.getAlertaEstoque().isEmpty() ? null : produto.getAlertaEstoque().get(0);
     }
+
 }

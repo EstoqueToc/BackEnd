@@ -13,10 +13,6 @@ public class UsuarioTokenDto {
     private String nome;
     private String email;
     private String token;
-    private EmpresaDetalhesConsulta fkEmpresa;
+    private EmpresaDetalhesConsulta empresa;
     private String tipo;
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
 }

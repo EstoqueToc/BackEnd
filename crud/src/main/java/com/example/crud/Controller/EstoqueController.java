@@ -67,14 +67,14 @@ public class EstoqueController {
     private void verificarEstoqueCritico() throws IOException, InterruptedException {
         List<Produto> produtosCriticos = estoqueService.getProdutosCriticos();
         for (Produto produto : produtosCriticos) {
-            sendSlackMessage("Alerta: Estoque crítico para o produto " + produto.getNome() + ". Apenas " + produto.getQtdEstoque() + " unidades restantes.");
+            sendSlackMessage("Alerta: Estoque crítico para o produto " + produto.getNomeProduto() + ". Apenas " + getTotalProdutosEmEstoque() + " unidades restantes.");
         }
     }
 
     private void verificarEstoqueModerado() throws IOException, InterruptedException {
         List<Produto> produtosModerados = estoqueService.getProdutosModerados();
         for (Produto produto : produtosModerados) {
-            sendSlackMessage("Aviso: Estoque moderado para o produto " + produto.getNome() + ". Apenas " + produto.getQtdEstoque() + " unidades restantes.");
+            sendSlackMessage("Aviso: Estoque moderado para o produto " + produto.getNomeProduto() + ". Apenas " + getTotalProdutosEmEstoque() + " unidades restantes.");
         }
     }
 

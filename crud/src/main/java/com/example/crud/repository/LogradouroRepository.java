@@ -8,13 +8,13 @@ import java.util.Optional;
 
 public interface LogradouroRepository extends JpaRepository<Logradouro, Long> {
 
-    Optional<Logradouro> findByCep(String cep);
+    Optional<Logradouro> findByCepLogradouro(String cep);
 
-    List<Logradouro> findByCidade(String cidade);
+    List<Logradouro> findByCidadeLogradouro(String cidade);
 
-    List<Logradouro> findByEstado(String estado);
+    List<Logradouro> findByEstadoLogradouro(String estado);
 
-    List<Logradouro> findByRua(String logradouro);
+    List<Logradouro> findByRuaLogradouro(String logradouro);
 
-    void deleteByCep(String cep);
+    void deleteByCepLogradouro(String cep);
 }

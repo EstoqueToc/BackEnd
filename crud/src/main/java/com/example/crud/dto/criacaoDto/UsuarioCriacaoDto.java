@@ -18,8 +18,7 @@ public class UsuarioCriacaoDto {
     private String nome;
 
     @CPF(message = "CPF inválido")
-//    @NotBlank(message = "CNPJ é obrigatório")
-    private String CPF;
+    private String cpf;
 
     @Email(message = "Email inválido")
     @NotBlank(message = "Email é obrigatório")
@@ -30,12 +29,13 @@ public class UsuarioCriacaoDto {
     private String senha;
 
     @Past(message = "Data de nascimento deve estar no passado")
-//    @NotNull(message = "Data de nascimento é obrigatória")
-    private LocalDate dtNascimento;
+    private LocalDate dataNascimento;
 
     private String funcao;
 
-    private Empresa fkEmpresa;
+    private Empresa empresa;
 
-    private boolean acesso;
+    private int acesso;
+
+    private int ativo;
 }

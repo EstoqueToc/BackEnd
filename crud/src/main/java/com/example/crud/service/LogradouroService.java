@@ -27,23 +27,23 @@ public class LogradouroService {
     }
 
     public ResponseEntity<Logradouro> getLogradouroByCep(String cep) {
-        return repository.findByCep(cep)
+        return repository.findByCepLogradouro(cep)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     public ResponseEntity<List<Logradouro>> getLogradouroByCidade(String cidade) {
-        List<Logradouro> lista = repository.findByCidade(cidade);
+        List<Logradouro> lista = repository.findByCidadeLogradouro(cidade);
         return ResponseEntity.ok(lista);
     }
 
     public ResponseEntity<List<Logradouro>> getLogradouroByEstado(String estado) {
-        List<Logradouro> lista = repository.findByEstado(estado);
+        List<Logradouro> lista = repository.findByEstadoLogradouro(estado);
         return ResponseEntity.ok(lista);
     }
 
     public ResponseEntity<List<Logradouro>> getLogradouroByRua(String rua) {
-        List<Logradouro> lista = repository.findByRua(rua);
+        List<Logradouro> lista = repository.findByRuaLogradouro(rua);
         return ResponseEntity.ok(lista);
     }
 
@@ -67,9 +67,9 @@ public class LogradouroService {
     }
 
     public ResponseEntity<Void> deletarLogradouroByCep(String cep) {
-        return repository.findByCep(cep)
+        return repository.findByCepLogradouro(cep)
                 .map(logradouro -> {
-                    repository.deleteByCep(cep);
+                    repository.deleteByCepLogradouro(cep);
                     return ResponseEntity.noContent().<Void>build();
                 })
                 .orElse(ResponseEntity.notFound().build());

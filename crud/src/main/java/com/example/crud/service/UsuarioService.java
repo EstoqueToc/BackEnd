@@ -91,9 +91,9 @@ public class UsuarioService {
         final Usuario usuario = UsuarioMapper.toEntity(usuarioCriacaoDto);
         String senhaCriptografada = passwordEncoder.encode(usuarioCriacaoDto.getSenha());
         usuario.setSenha(senhaCriptografada);
-        var empresa = empresaRepository.findById(usuarioCriacaoDto.getFkEmpresa().getId())
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Empresa", usuarioCriacaoDto.getFkEmpresa().getId()));
-        usuario.setFkEmpresa(empresa);
+        var empresa = empresaRepository.findById(usuarioCriacaoDto.getEmpresa().getId())
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Empresa", usuarioCriacaoDto.getEmpresa().getId()));
+        usuario.setEmpresa(empresa);
         this.usuarioRepository.save(usuario);
     }
 
@@ -143,5 +143,17 @@ public class UsuarioService {
 //        }
 
 
+    }
+
+    public void atualizar(Long codigo, UsuarioCriacaoDto usuarioCriacaoDto) {
+        validarCodigoFuncionario(codigo);
+        final Usuario usuario = UsuarioMapper.toEntity(usuarioCriacaoDto);
+        usuario.setId(codigo);
+        String senhaCriptografada = passwordEncoder.encode(usuarioCriacaoDto.getSenha());
+        usuario.setSenha(senhaCriptografada);
+        var empresa = empresaRepository.findById(usuarioCriacaoDto.getEmpresa().getId())
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Empresa", usuarioCriacaoDto.getEmpresa().getId()));
+        usuario.setEmpresa(empresa);
+        this.usuarioRepository.save(usuario);
     }
 }

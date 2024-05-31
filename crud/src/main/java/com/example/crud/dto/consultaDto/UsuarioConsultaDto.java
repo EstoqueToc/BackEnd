@@ -13,34 +13,37 @@ import java.time.LocalDate;
 public class UsuarioConsultaDto {
 
     private String nome;
-    private String CPF;
+    private String cpf;
     private String email;
     private String senha;
-    private LocalDate dtNascimento;
+    private LocalDate dataNascimento;
     private String funcao;
-    private boolean acesso;
-    private EmpresaDetalhesConsulta fkEmpresa;
+    private int acesso;
+    private int ativo;
+    private EmpresaDetalhesConsulta empresa;
 
     public UsuarioConsultaDto() {
     }
 
     public UsuarioConsultaDto(Usuario usuario) {
         this.nome = usuario.getNome();
-        this.CPF = usuario.getCPF();
+        this.cpf = usuario.getCpf();
         this.email = usuario.getEmail();
         this.senha = usuario.getSenha();
-        this.dtNascimento = usuario.getDtNascimento();
+        this.dataNascimento = usuario.getDataNascimento();
         this.funcao = usuario.getFuncao();
-        this.acesso = usuario.isAcesso();
+        this.acesso = usuario.getAcesso();
+        this.ativo = usuario.getAtivo();
     }
 
     public UsuarioConsultaDto(UsuarioCriacaoDto usuario) {
         this.nome = usuario.getNome();
-        this.CPF = usuario.getCPF();
+        this.cpf = usuario.getCpf();
         this.email = usuario.getEmail();
         this.senha = usuario.getSenha();
-        this.dtNascimento = usuario.getDtNascimento();
+        this.dataNascimento = usuario.getDataNascimento();
         this.funcao = usuario.getFuncao();
-        this.acesso = usuario.isAcesso();
+        this.acesso = usuario.getAcesso();
+        this.ativo = usuario.getAtivo();
     }
 }

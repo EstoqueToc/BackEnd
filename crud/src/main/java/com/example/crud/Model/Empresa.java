@@ -20,7 +20,7 @@ public class Empresa {
 
     private String razaoSocial;
 
-    private String CNPJ;
+    private String cnpj;
 
     private String telefone;
 
@@ -28,8 +28,12 @@ public class Empresa {
 
     private boolean ativo = true;
 
-    @OneToMany(mappedBy = "empresa")
-    private List<Produto> produtos;
+    @ManyToOne
+    @JoinColumn(name = "logradouro", nullable = false)
+    private Logradouro logradouro;
+
+//    @OneToMany(mappedBy = "produtos")
+//    private List<Produto> produtos;
 
     @OneToMany(mappedBy = "empresa")
     private List<Alerta> alertas;
@@ -45,7 +49,7 @@ public class Empresa {
         return Objects.equals(id, empresa.id) &&
                 Objects.equals(nomeEmpresa, empresa.nomeEmpresa) &&
                 Objects.equals(razaoSocial, empresa.razaoSocial) &&
-                Objects.equals(CNPJ, empresa.CNPJ) &&
+                Objects.equals(cnpj, empresa.cnpj) &&
                 Objects.equals(telefone, empresa.telefone) &&
                 Objects.equals(emailCorporativo, empresa.emailCorporativo) &&
                 Objects.equals(ativo, empresa.ativo);
@@ -53,7 +57,7 @@ public class Empresa {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nomeEmpresa, razaoSocial, CNPJ, telefone, emailCorporativo, ativo);
+        return Objects.hash(id, nomeEmpresa, razaoSocial, cnpj, telefone, emailCorporativo, ativo);
     }
 
     public String setNome(String novoNome) {

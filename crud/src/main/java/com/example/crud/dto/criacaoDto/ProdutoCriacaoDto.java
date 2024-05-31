@@ -9,6 +9,7 @@ import jakarta.validation.constraints.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,30 +18,34 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class ProdutoCriacaoDto {
 
     @NotBlank(message = "Nome do produto é obrigatório")
-    private String nome;
-
-    @NotNull(message = "Preço de venda é obrigatório")
-    @PositiveOrZero(message = "Preço de venda deve ser maior ou igual a zero")
-    private Double precoDeVenda;
-
-
-    @NotNull(message = "Preço de compra é obrigatório")
-    @PositiveOrZero(message = "Preço de compra deve ser maior ou igual a zero")
-    private double precoDeCompra;
-
-    @NotNull(message = "Data de entrada é obrigatória")
-    private LocalDate dataDeEntrada;
-
-    @NotBlank(message = "Unidade de medida é obrigatória")
-    private String unidadeDeMedida;
+    private String nomeProduto;
 
     @NotBlank(message = "Descrição é obrigatória")
     private String descricao;
 
+    private LocalDate dataValidade;
 
+    @NotNull(message = "Preço de compra é obrigatório")
+    @PositiveOrZero(message = "Preço de compra deve ser maior ou igual a zero")
+    private double precoCompraProduto;
+
+    @NotNull(message = "Preço de venda é obrigatório")
+    @PositiveOrZero(message = "Preço de venda deve ser maior ou igual a zero")
+    private Double precoVendaProduto;
+
+    @NotNull(message = "Data de entrada é obrigatória")
+    private LocalDate dataEntrada;
+
+    @NotBlank(message = "Unidade de medida é obrigatória")
+    private String unidadeMedida;
+
+    @NotNull(message = "Quantidade de Entrada é obrigatória")
+    @Positive(message = "Quantidade de Entrada deve ser maior que zero")
+    private Integer qtdEntrada;
 
     @NotNull(message = "Categoria é obrigatória")
     private Categoria categoria;
@@ -48,31 +53,10 @@ public class ProdutoCriacaoDto {
     @NotNull(message = "Fornecedor é obrigatório")
     private Fornecedor fornecedor;
 
-    @NotNull(message = "Quantidade em estoque é obrigatória")
-    @PositiveOrZero(message = "Quantidade em estoque deve ser maior ou igual a zero")
-    private Integer qtdEstoque;
-
     @NotNull(message = "Empresa é obrigatória")
-    private Empresa empresaId;
-
-    private LocalDate dataDeValidade;
-
-    @NotNull
     private Empresa empresa;
 
     private List<Alerta> alertaEstoque;
-    public ProdutoCriacaoDto(String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, LocalDate dataDeValidade) {
-        this.nome = nome;
-        this.precoDeVenda = precoDeVenda;
-        this.precoDeCompra = precoDeCompra;
-        this.dataDeEntrada = dataDeEntrada;
-        this.unidadeDeMedida = unidadeDeMedida;
-        this.descricao = descricao;
-        this.categoria = categoria;
-        this.fornecedor = fornecedor;
-        this.qtdEstoque = qtdEstoque;
-        this.dataDeValidade = dataDeValidade;
-    }
 
     public ProdutoCriacaoDto() {
     }
