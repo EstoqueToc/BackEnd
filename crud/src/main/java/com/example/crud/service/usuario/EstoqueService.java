@@ -1,13 +1,11 @@
 package com.example.crud.service.usuario;
 
 import com.example.crud.Model.Alerta;
-import com.example.crud.Model.Estoque;
 import com.example.crud.Model.Produto;
 import com.example.crud.repository.AlertaRepository;
 import com.example.crud.repository.EstoqueRepository;
 import com.example.crud.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
