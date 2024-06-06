@@ -78,7 +78,6 @@ public class EstoqueController {
         }
     }
 
-
     private void sendSlackMessage(String message) throws IOException, InterruptedException {
         JSONObject json = new JSONObject();
         json.put("text", message);

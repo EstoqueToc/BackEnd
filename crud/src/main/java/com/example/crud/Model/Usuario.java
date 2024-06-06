@@ -32,7 +32,6 @@ public class Usuario {
     private int ativo;
 
     @ManyToOne
-    @JoinColumn(name = "empresa", nullable = false)
     private Empresa empresa;
 
 //    @ElementCollection

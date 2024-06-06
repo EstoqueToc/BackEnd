@@ -1,5 +1,6 @@
 package com.example.crud.service;
 
+import com.example.crud.Model.Empresa;
 import com.example.crud.Model.Usuario;
 import com.example.crud.ModelMapperConfig;
 import com.example.crud.configuration.security.jwt.GerenciadorTokenJwt;
@@ -88,13 +89,14 @@ public class UsuarioService {
     }
 
     public void criar(UsuarioCriacaoDto usuarioCriacaoDto) {
-        final Usuario usuario = UsuarioMapper.toEntity(usuarioCriacaoDto);
+        Usuario usuario = UsuarioMapper.toEntity(usuarioCriacaoDto);
         String senhaCriptografada = passwordEncoder.encode(usuarioCriacaoDto.getSenha());
         usuario.setSenha(senhaCriptografada);
-        var empresa = empresaRepository.findById(usuarioCriacaoDto.getEmpresa().getId())
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Empresa", usuarioCriacaoDto.getEmpresa().getId()));
+        var empresaId = usuarioCriacaoDto.getEmpresa().getId();
+        var empresa = empresaRepository.findById(empresaId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Empresa", empresaId));
         usuario.setEmpresa(empresa);
-        this.usuarioRepository.save(usuario);
+        usuarioRepository.save(usuario);
     }
 
     public Usuario getUm(Long codigo) {

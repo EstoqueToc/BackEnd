@@ -50,9 +50,8 @@ public class EmpresaController {
     @ApiResponse(responseCode = "404", description = "Empresa com o ID fornecido não encontrada", content = @Content)
     @GetMapping("/{id}")
     public ResponseEntity<EmpresaConsultaDto> getEmpresaById(@Parameter(description = "ID da empresa para busca") @PathVariable Long id) {
-        Optional<EmpresaConsultaDto> empresaOpt = empresaService.getEmpresaById(id);
-        return empresaOpt.map(ResponseEntity::ok)
-                .orElseGet(() -> status(404).build());
+        EmpresaConsultaDto empresaOpt = empresaService.getEmpresaById(id);
+        return empresaOpt != null ? status(200).body(empresaOpt) : status(404).build();
     }
 
     @Operation(summary = "Cria uma nova empresa")

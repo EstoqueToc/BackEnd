@@ -16,7 +16,7 @@ public class EmpresaConsultaDto {
     private String cnpj; /* 52.254.752/0001-82 */
     private String telefone; /* (99) 99999-9999 | (99)99999-9999 | (99) 9 9999-9999 | 99 99999-9999 | 99 9 9999-9999*/
     private String emailCorporativo;
-    private LogradouroConsultaDto logradouro;
+    private Logradouro logradouro;
     private boolean ativo;
 
     public EmpresaConsultaDto() {
@@ -29,11 +29,11 @@ public class EmpresaConsultaDto {
         this.cnpj = empresa.getCnpj();
         this.telefone = empresa.getTelefone();
         this.emailCorporativo = empresa.getEmailCorporativo();
-        this.logradouro = new LogradouroConsultaDto(empresa.getLogradouro());
+        this.logradouro = empresa.getLogradouro();
         this.ativo = empresa.isAtivo();
     }
-    public String getNome() {
-        return nomeEmpresa;
-    }
+//    public String getNome() {
+//        return nomeEmpresa;
+//    }
 
 }

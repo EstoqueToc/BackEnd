@@ -1,6 +1,7 @@
 package com.example.crud.dto.consultaDto;
 
 import com.example.crud.Model.Categoria;
+import com.example.crud.Model.Empresa;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ public class CategoriaConsultaDto {
 
     private Long id;
     private String nome;
+    private Empresa empresa;
 
     public CategoriaConsultaDto() {
     }
@@ -19,6 +21,7 @@ public class CategoriaConsultaDto {
     public CategoriaConsultaDto(Categoria categoria) {
         this.id = categoria.getId();
         this.nome = categoria.getNome();
+        this.empresa = categoria.getEmpresa();
     }
 
     @Override

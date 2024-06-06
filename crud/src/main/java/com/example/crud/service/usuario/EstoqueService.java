@@ -1,6 +1,7 @@
 package com.example.crud.service.usuario;
 
 import com.example.crud.Model.Alerta;
+import com.example.crud.Model.Estoque;
 import com.example.crud.Model.Produto;
 import com.example.crud.repository.AlertaRepository;
 import com.example.crud.repository.EstoqueRepository;
@@ -20,11 +21,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EstoqueService {
 
-    private ProdutoRepository produtoRepository;
+    private final ProdutoRepository produtoRepository;
 
-    private AlertaRepository alertaRepository;
+    private final AlertaRepository alertaRepository;
 
-    private EstoqueRepository estoqueRepository;
+    private final EstoqueRepository estoqueRepository;
 
     private static final Logger logger = Logger.getLogger(EstoqueService.class.getName());
 

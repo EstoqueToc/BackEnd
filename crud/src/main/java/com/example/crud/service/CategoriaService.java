@@ -3,7 +3,9 @@ package com.example.crud.service;
 import com.example.crud.Model.Categoria;
 import com.example.crud.dto.consultaDto.CategoriaConsultaDto;
 import com.example.crud.dto.criacaoDto.CategoriaCriacaoDto;
+import com.example.crud.excecoes.RecursoNaoEncontradoException;
 import com.example.crud.repository.CategoriaRepository;
+import com.example.crud.repository.EmpresaRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class CategoriaService {
 
     private final CategoriaRepository repository;
+    private final EmpresaRepository empresaRepository;
     private final ModelMapper modelMapper;
 
     public ResponseEntity<List<CategoriaConsultaDto>> getAllCategorias() {
@@ -37,6 +40,9 @@ public class CategoriaService {
 
     public ResponseEntity<CategoriaConsultaDto> criarCategoria(CategoriaCriacaoDto novaCategoriaDto) {
         Categoria novaCategoria = modelMapper.map(novaCategoriaDto, Categoria.class);
+        var empresa = empresaRepository.findById(novaCategoriaDto.getEmpresa().getId())
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria", novaCategoria.getEmpresa().getId()));
+        novaCategoria.setEmpresa(empresa);
         repository.save(novaCategoria);
         return ResponseEntity.status(HttpStatus.CREATED).body(modelMapper.map(novaCategoria, CategoriaConsultaDto.class));
     }
@@ -44,8 +50,10 @@ public class CategoriaService {
     public ResponseEntity<CategoriaConsultaDto> atualizarCategoria(Long id, CategoriaCriacaoDto categoriaAtualizadaDto) {
         return repository.findById(id)
                 .map(categoria -> {
-                    modelMapper.map(categoriaAtualizadaDto, categoria);
-                    categoria.setId(id);
+                    categoria.setNome(categoriaAtualizadaDto.getNome());
+                    var empresa = empresaRepository.findById(categoriaAtualizadaDto.getEmpresa().getId())
+                            .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria", categoriaAtualizadaDto.getEmpresa().getId()));
+                    categoria.setEmpresa(empresa);
                     repository.save(categoria);
                     return ResponseEntity.ok(modelMapper.map(categoria, CategoriaConsultaDto.class));
                 })

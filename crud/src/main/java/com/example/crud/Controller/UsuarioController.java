@@ -45,7 +45,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "204", description = "Nenhum usuário disponível", content = @Content)
     })
     @GetMapping
-   @SecurityRequirement(name = "Bearer")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<UsuarioConsultaDto>> listar() {
         return status(200).body(usuarioService.getAll());
     }

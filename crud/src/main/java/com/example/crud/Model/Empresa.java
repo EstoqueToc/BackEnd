@@ -29,14 +29,13 @@ public class Empresa {
     private boolean ativo = true;
 
     @ManyToOne
-    @JoinColumn(name = "logradouro", nullable = false)
     private Logradouro logradouro;
 
 //    @OneToMany(mappedBy = "produtos")
 //    private List<Produto> produtos;
 
-    @OneToMany(mappedBy = "empresa")
-    private List<Alerta> alertas;
+//    @OneToMany(mappedBy = "empresa")
+//    private List<Alerta> alertas;
 
     public Empresa() {
     }
@@ -60,15 +59,15 @@ public class Empresa {
         return Objects.hash(id, nomeEmpresa, razaoSocial, cnpj, telefone, emailCorporativo, ativo);
     }
 
-    public String setNome(String novoNome) {
-        String nomeAntigo = this.nomeEmpresa;
-        this.nomeEmpresa = novoNome;
-        return nomeAntigo;
-    }
-
-    public String getNome() {
-        return nomeEmpresa;
-    }
+//    public String setNome(String novoNome) {
+//        String nomeAntigo = this.nomeEmpresa;
+//        this.nomeEmpresa = novoNome;
+//        return nomeAntigo;
+//    }
+//
+//    public String getNome() {
+//        return nomeEmpresa;
+//    }
 
 
 }

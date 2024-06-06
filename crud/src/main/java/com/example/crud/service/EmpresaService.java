@@ -29,13 +29,17 @@ public class EmpresaService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<EmpresaConsultaDto> getEmpresaById(Long id) {
-        return empresaRepository.findById(id)
-                .map(empresa -> modelMapper.map(empresa, EmpresaConsultaDto.class));
+    public EmpresaConsultaDto getEmpresaById(Long id) {
+        Empresa empresa = empresaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Empresa não encontrada"));
+        return modelMapper.map(empresa, EmpresaConsultaDto.class);
     }
 
     public Empresa criarEmpresa(EmpresaCriacaoDto novaEmpresaDto) {
         Empresa novaEmpresa = modelMapper.map(novaEmpresaDto, Empresa.class);
+        if(novaEmpresaDto.getLogradouro() == null){
+            novaEmpresa.setLogradouro(null);
+        }
         var logradouro = logradouroRepository.findById(novaEmpresaDto.getLogradouro().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Logradouro não encontrado"));
         novaEmpresa.setLogradouro(logradouro);
