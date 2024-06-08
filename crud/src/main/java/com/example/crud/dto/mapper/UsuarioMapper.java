@@ -40,6 +40,7 @@ public class UsuarioMapper {
         usuarioTokenDto.setToken(token);
         usuarioTokenDto.setTipo(usuario.getFuncao());
         usuarioTokenDto.setEmpresa(new EmpresaDetalhesConsulta(usuario.getEmpresa()));
+        usuarioTokenDto.setAcesso(usuario.getAcesso());
         return usuarioTokenDto;
     }
 }

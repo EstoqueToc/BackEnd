@@ -21,13 +21,13 @@ public class Fornecedor {
 
     private String nomeFantasia;
     private String razaoSocial;
-    @Column(name = "telefone_fornecedor", unique = true)
+    @Column(name = "telefone_fornecedor")
     private String telefone;
-    @Column(name = "email_fornecedor", unique = true)
+    @Column(name = "email_fornecedor")
     private String email;
-    @Column(name = "cnpj_fornecedor", unique = true)
+    @Column(name = "cnpj_fornecedor")
     private String cnpj;
-    private boolean ativo;
+    private int ativo;
 
     @ManyToOne
     private Logradouro logradouro;

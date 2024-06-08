@@ -76,4 +76,12 @@ public class CategoriaController {
     public ResponseEntity<List<CategoriaConsultaDto>> pesquisarCategoriaPorNome(@Parameter(description = "Nome da categoria para pesquisa") @PathVariable String nome) {
         return categoriaService.pesquisarCategoriaPorNome(nome);
     }
+
+    @Operation(summary = "Retorna uma lista de categorias pelo ID da empresa")
+    @ApiResponse(responseCode = "200", description = "Categorias encontradas com sucesso")
+    @ApiResponse(responseCode = "204", description = "Nenhuma categoria encontrada com o ID da empresa fornecido", content = @Content)
+    @GetMapping("/empresa/{id}")
+    public ResponseEntity<List<CategoriaConsultaDto>> getCategoriaByEmpresaId(@Parameter(description = "ID da empresa para busca") @PathVariable Long id) {
+        return categoriaService.getCategoriaByEmpresaId(id);
+    }
 }

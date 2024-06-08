@@ -4,6 +4,7 @@ import com.example.crud.GerenciadorArquivo.UsuarioCSV;
 import com.example.crud.Helpers.ListaObj;
 import com.example.crud.Model.Usuario;
 import com.example.crud.dto.consultaDto.UsuarioConsultaDto;
+import com.example.crud.dto.consultaDto.UsuarioSimplesDto;
 import com.example.crud.dto.criacaoDto.UsuarioCriacaoDto;
 import com.example.crud.repository.UsuarioRepository;
 import com.example.crud.service.UsuarioService;
@@ -50,6 +51,17 @@ public class UsuarioController {
         return status(200).body(usuarioService.getAll());
     }
 
+    @Operation(summary = "Lista todos os usuários de uma Forma Simples")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuários encontrados"),
+            @ApiResponse(responseCode = "204", description = "Nenhum usuário disponível", content = @Content)
+    })
+    @GetMapping("/simples/{ideEmpresa}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<UsuarioSimplesDto>> listarSimples(@Parameter(description = "ID da empresa") @PathVariable Long ideEmpresa){
+        return status(200).body(usuarioService.getSimples(ideEmpresa));
+    }
+
     @Operation(summary = "Pesquisa um usuário pelo índice na lista")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário encontrado"),
@@ -62,6 +74,22 @@ public class UsuarioController {
         return repository.findById(indice)
                 .map(usuario -> status(200).body(modelMapper.map(usuario, UsuarioConsultaDto.class)))
                 .orElse(status(404).build());
+    }
+
+    @Operation(summary = "Pesquisa um usuário pelo nome na lista")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
+    })
+    @GetMapping("/simples/{nome}/{ideEmpresa}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<UsuarioSimplesDto>> pesquisarUsuarioNome(
+            @PathVariable String nome,
+            @PathVariable Long ideEmpresa) {
+        List<UsuarioSimplesDto> lista = usuarioService.getSimplesNome(nome, ideEmpresa);
+        return lista.isEmpty()
+                ? ResponseEntity.status(404).build()
+                : ResponseEntity.ok(lista);
     }
 
     @Operation(summary = "Cadastra um novo usuário")

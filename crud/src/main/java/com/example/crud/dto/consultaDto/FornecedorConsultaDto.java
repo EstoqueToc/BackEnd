@@ -16,7 +16,7 @@ public class FornecedorConsultaDto {
     private String telefone;
     private String email;
     private String cnpj;
-    private boolean ativo;
+    private int ativo;
     private LogradouroConsultaDto logradouro;
 
     public FornecedorConsultaDto() {
@@ -29,7 +29,7 @@ public class FornecedorConsultaDto {
         this.telefone = fornecedor.getTelefone();
         this.email = fornecedor.getEmail();
         this.cnpj = fornecedor.getCnpj();
-        this.ativo = fornecedor.isAtivo();
+        this.ativo = fornecedor.getAtivo();
         this.logradouro = new LogradouroConsultaDto(fornecedor.getLogradouro());
     }
 }

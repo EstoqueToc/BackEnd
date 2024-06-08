@@ -84,4 +84,12 @@ public class CategoriaService {
                 .collect(Collectors.toList());
         return categorias.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).build() : ResponseEntity.ok(listaDto);
     }
+
+    public ResponseEntity<List<CategoriaConsultaDto>> getCategoriaByEmpresaId(Long id) {
+        var categorias = repository.findCategoriaByEmpresaId(id);
+        List<CategoriaConsultaDto> listaDto = categorias.stream()
+                .map(categoria -> modelMapper.map(categoria, CategoriaConsultaDto.class))
+                .collect(Collectors.toList());
+        return categorias.isEmpty() ? ResponseEntity.status(HttpStatus.NO_CONTENT).build() : ResponseEntity.ok(listaDto);
+    }
 }

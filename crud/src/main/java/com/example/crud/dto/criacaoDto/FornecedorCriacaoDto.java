@@ -30,7 +30,7 @@ public class FornecedorCriacaoDto {
     @CNPJ(message = "CNPJ inválido")
     private String cnpj;
 
-    private boolean ativo;
+    private int ativo;
 
     private Logradouro logradouro;
 }

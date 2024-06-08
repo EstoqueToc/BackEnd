@@ -29,6 +29,9 @@ public class Produto {
     private Integer qtdEntrada;
 
     @ManyToOne
+    private Empresa empresa;
+
+    @ManyToOne
     @JoinColumn(name = "categoria", nullable = false)
     private Categoria categoria;
 

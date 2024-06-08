@@ -4,6 +4,7 @@ import com.example.crud.Model.Fornecedor;
 import com.example.crud.dto.consultaDto.FornecedorConsultaDto;
 import com.example.crud.dto.criacaoDto.FornecedorCriacaoDto;
 import com.example.crud.repository.FornecedorRepository;
+import com.example.crud.repository.LogradouroRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class FornecedorService {
 
     private final FornecedorRepository repository;
+    private final LogradouroRepository logradouroRepository;
     private final ModelMapper modelMapper;
 
     public ResponseEntity<FornecedorConsultaDto> adicionarFornecedor(FornecedorCriacaoDto novoFornecedorDto) {
@@ -82,5 +84,9 @@ public class FornecedorService {
         return repository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    public List<Fornecedor> getFornecedorByEmpresaId(long id) {
+        return repository.findFornecedorByEmpresaId(id);
     }
 }

@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.http.ResponseEntity.*;
+
 @RestController
 @RequestMapping("/fornecedores")
 @RequiredArgsConstructor
@@ -112,5 +114,16 @@ public class FornecedorController /*implements IUpDate*/ {
     @GetMapping("/{id}")
     public ResponseEntity<Fornecedor> getFornecedorById(@PathVariable @Parameter(description = "ID do fornecedor para busca") Long id) {
         return fornecedorService.getFornecedorById(id);
+    }
+
+    @Operation(summary = "Retorna uma lista de fornecedores pelo ID da empresa")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Fornecedores encontrados com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum fornecedor encontrado para a empresa fornecida", content = @Content)
+    })
+    @GetMapping("/empresa/{id}")
+    public ResponseEntity<List<Fornecedor>> getFornecedorByEmpresaId(@PathVariable @Parameter(description = "ID da empresa para busca") Long id) {
+        List<Fornecedor> lista = fornecedorService.getFornecedorByEmpresaId(id);
+        return lista.isEmpty() ? status(204).build() : status(200).body(lista);
     }
 }

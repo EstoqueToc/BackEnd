@@ -3,6 +3,7 @@ package com.example.crud.service.usuario;
 import com.example.crud.Model.Alerta;
 import com.example.crud.Model.Estoque;
 import com.example.crud.Model.Produto;
+import com.example.crud.dto.consultaDto.EstoqueInfo;
 import com.example.crud.repository.AlertaRepository;
 import com.example.crud.repository.EstoqueRepository;
 import com.example.crud.repository.ProdutoRepository;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -114,6 +116,49 @@ public class EstoqueService {
             logger.info("Produto crítico: " + produto.getNomeProduto() + " - Quantidade: " + getQtdDisponivel(produto));
         }
         return produtosCriticos;
+    }
+
+    public List<Produto> getProdutosComEstoqueAlto() {
+        int limiteEstoqueAlto = 100;
+        return estoqueRepository.findProdutosComEstoqueAlto(limiteEstoqueAlto);
+    }
+
+    public List<Produto> getProdutosComEstoqueMedio() {
+        int limiteEstoqueBaixo = 20;
+        int limiteEstoqueAlto = 100;
+        return estoqueRepository.findProdutosComEstoqueMedio(limiteEstoqueBaixo, limiteEstoqueAlto);
+    }
+
+    public List<Produto> getProdutosComEstoqueBaixo() {
+        int limiteEstoqueBaixo = 20;
+        return estoqueRepository.findProdutosComEstoqueBaixo(limiteEstoqueBaixo);
+    }
+
+    public List<EstoqueInfo> getInformacoesEstoque() {
+        List<Object[]> resultados = estoqueRepository.findInformacoesEstoque();
+
+        List<EstoqueInfo> estoqueInfos = new ArrayList<>();
+        for (Object[] resultado : resultados) {
+            String produto = (String) resultado[0];
+            int quantidade = (int) resultado[1];
+            double precoUnitario = (double) resultado[2];
+            String statusEstoque = calcularStatusEstoque(quantidade);
+
+            EstoqueInfo estoqueInfo = new EstoqueInfo(produto, quantidade, precoUnitario, statusEstoque);
+            estoqueInfos.add(estoqueInfo);
+        }
+
+        return estoqueInfos;
+    }
+
+    private String calcularStatusEstoque(int quantidade) {
+        if (quantidade >= 100) {
+            return "Alto";
+        } else if (quantidade >= 20) {
+            return "Médio";
+        } else {
+            return "Baixo";
+        }
     }
 
 }

@@ -15,4 +15,5 @@ public class UsuarioTokenDto {
     private String token;
     private EmpresaDetalhesConsulta empresa;
     private String tipo;
+    private int acesso;
 }

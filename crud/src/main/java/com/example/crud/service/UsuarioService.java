@@ -5,6 +5,7 @@ import com.example.crud.Model.Usuario;
 import com.example.crud.ModelMapperConfig;
 import com.example.crud.configuration.security.jwt.GerenciadorTokenJwt;
 import com.example.crud.dto.consultaDto.UsuarioConsultaDto;
+import com.example.crud.dto.consultaDto.UsuarioSimplesDto;
 import com.example.crud.dto.criacaoDto.UsuarioCriacaoDto;
 import com.example.crud.dto.mapper.UsuarioMapper;
 import com.example.crud.excecoes.RecursoNaoEncontradoException;
@@ -85,6 +86,24 @@ public class UsuarioService {
 
         List<UsuarioConsultaDto> listaDtos = mapper.map(lista, new TypeToken<List<UsuarioConsultaDto>>() {
         }.getType());
+        return listaDtos;
+    }
+
+    public List<UsuarioSimplesDto> getSimples(Long id) {
+        List<Usuario> lista = usuarioRepository.findAllByEmpresaIdOrderByNomeAsc(id);
+        if(lista.isEmpty()){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(204));
+        }
+        List<UsuarioSimplesDto> listaDtos = mapper.map(lista, new TypeToken<List<UsuarioSimplesDto>>(){}.getType());
+        return listaDtos;
+    }
+
+    public List<UsuarioSimplesDto> getSimplesNome(String nome, Long id) {
+        List<Usuario> lista = usuarioRepository.findAllByEmpresaIdAndNomeContainingIgnoreCase(id, nome);
+        if(lista.isEmpty()){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(204));
+        }
+        List<UsuarioSimplesDto> listaDtos = mapper.map(lista, new TypeToken<List<UsuarioSimplesDto>>(){}.getType());
         return listaDtos;
     }
 

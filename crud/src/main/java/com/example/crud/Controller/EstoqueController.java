@@ -1,6 +1,7 @@
 package com.example.crud.Controller;
 
 import com.example.crud.Model.Produto;
+import com.example.crud.dto.consultaDto.EstoqueInfo;
 import com.example.crud.service.usuario.EstoqueService;
 import com.example.crud.slack.Slack;
 import lombok.RequiredArgsConstructor;
@@ -95,4 +96,28 @@ public class EstoqueController {
 //    public ResponseEntity<String> verificarAlertas() {
 //        return estoqueService.verificarAlertas() ? ResponseEntity.ok("Alerta de estoque baixo!") : ResponseEntity.ok("Estoque normal");
 //    }
+
+    @GetMapping("/alto")
+    public ResponseEntity<List<Produto>> getProdutosComEstoqueAlto() {
+        List<Produto> produtos = estoqueService.getProdutosComEstoqueAlto();
+        return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/medio")
+    public ResponseEntity<List<Produto>> getProdutosComEstoqueMedio() {
+        List<Produto> produtos = estoqueService.getProdutosComEstoqueMedio();
+        return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/baixo")
+    public ResponseEntity<List<Produto>> getProdutosComEstoqueBaixo() {
+        List<Produto> produtos = estoqueService.getProdutosComEstoqueBaixo();
+        return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/informacoes")
+    public ResponseEntity<List<EstoqueInfo>> getInformacoesEstoque() {
+        List<EstoqueInfo> estoqueInfos = estoqueService.getInformacoesEstoque();
+        return ResponseEntity.ok(estoqueInfos);
+    }
 }
