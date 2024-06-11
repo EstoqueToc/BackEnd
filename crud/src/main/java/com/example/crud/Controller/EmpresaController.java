@@ -58,12 +58,12 @@ public class EmpresaController {
     @ApiResponse(responseCode = "201", description = "Empresa criada com sucesso")
     @PostMapping("/cadastro")
     public ResponseEntity<Empresa> criarEmpresa(@Parameter(description = "Objeto da empresa a ser criado") @Valid @RequestBody EmpresaCriacaoDto novaEmpresaDto) {
-        /*Empresa novaEmpresa = empresaService.criarEmpresa(novaEmpresaDto);
-        EmpresaConsultaDto novaEmpresaConsultaDto = modelMapper.map(novaEmpresa, EmpresaConsultaDto.class);
-        return status(201).body(novaEmpresaConsultaDto);*/
+//        /*Empresa novaEmpresa = empresaService.criarEmpresa(novaEmpresaDto);
+//        EmpresaConsultaDto novaEmpresaConsultaDto = modelMapper.map(novaEmpresa, EmpresaConsultaDto.class);
+//        return status(201).body(novaEmpresaConsultaDto);*/
 
         Empresa novaEmpresa = modelMapper.map(novaEmpresaDto, Empresa.class);
-//        logradouroRepository.save(novaEmpresa.getLogradouro());
+        logradouroRepository.save(novaEmpresa.getLogradouro());
         empresaRepository.save(novaEmpresa);
 
         return status(201).body(novaEmpresa);
