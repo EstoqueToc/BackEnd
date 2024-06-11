@@ -1,8 +1,6 @@
 package com.example.crud.service;
 
-import com.example.crud.Model.Empresa;
 import com.example.crud.Model.Usuario;
-import com.example.crud.ModelMapperConfig;
 import com.example.crud.configuration.security.jwt.GerenciadorTokenJwt;
 import com.example.crud.dto.consultaDto.UsuarioConsultaDto;
 import com.example.crud.dto.consultaDto.UsuarioSimplesDto;
@@ -16,7 +14,6 @@ import com.example.crud.service.dto.UsuarioTokenDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.modelmapper.internal.bytebuddy.description.method.MethodDescription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.AuthenticationManager;

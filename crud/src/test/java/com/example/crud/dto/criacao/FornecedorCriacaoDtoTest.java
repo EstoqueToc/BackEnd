@@ -26,7 +26,7 @@ public class FornecedorCriacaoDtoTest {
     @Test
     public void testNomeNotBlank() {
         FornecedorCriacaoDto dto = new FornecedorCriacaoDto();
-        dto.setNome("");
+        dto.setNomeFantasia("");
         assertTrue(validator.validate(dto).size() > 0);
     }
 
@@ -66,29 +66,13 @@ public class FornecedorCriacaoDtoTest {
     }
 
     @Test
-    public void testPrecoNotNull() {
-        FornecedorCriacaoDto dto = new FornecedorCriacaoDto();
-        dto.setPreco(null);
-        assertTrue(validator.validate(dto).size() > 0);
-    }
-
-    @Test
-    public void testParceriaNotNull() {
-        FornecedorCriacaoDto dto = new FornecedorCriacaoDto();
-        dto.setParceria(null);
-        assertTrue(validator.validate(dto).size() > 0);
-    }
-    @Test
     public void testValidDto() {
         FornecedorCriacaoDto dto = new FornecedorCriacaoDto();
-        dto.setNome("Nome");
         dto.setNomeFantasia("Nome Fantasia");
         dto.setRazaoSocial("Razão Social");
         dto.setTelefone("123456789");
         dto.setEmail("email@example.com");
         dto.setCnpj("68.484.147/0001-38");
-        dto.setPreco(10.0);
-        dto.setParceria(true);
 
         Set<ConstraintViolation<FornecedorCriacaoDto>> violations = validator.validate(dto);
         for (ConstraintViolation<FornecedorCriacaoDto> violation : violations) {

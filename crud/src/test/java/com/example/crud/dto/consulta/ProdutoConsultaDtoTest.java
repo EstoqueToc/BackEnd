@@ -10,6 +10,7 @@ import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -21,31 +22,32 @@ public class ProdutoConsultaDtoTest {
         categoria.setNome("Categoria");
 
         Fornecedor fornecedor = new Fornecedor();
-        fornecedor.setNome("Fornecedor");
+        fornecedor.setNomeFantasia("Fantasia");
 
         Produto produto = new Produto();
-        produto.setNome("Produto");
-        produto.setPrecoDeVenda(10.0);
-        produto.setPrecoDeCompra(5.0);
-        produto.setDataDeEntrada(LocalDate.of(2022, 1, 1));
-        produto.setUnidadeDeMedida("UN");
-        produto.setDescricao("Descrição");
+        produto.setNomeProduto("Produto");
+        produto.setPrecoVendaProduto(10.0);
+        produto.setPrecoCompraProduto(5.0);
+        produto.setDataEntrada(LocalDate.of(2022, 1, 1));
+        produto.setUnidadeMedida("UN");
+        produto.setDescricaoProduto("Descrição");
         produto.setCategoria(categoria);
         produto.setFornecedor(fornecedor);
-        produto.setQtdEstoque(100);
-        produto.setDataDeValidade(LocalDate.of(2023, 1, 1));
+        produto.setDataValidade(LocalDate.of(2023, 1, 1));
+        produto.setAlertaEstoque(new ArrayList<>());
+
 
         ProdutoConsultaDto dto = new ProdutoConsultaDto(produto);
 
-        assertEquals("Produto", dto.getNome());
-        assertEquals(10.0, dto.getPrecoDeVenda());
-        assertEquals(5.0, dto.getPrecoDeCompra());
-        assertEquals(LocalDate.of(2022, 1, 1), dto.getDataDeEntrada());
-        assertEquals("UN", dto.getUnidadeDeMedida());
-        assertEquals("Descrição", dto.getDescricao());
+        assertEquals("Produto", dto.getNomeProduto());
+        assertEquals(10.0, dto.getPrecoVendaProduto());
+        assertEquals(5.0, dto.getPrecoCompraProduto());
+        assertEquals(LocalDate.of(2022, 1, 1), dto.getDataEntrada());
+        assertEquals("UN", dto.getUnidadeMedida());
+        assertEquals("Descrição", dto.getDescricaoProduto());
         assertEquals(categoria, dto.getCategoria());
         assertEquals(fornecedor, dto.getFornecedor());
-        assertEquals(100, dto.getQtdEstoque());
-        assertEquals(LocalDate.of(2023, 1, 1), dto.getDataDeValidade());
+        assertEquals(LocalDate.of(2023, 1, 1), dto.getDataValidade());
+
     }
 }

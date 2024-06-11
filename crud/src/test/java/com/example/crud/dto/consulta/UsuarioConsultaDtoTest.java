@@ -14,21 +14,20 @@ public class UsuarioConsultaDtoTest {
     public void testUsuarioConsultaDto() {
         UsuarioCriacaoDto usuario = new UsuarioCriacaoDto();
         usuario.setNome("Nome");
-        usuario.setCPF("123.456.789-00");
+        usuario.setCpf("123.456.789-00");
         usuario.setEmail("email@example.com");
         usuario.setSenha("senha123");
-        usuario.setDtNascimento(LocalDate.of(2000, 1, 1));
+        usuario.setDataNascimento(LocalDate.of(2000, 1, 1));
         usuario.setFuncao("Função");
-        usuario.setAcesso(true);
+
 
         UsuarioConsultaDto dto = new UsuarioConsultaDto(usuario);
 
         assertEquals("Nome", dto.getNome());
-        assertEquals("123.456.789-00", dto.getCPF());
+        assertEquals("123.456.789-00", dto.getCpf());
         assertEquals("email@example.com", dto.getEmail());
         assertEquals("senha123", dto.getSenha());
-        assertEquals(LocalDate.of(2000, 1, 1), dto.getDtNascimento());
+        assertEquals(LocalDate.of(2000, 1, 1), dto.getDataNascimento());
         assertEquals("Função", dto.getFuncao());
-        assertEquals(true, dto.isAcesso());
     }
 }

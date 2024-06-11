@@ -38,4 +38,5 @@ public class Fornecedor {
     public Fornecedor(String nome) {
         this.nomeFantasia = nome;
     }
+
 }

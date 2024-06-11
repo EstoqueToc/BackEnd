@@ -14,22 +14,20 @@ public class EmpresaConsultaDtoTest {
     @Test
     public void testConstructorWithEmpresa() {
         Logradouro logradouro = new Logradouro();
-        logradouro.setRua("Rua das Flores");
-        logradouro.setNumero("123");
-        logradouro.setComplemento("Apto 101");
-        logradouro.setCidade("São Paulo");
-        logradouro.setEstado("SP");
-        logradouro.setCep("12345-678");
-        logradouro.setPais("Brasil");
+        logradouro.setRuaLogradouro("Rua Teste");
+        logradouro.setNumeroLogradouro("123");
+        logradouro.setComplementoLogradouro("Apto 123");
+        logradouro.setCidadeLogradouro("São Paulo");
+        logradouro.setEstadoLogradouro("SP");
+        logradouro.setCepLogradouro("12345-123");
 
         Empresa empresa = new Empresa();
         empresa.setId(1L);
         empresa.setNomeEmpresa("Minha Empresa");
         empresa.setRazaoSocial("Razão Social");
-        empresa.setCNPJ("52.254.752/0001-82");
+        empresa.setCnpj("52.254.752/0001-82");
         empresa.setTelefone("(99) 99999-9999");
         empresa.setEmailCorporativo("empresa@example.com");
-        empresa.setSenhaEmpresa("senha123");
         empresa.setLogradouro(logradouro);
         empresa.setAtivo(true);
 
@@ -39,10 +37,9 @@ public class EmpresaConsultaDtoTest {
         assertEquals(1L, dto.getId());
         assertEquals("Minha Empresa", dto.getNomeEmpresa());
         assertEquals("Razão Social", dto.getRazaoSocial());
-        assertEquals("52.254.752/0001-82", dto.getCNPJ());
+        assertEquals("52.254.752/0001-82", dto.getCnpj());
         assertEquals("(99) 99999-9999", dto.getTelefone());
         assertEquals("empresa@example.com", dto.getEmailCorporativo());
-        assertEquals("senha123", dto.getSenhaEmpresa());
         assertEquals(logradouro, dto.getLogradouro());
         assertEquals(true, dto.isAtivo());
     }
@@ -54,6 +51,6 @@ public class EmpresaConsultaDtoTest {
 
         EmpresaConsultaDto dto = new EmpresaConsultaDto(empresa);
 
-        assertEquals("Minha Empresa", dto.getNome());
+        assertEquals("Minha Empresa", dto.getNomeEmpresa());
     }
 }

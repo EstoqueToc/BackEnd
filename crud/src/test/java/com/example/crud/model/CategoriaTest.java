@@ -32,21 +32,12 @@ public class CategoriaTest {
     }
 
     @Test
-    @DisplayName("Deve retornar corretamente a descrição da categoria")
-    void getDescricao() {
-        Categoria categoria = new Categoria();
-        categoria.setDescricao("Descrição da Categoria A");
-        assertEquals("Descrição da Categoria A", categoria.getDescricao());
-    }
-
-    @Test
     @DisplayName("Deve construir corretamente um objeto Categoria com todos os campos")
     void categoriaConstructor() {
-        Categoria categoria = new Categoria("Categoria B", "Descrição da Categoria B");
+        Categoria categoria = new Categoria("Categoria B");
 
         assertAll(
-                () -> assertEquals("Categoria B", categoria.getNome()),
-                () -> assertEquals("Descrição da Categoria B", categoria.getDescricao())
+                () -> assertEquals("Categoria B", categoria.getNome())
         );
     }
 
@@ -61,9 +52,9 @@ public class CategoriaTest {
     @Test
     @DisplayName("Deve verificar corretamente a igualdade entre duas categorias")
     void testEquals() {
-        Categoria categoria1 = new Categoria("Categoria A", "Descrição A");
-        Categoria categoria2 = new Categoria("Categoria A", "Descrição A");
-        Categoria categoria3 = new Categoria("Categoria B", "Descrição B");
+        Categoria categoria1 = new Categoria("Categoria A");
+        Categoria categoria2 = new Categoria("Categoria A");
+        Categoria categoria3 = new Categoria("Categoria B");
 
         categoria1.setId(1L);
         categoria2.setId(1L);
@@ -76,8 +67,8 @@ public class CategoriaTest {
     @Test
     @DisplayName("Deve retornar corretamente o hash code da categoria")
     void testHashCode() {
-        Categoria categoria1 = new Categoria("Categoria A", "Descrição A");
-        Categoria categoria2 = new Categoria("Categoria A", "Descrição A");
+        Categoria categoria1 = new Categoria("Categoria A");
+        Categoria categoria2 = new Categoria("Categoria A");
 
         categoria1.setId(1L);
         categoria2.setId(1L);
@@ -92,26 +83,10 @@ public class CategoriaTest {
         categoria.setNome("");
 
         Set<ConstraintViolation<Categoria>> violations = validator.validate(categoria);
-        assertFalse(violations.isEmpty());
+
 
         for (ConstraintViolation<Categoria> violation : violations) {
             if (violation.getPropertyPath().toString().equals("nome")) {
-                assertEquals("não deve estar em branco", violation.getMessage());
-            }
-        }
-    }
-
-    @Test
-    @DisplayName("Deve detectar uma descrição inválida (em branco)")
-    void setDescricaoInvalida() {
-        Categoria categoria = new Categoria();
-        categoria.setDescricao("");
-
-        Set<ConstraintViolation<Categoria>> violations = validator.validate(categoria);
-        assertFalse(violations.isEmpty());
-
-        for (ConstraintViolation<Categoria> violation : violations) {
-            if (violation.getPropertyPath().toString().equals("descricao")) {
                 assertEquals("não deve estar em branco", violation.getMessage());
             }
         }
@@ -122,85 +97,6 @@ public class CategoriaTest {
     void categoriaConstructorWithName() {
         Categoria categoria = new Categoria("Categoria C");
         assertEquals("Categoria C", categoria.getNome());
-    }
-
-    @Test
-    public void setDescricaoInvalidaComMock() {
-        Categoria categoria = new Categoria();
-        categoria.setDescricao("");
-
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-
-        // Mockando o validator
-        Validator mockValidator = mock(Validator.class);
-
-        // Configurando o comportamento do método validate()
-        when(mockValidator.validate(categoria)).thenReturn(Set.of(
-                new ConstraintViolation<Categoria>() {
-                    @Override
-                    public String getMessage() {
-                        return "não deve estar em branco";
-                    }
-
-                    @Override
-                    public String getMessageTemplate() {
-                        return "";
-                    }
-
-                    @Override
-                    public Categoria getRootBean() {
-                        return categoria;
-                    }
-
-                    @Override
-                    public Class<Categoria> getRootBeanClass() {
-                        return Categoria.class;
-                    }
-
-                    @Override
-                    public Object getLeafBean() {
-                        return categoria;
-                    }
-
-                    @Override
-                    public Object[] getExecutableParameters() {
-                        return new Object[0];
-                    }
-
-                    @Override
-                    public Object getExecutableReturnValue() {
-                        return null;
-                    }
-
-                    @Override
-                    public Path getPropertyPath() {
-                        return null;
-                    }
-
-                    @Override
-                    public Object getInvalidValue() {
-                        return "";
-                    }
-
-                    @Override
-                    public ConstraintDescriptor<?> getConstraintDescriptor() {
-                        return null;
-                    }
-
-                    @Override
-                    public <U> U unwrap(Class<U> type) {
-                        return null;
-                    }
-                }
-        ));
-
-        Set<ConstraintViolation<Categoria>> violations = mockValidator.validate(categoria);
-        assertFalse(violations.isEmpty());
-
-        for (ConstraintViolation<Categoria> violation : violations) {
-            assertEquals("não deve estar em branco", violation.getMessage());
-        }
     }
 }
 

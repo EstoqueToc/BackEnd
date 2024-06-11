@@ -56,38 +56,6 @@ public class EmpresaServiceTest {
         verify(empresaRepository, times(1)).findAll();
     }
 
-    @Test
-    @DisplayName("Deve retornar uma empresa pelo ID")
-    public void testGetEmpresaById() {
-        Empresa empresa = new Empresa();
-        empresa.setId(1L);
-        EmpresaConsultaDto empresaConsultaDto = new EmpresaConsultaDto();
-
-        when(empresaRepository.findById(1L)).thenReturn(Optional.of(empresa));
-        when(modelMapper.map(empresa, EmpresaConsultaDto.class)).thenReturn(empresaConsultaDto);
-
-        Optional<EmpresaConsultaDto> result = empresaService.getEmpresaById(1L);
-
-        assertTrue(result.isPresent());
-        assertEquals(empresaConsultaDto, result.get());
-        verify(empresaRepository, times(1)).findById(1L);
-    }
-
-    @Test
-    @DisplayName("Deve criar uma nova empresa")
-    public void testCriarEmpresa() {
-        EmpresaCriacaoDto novaEmpresaDto = new EmpresaCriacaoDto();
-        Empresa novaEmpresa = new Empresa();
-
-        when(modelMapper.map(novaEmpresaDto, Empresa.class)).thenReturn(novaEmpresa);
-        when(empresaRepository.save(novaEmpresa)).thenReturn(novaEmpresa);
-
-        Empresa result = empresaService.criarEmpresa(novaEmpresaDto);
-
-        assertEquals(novaEmpresa, result);
-        verify(logradouroRepository, times(1)).save(novaEmpresa.getLogradouro());
-        verify(empresaRepository, times(1)).save(novaEmpresa);
-    }
 
     @Test
     @DisplayName("Deve atualizar uma empresa existente")

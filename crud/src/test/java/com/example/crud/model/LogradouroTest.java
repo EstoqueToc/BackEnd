@@ -12,112 +12,96 @@ public class LogradouroTest {
     @DisplayName("Deve retornar corretamente a rua")
     void getRua() {
         Logradouro logradouro = new Logradouro();
-        logradouro.setRua("Rua das Flores");
-        assertEquals("Rua das Flores", logradouro.getRua());
+        logradouro.setRuaLogradouro("Rua das Flores");
+        assertEquals("Rua das Flores", logradouro.getRuaLogradouro());
     }
 
     @Test
     @DisplayName("Deve retornar corretamente o número")
     void getNumero() {
         Logradouro logradouro = new Logradouro();
-        logradouro.setNumero("123");
-        assertEquals("123", logradouro.getNumero());
+        logradouro.setNumeroLogradouro("123");
+        assertEquals("123", logradouro.getNumeroLogradouro());
     }
 
     @Test
     @DisplayName("Deve retornar corretamente o complemento")
     void getComplemento() {
         Logradouro logradouro = new Logradouro();
-        logradouro.setComplemento("Apto 101");
-        assertEquals("Apto 101", logradouro.getComplemento());
+        logradouro.setComplementoLogradouro("Apto 101");
+        assertEquals("Apto 101", logradouro.getComplementoLogradouro());
     }
 
     @Test
     @DisplayName("Deve retornar corretamente a cidade")
     void getCidade() {
         Logradouro logradouro = new Logradouro();
-        logradouro.setCidade("São Paulo");
-        assertEquals("São Paulo", logradouro.getCidade());
+        logradouro.setCidadeLogradouro("São Paulo");
+        assertEquals("São Paulo", logradouro.getCidadeLogradouro());
     }
 
     @Test
     @DisplayName("Deve retornar corretamente o estado")
     void getEstado() {
         Logradouro logradouro = new Logradouro();
-        logradouro.setEstado("SP");
-        assertEquals("SP", logradouro.getEstado());
+        logradouro.setEstadoLogradouro("SP");
+        assertEquals("SP", logradouro.getEstadoLogradouro());
     }
 
     @Test
     @DisplayName("Deve retornar corretamente o CEP")
     void getCep() {
         Logradouro logradouro = new Logradouro();
-        logradouro.setCep("01001-000");
-        assertEquals("01001-000", logradouro.getCep());
-    }
-
-    @Test
-    @DisplayName("Deve retornar corretamente o país")
-    void getPais() {
-        Logradouro logradouro = new Logradouro();
-        logradouro.setPais("Brasil");
-        assertEquals("Brasil", logradouro.getPais());
+        logradouro.setCepLogradouro("01001-000");
+        assertEquals("01001-000", logradouro.getCepLogradouro());
     }
 
     @Test
     @DisplayName("Deve definir corretamente a rua")
     void setRua() {
         Logradouro logradouro = new Logradouro();
-        logradouro.setRua("Avenida Paulista");
-        assertEquals("Avenida Paulista", logradouro.getRua());
+        logradouro.setRuaLogradouro("Avenida Paulista");
+        assertEquals("Avenida Paulista", logradouro.getRuaLogradouro());
     }
 
     @Test
     @DisplayName("Deve definir corretamente o número")
     void setNumero() {
         Logradouro logradouro = new Logradouro();
-        logradouro.setNumero("456");
-        assertEquals("456", logradouro.getNumero());
+        logradouro.setNumeroLogradouro("456");
+        assertEquals("456", logradouro.getNumeroLogradouro());
     }
 
     @Test
     @DisplayName("Deve definir corretamente o complemento")
     void setComplemento() {
         Logradouro logradouro = new Logradouro();
-        logradouro.setComplemento("Bloco B");
-        assertEquals("Bloco B", logradouro.getComplemento());
+        logradouro.setComplementoLogradouro("Bloco B");
+        assertEquals("Bloco B", logradouro.getComplementoLogradouro());
     }
 
     @Test
     @DisplayName("Deve definir corretamente a cidade")
     void setCidade() {
         Logradouro logradouro = new Logradouro();
-        logradouro.setCidade("Rio de Janeiro");
-        assertEquals("Rio de Janeiro", logradouro.getCidade());
+        logradouro.setCidadeLogradouro("Rio de Janeiro");
+        assertEquals("Rio de Janeiro", logradouro.getCidadeLogradouro());
     }
 
     @Test
     @DisplayName("Deve definir corretamente o estado")
     void setEstado() {
         Logradouro logradouro = new Logradouro();
-        logradouro.setEstado("RJ");
-        assertEquals("RJ", logradouro.getEstado());
+        logradouro.setEstadoLogradouro("RJ");
+        assertEquals("RJ", logradouro.getEstadoLogradouro());
     }
 
     @Test
     @DisplayName("Deve definir corretamente o CEP")
     void setCep() {
         Logradouro logradouro = new Logradouro();
-        logradouro.setCep("20000-000");
-        assertEquals("20000-000", logradouro.getCep());
-    }
-
-    @Test
-    @DisplayName("Deve definir corretamente o país")
-    void setPais() {
-        Logradouro logradouro = new Logradouro();
-        logradouro.setPais("Brasil");
-        assertEquals("Brasil", logradouro.getPais());
+        logradouro.setCepLogradouro("20000-000");
+        assertEquals("20000-000", logradouro.getCepLogradouro());
     }
 
     @Test
@@ -127,11 +111,11 @@ public class LogradouroTest {
         String endereco = "Rua das Acácias, 45, Casa, Curitiba - PR";
         logradouro.setEndereco(endereco);
 
-        assertEquals("Rua das Acácias", logradouro.getRua());
-        assertEquals("45", logradouro.getNumero());
-        assertEquals("Casa", logradouro.getComplemento());
-        assertEquals("Curitiba", logradouro.getCidade());
-        assertEquals("PR", logradouro.getEstado());
+        assertEquals("Rua das Acácias", logradouro.getRuaLogradouro());
+        assertEquals("45", logradouro.getNumeroLogradouro());
+        assertEquals("Casa", logradouro.getComplementoLogradouro());
+        assertEquals("Curitiba", logradouro.getCidadeLogradouro());
+        assertEquals("PR", logradouro.getEstadoLogradouro());
     }
 
     @Test
@@ -141,10 +125,10 @@ public class LogradouroTest {
         String enderecoInvalido = "Formato inválido de endereço";
         logradouro.setEndereco(enderecoInvalido);
 
-        assertNull(logradouro.getRua());
-        assertNull(logradouro.getNumero());
-        assertNull(logradouro.getComplemento());
-        assertNull(logradouro.getCidade());
-        assertNull(logradouro.getEstado());
+        assertNull(logradouro.getRuaLogradouro());
+        assertNull(logradouro.getNumeroLogradouro());
+        assertNull(logradouro.getComplementoLogradouro());
+        assertNull(logradouro.getCidadeLogradouro());
+        assertNull(logradouro.getEstadoLogradouro());
     }
 }
