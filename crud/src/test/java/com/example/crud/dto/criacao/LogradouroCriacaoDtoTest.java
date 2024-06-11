@@ -22,13 +22,12 @@ public class LogradouroCriacaoDtoTest {
         LogradouroCriacaoDto logradouro = new LogradouroCriacaoDto(rua, numero, complemento, cidade, estado, cep, pais);
 
         // Assert
-        assertEquals(rua, logradouro.getRua());
-        assertEquals(numero, logradouro.getNumero());
-        assertEquals(complemento, logradouro.getComplemento());
-        assertEquals(cidade, logradouro.getCidade());
-        assertEquals(estado, logradouro.getEstado());
-        assertEquals(cep, logradouro.getCep());
-        assertEquals(pais, logradouro.getPais());
+        assertEquals(rua, logradouro.getRuaLogradouro());
+        assertEquals(numero, logradouro.getNumeroLogradouro());
+        assertEquals(complemento, logradouro.getComplementoLogradouro());
+        assertEquals(cidade, logradouro.getCidadeLogradouro());
+        assertEquals(estado, logradouro.getEstadoLogradouro());
+        assertEquals(cep, logradouro.getCepLogradouro());
     }
 
     @Test

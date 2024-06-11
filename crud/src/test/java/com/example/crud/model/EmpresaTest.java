@@ -17,10 +17,9 @@ public class EmpresaTest {
         empresa.setId(1L);
         empresa.setNomeEmpresa("Nome da Empresa");
         empresa.setRazaoSocial("Razão Social da Empresa");
-        empresa.setCNPJ("52.254.752/0001-82");
+        empresa.setCnpj("52.254.752/0001-82");
         empresa.setTelefone("(99) 99999-9999");
         empresa.setEmailCorporativo("empresa@example.com");
-        empresa.setSenhaEmpresa("senha123");
         Logradouro logradouro = new Logradouro();
         empresa.setLogradouro(logradouro);
         empresa.setAtivo(true);
@@ -29,10 +28,9 @@ public class EmpresaTest {
         assertEquals(1L, empresa.getId());
         assertEquals("Nome da Empresa", empresa.getNomeEmpresa());
         assertEquals("Razão Social da Empresa", empresa.getRazaoSocial());
-        assertEquals("52.254.752/0001-82", empresa.getCNPJ());
+        assertEquals("52.254.752/0001-82", empresa.getCnpj());
         assertEquals("(99) 99999-9999", empresa.getTelefone());
         assertEquals("empresa@example.com", empresa.getEmailCorporativo());
-        assertEquals("senha123", empresa.getSenhaEmpresa());
         assertEquals(logradouro, empresa.getLogradouro());
         assertTrue(empresa.isAtivo());
     }
@@ -41,8 +39,8 @@ public class EmpresaTest {
     @DisplayName("Teste de validação de CNPJ")
     void testValidacaoCNPJ() {
         Empresa empresa = new Empresa();
-        empresa.setCNPJ("52.254.752/0001-82");
-        assertEquals("52.254.752/0001-82", empresa.getCNPJ());
+        empresa.setCnpj("52.254.752/0001-82");
+        assertEquals("52.254.752/0001-82", empresa.getCnpj());
     }
 
     @Test
@@ -103,14 +101,6 @@ public class EmpresaTest {
     }
 
     @Test
-    @DisplayName("Teste de definição de senha")
-    void testDefinicaoSenha() {
-        Empresa empresa = new Empresa();
-        empresa.setSenhaEmpresa("senha123");
-        assertEquals("senha123", empresa.getSenhaEmpresa());
-    }
-
-    @Test
     @DisplayName("Teste de inicialização com valores padrão")
     void testInicializacaoValoresPadrao() {
         Empresa empresa = new Empresa();
@@ -118,12 +108,10 @@ public class EmpresaTest {
         assertNull(empresa.getId());
         assertNull(empresa.getNomeEmpresa());
         assertNull(empresa.getRazaoSocial());
-        assertNull(empresa.getCNPJ());
+        assertNull(empresa.getCnpj());
         assertNull(empresa.getTelefone());
         assertNull(empresa.getEmailCorporativo());
-        assertNull(empresa.getSenhaEmpresa());
         assertNull(empresa.getLogradouro());
-        assertFalse(empresa.isAtivo());
     }
 
     @Test

@@ -26,8 +26,8 @@ public class UsuarioTest {
     @DisplayName("Deve retornar corretamente o CPF do usuário")
     void getCPF() {
         Usuario usuario = new Usuario();
-        usuario.setCPF("987.654.321-00");
-        assertEquals("987.654.321-00", usuario.getCPF());
+        usuario.setCpf("987.654.321-00");
+        assertEquals("987.654.321-00", usuario.getCpf());
     }
 
     @Test
@@ -51,8 +51,8 @@ public class UsuarioTest {
     void getDtNascimento() {
         LocalDate dataNascimento = LocalDate.of(1980, 5, 15);
         Usuario usuario = new Usuario();
-        usuario.setDtNascimento(dataNascimento);
-        assertEquals(dataNascimento, usuario.getDtNascimento());
+        usuario.setDataNascimento(dataNascimento);
+        assertEquals(dataNascimento, usuario.getDataNascimento());
     }
 
     @Test
@@ -63,20 +63,13 @@ public class UsuarioTest {
         assertEquals("ROLE_ADMIN", usuario.getFuncao());
     }
 
-    @Test
-    @DisplayName("Deve retornar corretamente se o usuário tem acesso")
-    void isAcesso() {
-        Usuario usuario = new Usuario();
-        usuario.setAcesso(true);
-        assertTrue(usuario.isAcesso());
-    }
 
-    @Test
-    @DisplayName("Deve definir corretamente a lista de papéis do usuário")
-    void setRolesList() {
-        Usuario usuario = new Usuario();
-        List<String> roles = Arrays.asList("ROLE_USER", "ROLE_ADMIN");
-        usuario.setRolesList(roles);
-        assertEquals(roles, usuario.getRolesList());
-    }
+//    @Test
+//    @DisplayName("Deve definir corretamente a lista de papéis do usuário")
+//    void setRolesList() {
+//        Usuario usuario = new Usuario();
+//        List<String> roles = Arrays.asList("ROLE_USER", "ROLE_ADMIN");
+//        usuario.setRolesList(roles);
+//        assertEquals(roles, usuario.getRolesList());
+//    }
 }

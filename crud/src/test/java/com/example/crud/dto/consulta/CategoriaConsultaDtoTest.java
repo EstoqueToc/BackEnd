@@ -15,14 +15,14 @@ public class CategoriaConsultaDtoTest {
         Categoria categoria = new Categoria();
         categoria.setId(1L);
         categoria.setNome("Eletrônicos");
-        categoria.setDescricao("Categoria para produtos eletrônicos");
+
 
         CategoriaConsultaDto dto = new CategoriaConsultaDto(categoria);
 
         assertNotNull(dto);
         assertEquals(1L, dto.getId());
         assertEquals("Eletrônicos", dto.getNome());
-        assertEquals("Categoria para produtos eletrônicos", dto.getDescricao());
+
     }
 
     @Test
@@ -30,17 +30,14 @@ public class CategoriaConsultaDtoTest {
         CategoriaConsultaDto dto1 = new CategoriaConsultaDto();
         dto1.setId(1L);
         dto1.setNome("Eletrônicos");
-        dto1.setDescricao("Categoria para produtos eletrônicos");
 
         CategoriaConsultaDto dto2 = new CategoriaConsultaDto();
         dto2.setId(1L);
         dto2.setNome("Eletrônicos");
-        dto2.setDescricao("Categoria para produtos eletrônicos");
 
         CategoriaConsultaDto dto3 = new CategoriaConsultaDto();
         dto3.setId(2L);
         dto3.setNome("Informática");
-        dto3.setDescricao("Categoria para produtos de informática");
 
         assertEquals(dto1, dto2);
         assertNotEquals(dto1, dto3);

@@ -22,21 +22,20 @@ public class UsuarioCriacaoDtoTest {
 
         UsuarioCriacaoDto usuario = new UsuarioCriacaoDto();
         usuario.setNome(nome);
-        usuario.setCPF(cpf);
+        usuario.setCpf(cpf);
         usuario.setEmail(email);
         usuario.setSenha(senha);
-        usuario.setDtNascimento(dtNascimento);
+        usuario.setDataNascimento(dtNascimento);
         usuario.setFuncao(funcao);
-        usuario.setAcesso(acesso);
+
 
         assertNotNull(usuario);
         assertEquals(nome, usuario.getNome());
-        assertEquals(cpf, usuario.getCPF());
+        assertEquals(cpf, usuario.getCpf());
         assertEquals(email, usuario.getEmail());
         assertEquals(senha, usuario.getSenha());
-        assertEquals(dtNascimento, usuario.getDtNascimento());
+        assertEquals(dtNascimento, usuario.getDataNascimento());
         assertEquals(funcao, usuario.getFuncao());
-        assertEquals(acesso, usuario.isAcesso());
     }
 
     @Test

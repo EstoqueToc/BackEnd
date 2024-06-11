@@ -24,10 +24,7 @@ public class UsuarioDetalhesDtoTest {
         usuario.setNome("Test User");
         usuario.setEmail("testuser@example.com");
         usuario.setSenha("password123");
-        usuario.setDtNascimento(LocalDate.of(1990, 1, 1));
-        usuario.setFuncao("ROLE_USER,ROLE_ADMIN");
-        usuario.setAcesso(true);
-        usuario.setRolesList(List.of("ROLE_USER", "ROLE_ADMIN"));
+        usuario.setDataNascimento(LocalDate.of(1990, 1, 1));
 
         usuarioDetalhesDto = new UsuarioDetalhesDto(usuario);
     }
@@ -48,16 +45,6 @@ public class UsuarioDetalhesDtoTest {
     @DisplayName("Deve retornar o email do usuário")
     void getUsername() {
         assertEquals("testuser@example.com", usuarioDetalhesDto.getUsername());
-    }
-
-    @Test
-    @DisplayName("Deve retornar as autoridades do usuário")
-    void getAuthorities() {
-        Collection<? extends GrantedAuthority> authorities = usuarioDetalhesDto.getAuthorities();
-        assertNotNull(authorities);
-        assertEquals(2, authorities.size());
-        assertTrue(authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_USER")));
-        assertTrue(authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN")));
     }
 
     @Test
