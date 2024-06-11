@@ -5,14 +5,20 @@ import com.example.crud.Model.Estoque;
 import com.example.crud.Model.Produto;
 import com.example.crud.dto.consultaDto.EstoqueInfo;
 import com.example.crud.dto.consultaDto.FaturamentoMensal;
+import com.example.crud.dto.consultaResposta.ProdutoRespostaDto;
 import com.example.crud.repository.AlertaRepository;
 import com.example.crud.repository.EstoqueRepository;
 import com.example.crud.repository.ProdutoRepository;
+import com.google.gson.reflect.TypeToken;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,18 +39,45 @@ public class EstoqueService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private static final Logger logger = Logger.getLogger(EstoqueService.class.getName());
+    private final ModelMapper modelMapper;
 
-    private Integer getQtdDisponivel(Produto produto) {
+
+    private static final Logger logger = Logger.getLogger(EstoqueService.class.getName());
+    private static final int MAX_ATTEMPTS = 10;
+
+    public Integer getQtdDisponivel(Produto produto) {
         List<Estoque> estoques = estoqueRepository.findByProduto(produto);
         return estoques.stream().mapToInt(Estoque::getQtdDisponivel).sum();
     }
 
+
+
     public ResponseEntity<Integer> getTotalProdutosEmEstoque() {
         List<Produto> produtos = produtoRepository.findAll();
-        int total = produtos.stream().mapToInt(this::getQtdDisponivel).sum();
+
+        if (produtos.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
+
+        int attempts = 0;
+        int total = 0;
+
+        while (attempts < MAX_ATTEMPTS) {
+            total = produtos.stream().mapToInt(this::getQtdDisponivel).sum();
+            if (total > 0) {
+                break;
+            }
+            attempts++;
+        }
+
         return new ResponseEntity<>(total, HttpStatus.OK);
     }
+
+    //    public ResponseEntity<Integer> getTotalProdutosEmEstoque() {
+//        List<Produto> produtos = produtoRepository.findAll();
+//        int total = produtos.stream().mapToInt(this::getQtdDisponivel).sum();
+//        return new ResponseEntity<>(total, HttpStatus.OK);
+//    }
 
     public ResponseEntity<Map<String, Integer>> getProdutosPorCategoria() {
         List<Produto> produtos = produtoRepository.findAll();
@@ -82,6 +115,54 @@ public class EstoqueService {
         return new ResponseEntity<>(produtosPorDataDeValidade, HttpStatus.OK);
     }
 
+    public List<Produto> getProdutosModerados() {
+        Alerta alerta = alertaRepository.findFirstByOrderByIdAsc();
+        int alertaModerado = alerta.getAlertaModerado();
+
+        int attempts = 0;
+        List<Produto> produtosModerados = null;
+
+        while (attempts < MAX_ATTEMPTS) {
+            produtosModerados = produtoRepository.findAll().stream()
+                    .filter(produto -> getQtdDisponivel(produto) <= alertaModerado)
+                    .collect(Collectors.toList());
+            if (produtosModerados != null && !produtosModerados.isEmpty()) {
+                break;
+            }
+            attempts++;
+        }
+
+        logger.info("Produtos moderados encontrados: " + produtosModerados.size());
+        for (Produto produto : produtosModerados) {
+            logger.info("Produto moderado: " + produto.getNomeProduto() + " - Quantidade: " + getQtdDisponivel(produto));
+        }
+        return produtosModerados;
+    }
+
+    public List<Produto> getProdutosCriticos() {
+        Alerta alerta = alertaRepository.findFirstByOrderByIdAsc();
+        int alertaGrave = alerta.getAlertaGrave();
+
+        int attempts = 0;
+        List<Produto> produtosCriticos = null;
+
+        while (attempts < MAX_ATTEMPTS) {
+            produtosCriticos = produtoRepository.findAll().stream()
+                    .filter(produto -> getQtdDisponivel(produto) <= alertaGrave)
+                    .collect(Collectors.toList());
+            if (produtosCriticos != null && !produtosCriticos.isEmpty()) {
+                break;
+            }
+            attempts++;
+        }
+
+        logger.info("Produtos críticos encontrados: " + produtosCriticos.size());
+        for (Produto produto : produtosCriticos) {
+            logger.info("Produto crítico: " + produto.getNomeProduto() + " - Quantidade: " + getQtdDisponivel(produto));
+        }
+        return produtosCriticos;
+    }
+
 //    public List<Produto> getProdutosCriticos() {
 //        List<Produto> produtosCriticos = produtoRepository.findAll().stream()
 //                .filter(produto -> produto.getQtdEstoque() <= 2)
@@ -94,33 +175,33 @@ public class EstoqueService {
 //    }
 
 
-    public List<Produto> getProdutosModerados() {
-        Alerta alerta = alertaRepository.findFirstByOrderByIdAsc();
-        int alertaModerado = alerta.getAlertaModerado();
-
-        List<Produto> produtosModerados = produtoRepository.findAll().stream()
-                .filter(produto -> getQtdDisponivel(produto) <= alertaModerado)
-                .collect(Collectors.toList());
-        logger.info("Produtos moderados encontrados: " + produtosModerados.size());
-        for (Produto produto : produtosModerados) {
-            logger.info("Produto moderado: " + produto.getNomeProduto() + " - Quantidade: " + getQtdDisponivel(produto));
-        }
-        return produtosModerados;
-    }
-
-    public List<Produto> getProdutosCriticos() {
-        Alerta alerta = alertaRepository.findFirstByOrderByIdAsc();
-        int alertaGrave = alerta.getAlertaGrave();
-
-        List<Produto> produtosCriticos = produtoRepository.findAll().stream()
-                .filter(produto -> getQtdDisponivel(produto) <= alertaGrave)
-                .collect(Collectors.toList());
-        logger.info("Produtos críticos encontrados: " + produtosCriticos.size());
-        for (Produto produto : produtosCriticos) {
-            logger.info("Produto crítico: " + produto.getNomeProduto() + " - Quantidade: " + getQtdDisponivel(produto));
-        }
-        return produtosCriticos;
-    }
+//    public List<Produto> getProdutosModerados() {
+//        Alerta alerta = alertaRepository.findFirstByOrderByIdAsc();
+//        int alertaModerado = alerta.getAlertaModerado();
+//
+//        List<Produto> produtosModerados = produtoRepository.findAll().stream()
+//                .filter(produto -> getQtdDisponivel(produto) <= alertaModerado)
+//                .collect(Collectors.toList());
+//        logger.info("Produtos moderados encontrados: " + produtosModerados.size());
+//        for (Produto produto : produtosModerados) {
+//            logger.info("Produto moderado: " + produto.getNomeProduto() + " - Quantidade: " + getQtdDisponivel(produto));
+//        }
+//        return produtosModerados;
+//    }
+//
+//    public List<Produto> getProdutosCriticos() {
+//        Alerta alerta = alertaRepository.findFirstByOrderByIdAsc();
+//        int alertaGrave = alerta.getAlertaGrave();
+//
+//        List<Produto> produtosCriticos = produtoRepository.findAll().stream()
+//                .filter(produto -> getQtdDisponivel(produto) <= alertaGrave)
+//                .collect(Collectors.toList());
+//        logger.info("Produtos críticos encontrados: " + produtosCriticos.size());
+//        for (Produto produto : produtosCriticos) {
+//            logger.info("Produto crítico: " + produto.getNomeProduto() + " - Quantidade: " + getQtdDisponivel(produto));
+//        }
+//        return produtosCriticos;
+//    }
 
     public List<EstoqueInfo> getProdutosComEstoqueAlto(Long empresaId) {
         int limiteEstoqueAlto = 100;

@@ -4,6 +4,7 @@ import com.example.crud.Model.Estoque;
 import com.example.crud.Model.Produto;
 import com.example.crud.dto.consultaDto.EstoqueInfo;
 import com.example.crud.dto.consultaDto.FaturamentoMensal;
+import com.example.crud.dto.consultaResposta.ProdutoRespostaDto;
 import com.example.crud.repository.EstoqueRepository;
 import com.example.crud.repository.ProdutoRepository;
 import com.example.crud.service.usuario.EstoqueService;
@@ -32,13 +33,53 @@ public class EstoqueController {
     private final EstoqueRepository estoqueRepository;
     private final ProdutoRepository produtoRepository;
 
+
+//    @GetMapping("/total")
+//    public ResponseEntity<List<ProdutoRespostaDto>> getTotalProdutosEmEstoque() throws IOException, InterruptedException {
+//        List<ProdutoRespostaDto> response = estoqueService.getTotalProdutosEmEstoque();
+//        verificarEstoqueCritico();
+//        verificarEstoqueModerado();
+//        return status(200).body(response);
+//    }
+
     @GetMapping("/total")
     public ResponseEntity<Integer> getTotalProdutosEmEstoque() throws IOException, InterruptedException {
         ResponseEntity<Integer> response = estoqueService.getTotalProdutosEmEstoque();
-        verificarEstoqueCritico();
-        verificarEstoqueModerado();
+        verificarEstoque(); // Chamando o método de verificação com limite de tentativas
         return response;
     }
+
+    private void verificarEstoque() throws IOException, InterruptedException {
+        List<Produto> produtosCriticos = estoqueService.getProdutosCriticos();
+        for (Produto produto : produtosCriticos) {
+            if (estoqueService.getQtdDisponivel(produto) <= produto.getAlerta().get(0).getAlertaGrave()) {
+                sendSlackMessage("Alerta: Estoque crítico para o produto " + produto.getNomeProduto() + ". Apenas " + produto.getQtdEntrada() + " unidades restantes.");
+            }
+        }
+
+        List<Produto> produtosModerados = estoqueService.getProdutosModerados();
+        for (Produto produto : produtosModerados) {
+            int quantidadeDisponivel = estoqueService.getQtdDisponivel(produto);
+            int alertaGrave = produto.getAlerta().get(0).getAlertaGrave();
+            int alertaModerado = produto.getAlerta().get(0).getAlertaModerado();
+            if (quantidadeDisponivel > alertaGrave && quantidadeDisponivel <= alertaModerado) {
+                sendSlackMessage("Aviso: Estoque moderado para o produto " + produto.getNomeProduto() + ". Apenas " + produto.getQtdEntrada() + " unidades restantes.");
+            }
+        }
+    }
+
+
+//    private void verificarEstoque() throws IOException, InterruptedException {
+//        List<Produto> produtosCriticos = estoqueService.getProdutosCriticos();
+//        for (Produto produto : produtosCriticos) {
+//            sendSlackMessage("Alerta: Estoque crítico para o produto " + produto.getNomeProduto() + ". Apenas " + produto.getQtdEntrada() + " unidades restantes.");
+//        }
+//
+//        List<Produto> produtosModerados = estoqueService.getProdutosModerados();
+//        for (Produto produto : produtosModerados) {
+//            sendSlackMessage("Aviso: Estoque moderado para o produto " + produto.getNomeProduto() + ". Apenas " + produto.getQtdEntrada() + " unidades restantes.");
+//        }
+//    }
 
     @GetMapping("/categoria")
     public ResponseEntity<Map<String, Integer>> getProdutosPorCategoria() throws IOException, InterruptedException {
@@ -71,6 +112,8 @@ public class EstoqueController {
         verificarEstoqueModerado();
         return response;
     }
+
+
 
     private void verificarEstoqueCritico() throws IOException, InterruptedException {
         List<Produto> produtosCriticos = estoqueService.getProdutosCriticos();
