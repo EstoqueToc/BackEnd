@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,7 +27,7 @@ public class ProdutoConsultaDto {
     private Integer qtdEntrada;
     private Categoria categoria;
     private Fornecedor fornecedor;
-    private Alerta alertaEstoque;
+    private List<Alerta> alerta;
 
     public ProdutoConsultaDto(Produto produto) {
         this.id = produto.getId();
@@ -40,7 +41,7 @@ public class ProdutoConsultaDto {
         this.qtdEntrada = produto.getQtdEntrada();
         this.categoria = produto.getCategoria();
         this.fornecedor = produto.getFornecedor();
-        this.alertaEstoque = produto.getAlerta().isEmpty() ? null : produto.getAlerta().get(0);
+        this.alerta = produto.getAlerta().isEmpty() ? null : produto.getAlerta();
     }
 
 }

@@ -37,7 +37,6 @@ public class ProdutoCriacaoDto {
     @PositiveOrZero(message = "Preço de venda deve ser maior ou igual a zero")
     private Double precoVendaProduto;
 
-    @NotNull(message = "Data de entrada é obrigatória")
     private LocalDate dataEntrada;
 
     @NotBlank(message = "Unidade de medida é obrigatória")

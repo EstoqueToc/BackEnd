@@ -123,8 +123,11 @@ public class EstoqueController {
     }
 
     @GetMapping("/informacoes")
-    public ResponseEntity<List<EstoqueInfo>> getInformacoesEstoque(@RequestParam Long empresaId) {
+    public ResponseEntity<List<EstoqueInfo>> getInformacoesEstoque(@RequestParam Long empresaId) throws IOException, InterruptedException {
         List<EstoqueInfo> estoqueInfos = estoqueService.getInformacoesEstoque(empresaId);
+//        verificarEstoqueCritico();
+//        verificarEstoqueModerado();
+
         return ResponseEntity.ok(estoqueInfos);
     }
 
@@ -264,5 +267,15 @@ public class EstoqueController {
     @GetMapping("/produtos/simples/{nome}/{empresaId}")
     public ResponseEntity<List<EstoqueInfo>> getProdutosSimples(@PathVariable String nome, @PathVariable Long empresaId) {
         return ResponseEntity.ok(estoqueService.getProdutosSimples(nome, empresaId));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        Optional<Estoque> estoque = estoqueRepository.findById(id);
+        if (estoque.isEmpty()) {
+            return notFound().build();
+        }
+        estoqueRepository.delete(estoque.get());
+        return ResponseEntity.ok().build();
     }
 }
