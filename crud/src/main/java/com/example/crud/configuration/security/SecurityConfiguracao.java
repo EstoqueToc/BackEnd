@@ -1,7 +1,7 @@
 package com.example.crud.configuration.security;
 
 import com.example.crud.configuration.security.jwt.GerenciadorTokenJwt;
-import com.example.crud.service.usuario.autenticacao.AutenticacaoService;
+import com.example.crud.service.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -58,6 +58,8 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/produtos/csv/produto/**"),
             new AntPathRequestMatcher("/usuarios/csv/usuario**"),
             new AntPathRequestMatcher("/usuarios/cadastro/**"),
+            new AntPathRequestMatcher("/empresas/cadastro/**"),
+            new AntPathRequestMatcher("/empresas/**"),
             new AntPathRequestMatcher("/h2-console/**"),
             new AntPathRequestMatcher("/error/**")
     };

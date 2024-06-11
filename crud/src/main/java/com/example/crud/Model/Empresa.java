@@ -1,13 +1,11 @@
 package com.example.crud.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.br.CNPJ;
+
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -17,34 +15,59 @@ public class Empresa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
-    private String nome;
-    @NotBlank
+
+    private String nomeEmpresa;
+
     private String razaoSocial;
-    @CNPJ
-    @Size(min = 18, max = 18)
-    private String CNPJ; /* 52.254.752/0001-82 */
-    @NotBlank
-    @Size(min = 13, max = 16)
-    private String telefone; /* (99) 99999-9999 | (99)99999-9999 | (99) 9 9999-9999 | 99 99999-9999 | 99 9 9999-9999*/
-    @Email
+
+    private String cnpj;
+
+    private String telefone;
+
     private String emailCorporativo;
+
+    private boolean ativo = true;
+
     @ManyToOne
     private Logradouro logradouro;
 
-    private boolean ativo;
+//    @OneToMany(mappedBy = "produtos")
+//    private List<Produto> produtos;
+
+//    @OneToMany(mappedBy = "empresa")
+//    private List<Alerta> alertas;
 
     public Empresa() {
     }
 
-    public Empresa(Long empresa_id, String nome, String razaoSocial, String CNPJ, String telefone, String email, Logradouro logradouro, boolean ativo) {
-        this.id = empresa_id;
-        this.nome = nome;
-        this.razaoSocial = razaoSocial;
-        this.CNPJ = CNPJ;
-        this.telefone = telefone;
-        this.emailCorporativo = email;
-        this.logradouro = logradouro;
-        this.ativo = ativo;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Empresa empresa = (Empresa) o;
+        return Objects.equals(id, empresa.id) &&
+                Objects.equals(nomeEmpresa, empresa.nomeEmpresa) &&
+                Objects.equals(razaoSocial, empresa.razaoSocial) &&
+                Objects.equals(cnpj, empresa.cnpj) &&
+                Objects.equals(telefone, empresa.telefone) &&
+                Objects.equals(emailCorporativo, empresa.emailCorporativo) &&
+                Objects.equals(ativo, empresa.ativo);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nomeEmpresa, razaoSocial, cnpj, telefone, emailCorporativo, ativo);
+    }
+
+//    public String setNome(String novoNome) {
+//        String nomeAntigo = this.nomeEmpresa;
+//        this.nomeEmpresa = novoNome;
+//        return nomeAntigo;
+//    }
+//
+//    public String getNome() {
+//        return nomeEmpresa;
+//    }
+
+
 }

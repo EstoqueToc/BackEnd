@@ -1,9 +1,6 @@
 package com.example.crud.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +8,10 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -21,47 +22,43 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String nome;
-
-    @CPF
-    @NotBlank
-    private String CPF;
-
-    @Email
-    @NotBlank
+    private String cpf;
     private String email;
-
-
-    @NotBlank
     private String senha;
-
-    @Past
-    @NotNull
-    private LocalDate dtNascimento;
-
-    @NotBlank
+    private LocalDate dataNascimento;
     private String funcao;
+    private int acesso;
+    private int ativo;
 
-    @NotNull
-    private boolean acesso;
+    @ManyToOne
+    private Empresa empresa;
 
+//    @ElementCollection
+//    private List<String> roles;
     public Usuario() {
     }
 
-    public Usuario(Long id, String nome, String CPF, String email, String senha, LocalDate dtNascimento, String funcao, boolean acesso) {
+    public Usuario(Long id, String nome, String cpf, String email, String senha, LocalDate dataNascimento, String funcao, int acesso, int ativo, Empresa empresa, String roles) {
         this.id = id;
         this.nome = nome;
-        this.CPF = CPF;
+        this.cpf = cpf;
         this.email = email;
         this.senha = senha;
-        this.dtNascimento = dtNascimento;
+        this.dataNascimento = dataNascimento;
         this.funcao = funcao;
         this.acesso = acesso;
+        this.ativo = ativo;
+        this.empresa = empresa;
+//        this.roles = Arrays.asList(roles.split(","));
     }
 
-    public long getIdade() {
-        LocalDate hoje = LocalDate.now();
-        return ChronoUnit.YEARS.between(dtNascimento, hoje);
-    }
+//    public List<String> getRolesList() {
+//        return roles;
+//    }
+
+//    public void setRolesList(List<String> rolesList) {
+//        this.roles = rolesList;
+//    }
+
 }

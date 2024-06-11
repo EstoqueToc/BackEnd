@@ -1,49 +1,62 @@
 package com.example.crud.dto.criacaoDto;
 
+import com.example.crud.Model.Alerta;
 import com.example.crud.Model.Categoria;
+import com.example.crud.Model.Empresa;
 import com.example.crud.Model.Fornecedor;
-import jakarta.persistence.ManyToOne;
+import com.example.crud.Model.Empresa;
+import jakarta.validation.constraints.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
+@Setter
+@AllArgsConstructor
 public class ProdutoCriacaoDto {
 
-    @NotBlank
-    private String nome;
+    @NotBlank(message = "Nome do produto é obrigatório")
+    private String nomeProduto;
 
-    @NotNull
-    @PositiveOrZero
-    private Double precoDeVenda;
+    @NotBlank(message = "Descrição é obrigatória")
+    private String descricaoProduto;
 
-    @NotNull
-    @PositiveOrZero
-    private double precoDeCompra;
+    private LocalDate dataValidade;
 
-    @NotNull
-    private LocalDate dataDeEntrada;
+    @NotNull(message = "Preço de compra é obrigatório")
+    @PositiveOrZero(message = "Preço de compra deve ser maior ou igual a zero")
+    private double precoCompraProduto;
 
-    @NotBlank
-    private String unidadeDeMedida;
+    @NotNull(message = "Preço de venda é obrigatório")
+    @PositiveOrZero(message = "Preço de venda deve ser maior ou igual a zero")
+    private Double precoVendaProduto;
 
-    @NotBlank
-    private String descricao;
+    private LocalDate dataEntrada;
 
-    @ManyToOne
+    @NotBlank(message = "Unidade de medida é obrigatória")
+    private String unidadeMedida;
+
+    @NotNull(message = "Quantidade de Entrada é obrigatória")
+    @Positive(message = "Quantidade de Entrada deve ser maior que zero")
+    private Integer qtdEntrada;
+
+    @NotNull(message = "Categoria é obrigatória")
     private Categoria categoria;
 
-    @ManyToOne
+    @NotNull(message = "Fornecedor é obrigatório")
     private Fornecedor fornecedor;
 
-    @NotNull
-    @PositiveOrZero
-    private Integer qtdEstoque;
+    @NotNull(message = "Empresa é obrigatória")
+    private Empresa empresa;
 
-    private LocalDate dataDeValidade;
+    private List<Alerta> alerta;
 
-
+    public ProdutoCriacaoDto() {
+    }
 }

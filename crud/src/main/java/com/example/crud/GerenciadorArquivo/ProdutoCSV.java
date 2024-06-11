@@ -30,21 +30,21 @@ public class ProdutoCSV {
         // Bloco try-catch para gravar o arquivo
         try {
             saida.format("%-5S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S\n",
-                    "ID", "Nome", "Preço de Venda", "Preço de Compra", "Data de Entrada", "Unidade de Medida", "Descrição", "Categoria", "Fornecedor", "Quantidade em Estoque", "Data de Validade");
+                    "ID", "Nome", "Preço de Venda", "Preço de Compra", "Data de Entrada", "Unidade de Medida", "Descrição", "Categoria", "Fornecedor", "Quantidade de entrada", "Data de Validade");
             for (int i = 0; i < lista.getTamanho(); i++) {
                 Produto produto = lista.getElemento(i);
                 saida.format("%05d;%-20s;%20.2f;%20.2f;%-20s;%-20s;%-20s;%-20s;%-20s;%20d;%-20s\n",
                         produto.getId(),
-                        produto.getNome(),
-                        produto.getPrecoDeVenda(),
-                        produto.getPrecoDeCompra(),
-                        produto.getDataDeEntrada(),
-                        produto.getUnidadeDeMedida(),
-                        produto.getDescricao(),
+                        produto.getNomeProduto(),
+                        produto.getPrecoVendaProduto(),
+                        produto.getPrecoCompraProduto(),
+                        produto.getDataEntrada(),
+                        produto.getUnidadeMedida(),
+                        produto.getDescricaoProduto(),
                         produto.getCategoria().getNome(),
-                        produto.getFornecedor().getNome(),
-                        produto.getQtdEstoque(),
-                        produto.getDataDeValidade());
+                        produto.getFornecedor().getRazaoSocial(),
+                        produto.getQtdEntrada(),
+                        produto.getDataValidade());
             }
         } catch (FormatterClosedException erro) {
             System.out.println("Erro ao gravar o arquivo");

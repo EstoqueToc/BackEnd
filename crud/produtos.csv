@@ -1,2 +1,4 @@
-ID   ;NOME                ;PREÇO DE VENDA      ;PREÇO DE COMPRA     ;DATA DE ENTRADA     ;UNIDADE DE MEDIDA   ;DESCRIÇÃO           ;CATEGORIA           ;FORNECEDOR          ;QUANTIDADE EM ESTOQUE;DATA DE VALIDADE    
-00003;nome_883edcd58be0   ;                0,00;                0,00;2024-05-07          ;unidadeDeMedida_94a7d4dccc5b;descricao_9ef6b8aac7b6;nome_f90bfd468df5   ;nome_3aff72e0873b   ;                   0;2024-05-07          
+ID   ;NOME                ;PREÇO DE VENDA      ;PREÇO DE COMPRA     ;DATA DE ENTRADA     ;UNIDADE DE MEDIDA   ;DESCRIÇÃO           ;CATEGORIA           ;FORNECEDOR          ;QUANTIDADE DE ENTRADA;DATA DE VALIDADE    
+00001;Produto Teste Editado 1;               30,00;               20,00;2024-06-11          ;Unidade             ;Descrição Teste     ;Teste               ;Fornecedor Teste    ;                  30;2024-06-19          
+00002;Produto Teste Editado;               30,00;               20,00;2024-06-11          ;Unidade             ;Descrição Teste     ;Teste               ;Fornecedor Teste    ;                  15;2024-06-19          
+00003;Farinha Dona Benta  ;               12,99;               10,00;2024-06-11          ;kg                  ;Farinha da Dona Benta;Farinhas            ;Caixa               ;                  10;2024-08-12          

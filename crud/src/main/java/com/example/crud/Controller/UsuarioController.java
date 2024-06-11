@@ -4,11 +4,12 @@ import com.example.crud.GerenciadorArquivo.UsuarioCSV;
 import com.example.crud.Helpers.ListaObj;
 import com.example.crud.Model.Usuario;
 import com.example.crud.dto.consultaDto.UsuarioConsultaDto;
+import com.example.crud.dto.consultaDto.UsuarioSimplesDto;
 import com.example.crud.dto.criacaoDto.UsuarioCriacaoDto;
 import com.example.crud.repository.UsuarioRepository;
-import com.example.crud.service.usuario.UsuarioService;
-import com.example.crud.service.usuario.autenticacao.dto.UsuarioLoginDto;
-import com.example.crud.service.usuario.autenticacao.dto.UsuarioTokenDto;
+import com.example.crud.service.UsuarioService;
+import com.example.crud.service.dto.UsuarioLoginDto;
+import com.example.crud.service.dto.UsuarioTokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,18 +31,14 @@ import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/usuarios")
+@RequiredArgsConstructor
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioRepository repository;
+    private final UsuarioRepository repository;
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
-    private UsuarioCSV usuarioCSV;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     @Operation(summary = "Lista todos os usuários")
     @ApiResponses(value = {
@@ -48,15 +46,20 @@ public class UsuarioController {
             @ApiResponse(responseCode = "204", description = "Nenhum usuário disponível", content = @Content)
     })
     @GetMapping
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<UsuarioConsultaDto>> listar() {
-        List<UsuarioConsultaDto> lista = repository.findAll()
-                .stream()
-                .map(usuario -> modelMapper.map(usuario, UsuarioConsultaDto.class))
-                .collect(Collectors.toList());
+        return status(200).body(usuarioService.getAll());
+    }
 
-        return lista.isEmpty()
-                ? status(204).build()
-                : status(200).body(lista);
+    @Operation(summary = "Lista todos os usuários de uma Forma Simples")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuários encontrados"),
+            @ApiResponse(responseCode = "204", description = "Nenhum usuário disponível", content = @Content)
+    })
+    @GetMapping("/simples/{ideEmpresa}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<UsuarioSimplesDto>> listarSimples(@Parameter(description = "ID da empresa") @PathVariable Long ideEmpresa){
+        return status(200).body(usuarioService.getSimples(ideEmpresa));
     }
 
     @Operation(summary = "Pesquisa um usuário pelo índice na lista")
@@ -65,11 +68,28 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
     })
     @GetMapping("/{indice}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<UsuarioConsultaDto> pesquisarUsuario(
             @Parameter(description = "Índice do usuário na lista") @PathVariable Long indice) {
         return repository.findById(indice)
                 .map(usuario -> status(200).body(modelMapper.map(usuario, UsuarioConsultaDto.class)))
                 .orElse(status(404).build());
+    }
+
+    @Operation(summary = "Pesquisa um usuário pelo nome na lista")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
+    })
+    @GetMapping("/simples/{nome}/{ideEmpresa}")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<UsuarioSimplesDto>> pesquisarUsuarioNome(
+            @PathVariable String nome,
+            @PathVariable Long ideEmpresa) {
+        List<UsuarioSimplesDto> lista = usuarioService.getSimplesNome(nome, ideEmpresa);
+        return lista.isEmpty()
+                ? ResponseEntity.status(404).build()
+                : ResponseEntity.ok(lista);
     }
 
     @Operation(summary = "Cadastra um novo usuário")
@@ -92,16 +112,12 @@ public class UsuarioController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content(schema = @Schema(hidden = true)))
     })
     @PutMapping("/{indice}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<UsuarioConsultaDto> atualizarUsuario(
             @Parameter(description = "Índice do usuário na lista") @PathVariable Long indice,
             @Parameter(description = "Objeto do usuário com dados atualizados") @RequestBody @Valid UsuarioCriacaoDto usuarioAtualizadoDto) {
-        if (repository.existsById(indice)) {
-            Usuario usuarioAtualizado = modelMapper.map(usuarioAtualizadoDto, Usuario.class);
-            usuarioAtualizado.setId(indice);
-            repository.save(usuarioAtualizado);
-            return status(200).body(modelMapper.map(usuarioAtualizado, UsuarioConsultaDto.class));
-        }
-        return status(404).build();
+        usuarioService.atualizar(indice, usuarioAtualizadoDto);
+        return status(200).body(modelMapper.map(repository.findById(indice).get(), UsuarioConsultaDto.class));
     }
 
     @Operation(summary = "Remove um usuário da lista pelo índice")
@@ -110,6 +126,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
     })
     @DeleteMapping("/{indice}")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Void> removerUsuario(
             @Parameter(description = "Índice do usuário na lista para remoção") @PathVariable Long indice) {
         if (repository.existsById(indice)) {
@@ -125,6 +142,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "204", description = "Nenhum usuário para listar", content = @Content)
     })
     @GetMapping("/lista-usuario")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<UsuarioConsultaDto>> listarUsuariosOrdenados() {
         List<UsuarioConsultaDto> listaOrdenada = repository.findAllByOrderByNomeAsc()
                 .stream()
@@ -142,6 +160,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "204", description = "Nenhum usuário para ordenar por função", content = @Content)
     })
     @GetMapping("/lista-funcao")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<List<UsuarioConsultaDto>> listarUsuariosPorCargo() {
         List<UsuarioConsultaDto> usuarios = repository.findAllByOrderByFuncaoAsc()
                 .stream()
@@ -175,6 +194,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "400", description = "Erro ao gravar arquivo CSV de Usuário", content = @Content)
     })
     @PostMapping("/csv/usuario")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<String> gravaArquivoCsvUsuario() {
         ListaObj<Usuario> lista = new ListaObj<>(100);
         lista.adicionaLista(repository.findAll());
@@ -188,6 +208,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "400", description = "Erro ao ler arquivo CSV de Usuário", content = @Content)
     })
     @GetMapping("/csv/usuario")
+    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<String> leArquivoCsvUsuario() {
         UsuarioCSV.lerArquivoCsv("usuarios");
         return ok("Lendo arquivo CSV de Usuário");

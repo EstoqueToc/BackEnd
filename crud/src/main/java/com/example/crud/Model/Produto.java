@@ -2,67 +2,48 @@ package com.example.crud.Model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@Table(name = "produtos")
 public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    private String nome;
-
-    @NotNull
-    @PositiveOrZero
-    private Double precoDeVenda;
-
-    @NotNull
-    @PositiveOrZero
-    private double precoDeCompra;
-
-    @NotNull
-    private LocalDate dataDeEntrada;
-
-    @NotBlank
-    private String unidadeDeMedida;
-    //se vai ser em caixa, unidade, litros etc
-
-    @NotBlank
-    private String descricao;
+    private String nomeProduto;
+    private String descricaoProduto;
+    private LocalDate dataValidade;
+    private Double precoCompraProduto;
+    private Double precoVendaProduto;
+    private LocalDate dataEntrada;
+    private String unidadeMedida;
+    private Integer qtdEntrada;
 
     @ManyToOne
+    @JoinColumn(name = "empresa_id", nullable = false)
+    private Empresa empresa;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
     @ManyToOne
+    @JoinColumn(name = "fornecedor_id", nullable = false)
     private Fornecedor fornecedor;
 
-    @NotNull
-    @PositiveOrZero
-    private Integer qtdEstoque;
-
-    private LocalDate dataDeValidade;
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Alerta> alerta;
 
     public Produto() {
-    }
-
-    public Produto(Long id, String nome, Double precoDeVenda, double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, LocalDate dataDeValidade) {
-        this.id = id;
-        this.nome = nome;
-        this.precoDeVenda = precoDeVenda;
-        this.precoDeCompra = precoDeCompra;
-        this.dataDeEntrada = dataDeEntrada;
-        this.unidadeDeMedida = unidadeDeMedida;
-        this.descricao = descricao;
-        this.categoria = categoria;
-        this.fornecedor = fornecedor;
-        this.qtdEstoque = qtdEstoque;
-        this.dataDeValidade = dataDeValidade;
     }
 }

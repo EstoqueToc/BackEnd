@@ -31,18 +31,19 @@ public class UsuarioCSV {
         try {
             // Cabeçalho
             saida.format("%-5S;%-20S;%-15S;%-30S;%-15S;%-15S;%-15S\n",
-                    "ID", "Nome", "CPF", "Email", "Senha", "Tipo", "Status");
+                    "ID", "Nome", "CPF", "Email", "Senha", "Função", "Acesso");
+
             for (int i = 0; i < lista.getTamanho(); i++) {
                 // Recupera um elemento da lista e formata aqui:
                 Usuario usuario = lista.getElemento(i);
                 saida.format("%-5d;%-20s;%-15s;%-30s;%-15s;%-15s;%-15s\n",
                         usuario.getId(),
                         usuario.getNome(),
-                        usuario.getCPF(),
+                        usuario.getCpf(),
                         usuario.getEmail(),
                         usuario.getSenha(),
                         usuario.getFuncao(),
-                        usuario.isAcesso());
+                        usuario.getAcesso());
             }
         } catch (FormatterClosedException erro) {
             System.out.println("Erro ao gravar o arquivo");
