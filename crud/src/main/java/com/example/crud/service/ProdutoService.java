@@ -1,11 +1,11 @@
 package com.example.crud.service;
 
 import com.example.crud.Model.Alerta;
+import com.example.crud.Model.Estoque;
 import com.example.crud.Model.Produto;
 import com.example.crud.dto.consultaResposta.ProdutoRespostaDto;
 import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
-import com.example.crud.repository.AlertaRepository;
-import com.example.crud.repository.ProdutoRepository;
+import com.example.crud.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service;
 import com.example.crud.Model.Produto;
 import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
 import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
-import com.example.crud.repository.CategoriaRepository;
-import com.example.crud.repository.FornecedorRepository;
 import com.example.crud.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,34 +38,52 @@ public class ProdutoService {
 
     private final AlertaRepository alertaRepository;
 
+    private final EstoqueRepository estoqueRepository;
+
     private final ModelMapper mapper;
 
+    @Transactional
     public ProdutoRespostaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {
         Produto novoProduto = mapper.map(novoProdutoDto, Produto.class);
 
-        // Configurar e salvar os alertas
-        if (novoProduto.getAlertaEstoque() != null) {
-            for (Alerta alerta : novoProduto.getAlertaEstoque()) {
+        // Validar se categoria e fornecedor existem
+        var categoria = categoriaRepository.findById(novoProdutoDto.getCategoria().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada"));
+
+        var fornecedor = fornecedorRepository.findById(novoProdutoDto.getFornecedor().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Fornecedor não encontrado"));
+
+        // Associar categoria e fornecedor ao produto
+        novoProduto.setCategoria(categoria);
+        novoProduto.setFornecedor(fornecedor);
+
+        // Configurar e salvar os alertas se existirem
+        if (novoProduto.getAlerta() != null) {
+            for (Alerta alerta : novoProduto.getAlerta()) {
                 alerta.setProduto(novoProduto);
             }
+            novoProduto.getAlerta().forEach(alertaRepository::save); // Salvar alertas
         }
 
-        var categoria = categoriaRepository.findById(novoProdutoDto.getCategoria().getId());
-        var fornecedor = fornecedorRepository.findById(novoProdutoDto.getFornecedor().getId());
-        if (categoria.isEmpty()) {
-            throw new IllegalArgumentException("Categoria não encontrada");
-        }
-        if (fornecedor.isEmpty()) {
-            throw new IllegalArgumentException("Fornecedor não encontrado");
-        }
-        novoProduto.setCategoria(categoria.get());
-        novoProduto.setFornecedor(fornecedor.get());
+        novoProduto.setDataEntrada(LocalDate.now());
 
         // Salvar o produto (e os alertas devido ao CascadeType.ALL)
         Produto produtoSalvo = repository.save(novoProduto);
 
+        adicionarNoEstoque(produtoSalvo, novoProdutoDto.getQtdEntrada());
+
         // Mapear a entidade salva para o DTO de resposta
         return mapper.map(produtoSalvo, ProdutoRespostaDto.class);
+    }
+
+    private void adicionarNoEstoque(Produto produto, int qtdEntrada) {
+        Estoque estoque = new Estoque();
+        estoque.setProduto(produto);
+        estoque.setEmpresa(produto.getEmpresa());
+        estoque.setQtdDisponivel(qtdEntrada);
+        estoque.setQtdDisponivel(qtdEntrada);
+
+        estoqueRepository.save(estoque);
     }
 
 //    public ProdutoConsultaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {

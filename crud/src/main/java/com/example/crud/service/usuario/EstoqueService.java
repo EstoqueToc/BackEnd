@@ -296,4 +296,6 @@ public class EstoqueService {
         var pesquisa = estoqueRepository.findInformacoesSimples(nome, empresaId);
         return pesquisa;
     }
+
+
 }

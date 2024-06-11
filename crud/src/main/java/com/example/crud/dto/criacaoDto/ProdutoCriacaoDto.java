@@ -25,7 +25,7 @@ public class ProdutoCriacaoDto {
     private String nomeProduto;
 
     @NotBlank(message = "Descrição é obrigatória")
-    private String descricao;
+    private String descricaoProduto;
 
     private LocalDate dataValidade;
 
@@ -56,7 +56,7 @@ public class ProdutoCriacaoDto {
     @NotNull(message = "Empresa é obrigatória")
     private Empresa empresa;
 
-    private List<Alerta> alertaEstoque;
+    private List<Alerta> alerta;
 
     public ProdutoCriacaoDto() {
     }

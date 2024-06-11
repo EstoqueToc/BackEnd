@@ -42,10 +42,7 @@ public class Produto {
     private Fornecedor fornecedor;
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Alerta> alertaEstoque;
-
-    @OneToMany(mappedBy = "produto")
-    private List<Alerta> alertas;
+    private List<Alerta> alerta;
 
     public Produto() {
     }

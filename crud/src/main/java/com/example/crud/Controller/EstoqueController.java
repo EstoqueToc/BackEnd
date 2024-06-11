@@ -98,7 +98,7 @@ public class EstoqueController {
 //        json.put("text", message);
 //        Slack.sendMessage(json);
 //    }
-
+//
 //    @GetMapping("/slack/send")
 //    public ResponseEntity<String> verificarAlertas() {
 //        return estoqueService.verificarAlertas() ? ResponseEntity.ok("Alerta de estoque baixo!") : ResponseEntity.ok("Estoque normal");

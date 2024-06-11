@@ -1,6 +1,6 @@
 package com.example.crud.Controller;
 
-import com.example.crud.Helpers.QuickSortEndereco;
+import Helpers.QuickSortEndereco;
 import com.example.crud.dto.EnderecoApiExternaDto;
 import com.example.crud.dto.EnderecoDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,7 +59,7 @@ public class EnderecoController {
                     return enderecoDto;
                 }).collect(Collectors.toList());
 
-                quickSortEndereco.quickSort(resposta);
+        resposta = quickSortEndereco.quickSort(resposta);
 
         return status(200).body(resposta);
     }

@@ -12,34 +12,30 @@ import java.util.List;
 public class ProdutoRespostaDto {
 
     private Long id;
-    private String nome;
-    private Double precoDeVenda;
-    private Double precoDeCompra;
-    private LocalDate dataDeEntrada;
-    private String unidadeDeMedida;
-    private String descricao;
-    private Categoria categoria;
-    private Fornecedor fornecedor;
-    private Integer qtdEstoque;
-    private LocalDate dataDeValidade;
+    private String nomeProduto;
+    private String descricaoProduto;
+    private LocalDate dataValidade;
+    private Double precoCompraProduto;
+    private Double precoVendaProduto;
+    private LocalDate dataEntrada;
+    private String unidadeMedida;
+    private Integer qtdEntrada;
     private Empresa empresa;
-    private List<AlertaRespostaDto> alertaEstoque;
+    private List<AlertaRespostaDto> alerta;
 
     public ProdutoRespostaDto() {}
 
-    public ProdutoRespostaDto(Long id, String nome, Double precoDeVenda, Double precoDeCompra, LocalDate dataDeEntrada, String unidadeDeMedida, String descricao, Categoria categoria, Fornecedor fornecedor, Integer qtdEstoque, LocalDate dataDeValidade, Empresa empresa, List<AlertaRespostaDto> alertaEstoque) {
+    public ProdutoRespostaDto(Long id, String nomeProduto, String descricaoProduto, LocalDate dataValidade, Double precoCompraProduto, Double precoVendaProduto, LocalDate dataEntrada, String unidadeMedida, Integer qtdEntrada, Empresa empresa, List<AlertaRespostaDto> alerta) {
         this.id = id;
-        this.nome = nome;
-        this.precoDeVenda = precoDeVenda;
-        this.precoDeCompra = precoDeCompra;
-        this.dataDeEntrada = dataDeEntrada;
-        this.unidadeDeMedida = unidadeDeMedida;
-        this.descricao = descricao;
-        this.categoria = categoria;
-        this.fornecedor = fornecedor;
-        this.qtdEstoque = qtdEstoque;
-        this.dataDeValidade = dataDeValidade;
+        this.nomeProduto = nomeProduto;
+        this.descricaoProduto = descricaoProduto;
+        this.dataValidade = dataValidade;
+        this.precoCompraProduto = precoCompraProduto;
+        this.precoVendaProduto = precoVendaProduto;
+        this.dataEntrada = dataEntrada;
+        this.unidadeMedida = unidadeMedida;
+        this.qtdEntrada = qtdEntrada;
         this.empresa = empresa;
-        this.alertaEstoque = alertaEstoque;
+        this.alerta = alerta;
     }
 }

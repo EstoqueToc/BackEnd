@@ -22,9 +22,17 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -234,9 +242,7 @@ public class ProdutoController {
     @PostMapping("/csv/produto")
     public ResponseEntity<String> gravaArquivoCsvProduto() {
         ListaObj<Produto> lista = new ListaObj<>(100);
-        lista.adicionaLista(produtoService.getProdutos().stream()
-                .map(dto -> modelMapper.map(dto, Produto.class))
-                .collect(Collectors.toList()));
+        lista.adicionaLista(produtoService.getProdutos().stream().map(dto -> modelMapper.map(dto, Produto.class)).collect(Collectors.toList()));
         ProdutoCSV.gravaArquivoCsv(lista, "produtos");
         return ok("Gravando arquivo CSV de Produtos");
     }
@@ -268,5 +274,32 @@ public class ProdutoController {
             return ResponseEntity.badRequest().build();
         }
     }*/
+
+    @Operation(summary = "Baixa o arquivo CSV de Produtos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Arquivo CSV de Produtos baixado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Erro ao baixar o arquivo CSV de Produtos", content = @Content)
+    })
+    @GetMapping("/csv/produto/download")
+    public ResponseEntity<Resource> downloadCsvProduto() {
+        String nomeArquivo = "produtos.csv";
+        Path filePath = Paths.get(nomeArquivo);
+
+        if (!Files.exists(filePath)) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        Resource resource;
+        try {
+            resource = new UrlResource(filePath.toUri());
+        } catch (MalformedURLException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("text/csv"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + nomeArquivo + "\"")
+                .body(resource);
+    }
 
 }

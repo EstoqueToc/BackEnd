@@ -6,17 +6,15 @@ import com.example.crud.Model.Produto;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Formatter;
-import java.util.FormatterClosedException;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 
 public class ProdutoCSV {
-    //metodo para gravar o arquivo
+
+    // Método para gravar o arquivo
     public static void gravaArquivoCsv(ListaObj<Produto> lista, String nomeArq) {
         FileWriter arq = null;
         Formatter saida = null;
-        Boolean deuRuim = false;
+        boolean deuRuim = false;
 
         nomeArq += ".csv";
 
@@ -32,19 +30,19 @@ public class ProdutoCSV {
         // Bloco try-catch para gravar o arquivo
         try {
             saida.format("%-5S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S;%-20S\n",
-                    "ID", "Nome", "Preço de Venda", "Preço de Compra", "Data de Entrada", "Unidade de Medida", "Descrição", "Categoria", "Fornecedor", "Quantidade em Estoque", "Data de Validade");
+                    "ID", "Nome", "Preço de Venda", "Preço de Compra", "Data de Entrada", "Unidade de Medida", "Descrição", "Categoria", "Fornecedor", "Quantidade de entrada", "Data de Validade");
             for (int i = 0; i < lista.getTamanho(); i++) {
                 Produto produto = lista.getElemento(i);
                 saida.format("%05d;%-20s;%20.2f;%20.2f;%-20s;%-20s;%-20s;%-20s;%-20s;%20d;%-20s\n",
                         produto.getId(),
                         produto.getNomeProduto(),
-                        produto.getPrecoCompraProduto(),
+                        produto.getPrecoVendaProduto(),
                         produto.getPrecoCompraProduto(),
                         produto.getDataEntrada(),
                         produto.getUnidadeMedida(),
                         produto.getDescricaoProduto(),
                         produto.getCategoria().getNome(),
-                        produto.getFornecedor().getNomeFantasia(),
+                        produto.getFornecedor().getRazaoSocial(),
                         produto.getQtdEntrada(),
                         produto.getDataValidade());
             }
@@ -65,11 +63,11 @@ public class ProdutoCSV {
         }
     }
 
-    //metodo para ler o arquivo
+    // Método para ler o arquivo
     public static void lerArquivoCsv(String nomeArq) {
         FileReader arq = null;
         Scanner entrada = null;
-        Boolean deuRuim = false;
+        boolean deuRuim = false;
 
         nomeArq += ".csv";
 
@@ -82,25 +80,21 @@ public class ProdutoCSV {
             System.exit(1);
         }
 
+        // Lista para armazenar as linhas do arquivo
+        List<String[]> dados = new ArrayList<>();
+
         // Bloco try-catch para ler o arquivo
         try {
-            //cabeçalho
-            System.out.println("Nome;Preço de Venda;Preço de Compra;Data de Entrada;Unidade de Medida;Descrição;Categoria;Fornecedor;Quantidade em Estoque;Data de Validade");
+            // Cabeçalho
+            if (entrada.hasNext()) {
+                entrada.nextLine(); // Ignora a primeira linha (cabeçalho)
+            }
 
+            // Leitura dos dados
             while (entrada.hasNext()) {
                 String linha = entrada.nextLine();
                 String[] campos = linha.split(";");
-//                System.out.println("ID: " + campos[0]);
-                System.out.println("Nome: " + campos[1]);
-                System.out.println("Preço de Venda: " + campos[2]);
-                System.out.println("Preço de Compra: " + campos[3]);
-                System.out.println("Data de Entrada: " + campos[4]);
-                System.out.println("Unidade de Medida: " + campos[5]);
-                System.out.println("Descrição: " + campos[6]);
-                System.out.println("Categoria: " + campos[7]);
-                System.out.println("Fornecedor: " + campos[8]);
-                System.out.println("Quantidade em Estoque: " + campos[9]);
-                System.out.println("Data de Validade: " + campos[10]);
+                dados.add(campos);
             }
         } catch (NoSuchElementException erro) {
             System.out.println("Arquivo com problemas");
@@ -119,6 +113,20 @@ public class ProdutoCSV {
             if (deuRuim) {
                 System.exit(1);
             }
+        }
+
+        // Conversão da lista para uma matriz
+        String[][] matrizDados = new String[dados.size()][];
+        for (int i = 0; i < dados.size(); i++) {
+            matrizDados[i] = dados.get(i);
+        }
+
+        // Exibição dos dados em formato tabular
+        System.out.printf("%-5s %-20s %-20s %-20s %-20s %-20s %-20s %-20s %-20s %-20s %-20s\n",
+                "ID", "Nome", "Preço de Venda", "Preço de Compra", "Data de Entrada", "Unidade de Medida", "Descrição", "Categoria", "Fornecedor", "Qtd. Estoque", "Data de Validade");
+        for (String[] linha : matrizDados) {
+            System.out.printf("%-5s %-20s %-20s %-20s %-20s %-20s %-20s %-20s %-20s %-20s %-20s\n",
+                    linha[0], linha[1], linha[2], linha[3], linha[4], linha[5], linha[6], linha[7], linha[8], linha[9], linha[10]);
         }
     }
 }

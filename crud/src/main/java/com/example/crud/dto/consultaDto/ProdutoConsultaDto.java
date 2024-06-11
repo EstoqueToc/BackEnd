@@ -40,7 +40,7 @@ public class ProdutoConsultaDto {
         this.qtdEntrada = produto.getQtdEntrada();
         this.categoria = produto.getCategoria();
         this.fornecedor = produto.getFornecedor();
-        this.alertaEstoque = produto.getAlertaEstoque().isEmpty() ? null : produto.getAlertaEstoque().get(0);
+        this.alertaEstoque = produto.getAlerta().isEmpty() ? null : produto.getAlerta().get(0);
     }
 
 }

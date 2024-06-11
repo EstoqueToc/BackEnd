@@ -23,11 +23,11 @@ public class Alerta {
     private Integer alertaGrave;
 
     @ManyToOne
-    @JoinColumn(name = "produto_id", nullable = false)
+    @JoinColumn(name = "produto_id")
     private Produto produto;
 
-    @ManyToOne
-    @JoinColumn(name = "empresa_id", nullable = false)
-    private Empresa empresa;
+//    @ManyToOne
+//    @JoinColumn(name = "empresa_id", nullable = false)
+//    private Empresa empresa;
 }
 
