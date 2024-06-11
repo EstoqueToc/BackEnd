@@ -12,8 +12,5 @@ public class CategoriaCriacaoDto {
     @NotBlank(message = "Nome da categoria é obrigatório")
     private String nome;
 
-    @NotBlank(message = "Descrição da categoria é obrigatória")
-    private String descricao;
-
     private Empresa empresa;
 }

@@ -13,6 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@Table(name = "produtos")
 public class Produto {
 
     @Id
@@ -29,14 +30,15 @@ public class Produto {
     private Integer qtdEntrada;
 
     @ManyToOne
+    @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;
 
     @ManyToOne
-    @JoinColumn(name = "categoria", nullable = false)
+    @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
     @ManyToOne
-    @JoinColumn(name = "fornecedor", nullable = false)
+    @JoinColumn(name = "fornecedor_id", nullable = false)
     private Fornecedor fornecedor;
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
