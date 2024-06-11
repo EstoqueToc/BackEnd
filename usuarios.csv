@@ -1,0 +1,3 @@
+ID   ;NOME                ;CPF            ;EMAIL                         ;SENHA          ;TIPO           ;STATUS         
+1    ;Usuário A           ;12345678901    ;usuarioA@example.com          ;senha123       ;Administrador  ;true           
+2    ;Usuário B           ;09876543210    ;usuarioB@example.com          ;senha456       ;Funcionário    ;true           

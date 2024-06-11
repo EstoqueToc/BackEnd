@@ -1,0 +1,3 @@
+ID   ;NOME                ;PREÇO DE VENDA      ;PREÇO DE COMPRA     ;DATA DE ENTRADA     ;UNIDADE DE MEDIDA   ;DESCRIÇÃO           ;CATEGORIA           ;FORNECEDOR          ;QUANTIDADE EM ESTOQUE;DATA DE VALIDADE    
+00001;Produto A           ;              150,00;              100,00;2024-05-22          ;Unidade             ;Descrição do Produto A;Eletrônicos         ;Fornecedor A        ;                 100;2025-12-31          
+00002;Produto B           ;              200,00;              150,00;2024-05-22          ;Unidade             ;Descrição do Produto B;Alimentos           ;Fornecedor B        ;                  50;2024-12-31          
