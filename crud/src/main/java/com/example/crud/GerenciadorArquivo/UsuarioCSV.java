@@ -32,6 +32,7 @@ public class UsuarioCSV {
             // Cabeçalho
             saida.format("%-5S;%-20S;%-15S;%-30S;%-15S;%-15S;%-15S\n",
                     "ID", "Nome", "CPF", "Email", "Senha", "Função", "Acesso");
+
             for (int i = 0; i < lista.getTamanho(); i++) {
                 // Recupera um elemento da lista e formata aqui:
                 Usuario usuario = lista.getElemento(i);
