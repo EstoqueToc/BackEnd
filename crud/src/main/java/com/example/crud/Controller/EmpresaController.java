@@ -63,7 +63,7 @@ public class EmpresaController {
 //        return status(201).body(novaEmpresaConsultaDto);*/
 
         Empresa novaEmpresa = modelMapper.map(novaEmpresaDto, Empresa.class);
-//        logradouroRepository.save(novaEmpresa.getLogradouro());
+        logradouroRepository.save(novaEmpresa.getLogradouro());
         empresaRepository.save(novaEmpresa);
 
         return status(201).body(novaEmpresa);
