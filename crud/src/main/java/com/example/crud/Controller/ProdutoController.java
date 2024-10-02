@@ -25,9 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -300,6 +302,16 @@ public class ProdutoController {
                 .contentType(MediaType.parseMediaType("text/csv"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + nomeArquivo + "\"")
                 .body(resource);
+    }
+
+    @PostMapping("/upload-xlsx")
+    public ResponseEntity<String> uploadProdutos(@RequestParam("file") MultipartFile file) {
+        try {
+            produtoService.salvarProdutosEmLote(file);
+            return ResponseEntity.ok("Produtos cadastrados com sucesso.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar produtos: " + e.getMessage());
+        }
     }
 
 }
