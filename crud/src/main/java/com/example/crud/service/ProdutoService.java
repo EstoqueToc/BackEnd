@@ -10,15 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-
-import com.example.crud.Model.Produto;
 import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
-import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
 import com.example.crud.repository.ProdutoRepository;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -62,12 +55,11 @@ public class ProdutoService {
             for (Alerta alerta : novoProduto.getAlerta()) {
                 alerta.setProduto(novoProduto);
             }
-            novoProduto.getAlerta().forEach(alertaRepository::save); // Salvar alertas
+            novoProduto.getAlerta().forEach(alertaRepository::save);
         }
 
         novoProduto.setDataEntrada(LocalDate.now());
 
-        // Salvar o produto (e os alertas devido ao CascadeType.ALL)
         Produto produtoSalvo = repository.save(novoProduto);
 
         adicionarNoEstoque(produtoSalvo, novoProdutoDto.getQtdEntrada());

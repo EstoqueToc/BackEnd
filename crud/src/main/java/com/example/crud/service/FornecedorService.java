@@ -7,7 +7,6 @@ import com.example.crud.repository.FornecedorRepository;
 import com.example.crud.repository.LogradouroRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -58,17 +57,6 @@ public class FornecedorService {
                 })
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
-
-    /*public ResponseEntity<String> aplicarDesconto(int indice, double percentualDesconto, List<Fornecedor> fornecedores) {
-        if (indice >= 0 && indice < fornecedores.size() && percentualDesconto >= 0) {
-            Fornecedor fornecedor = fornecedores.get(indice);
-            double novoPreco = fornecedor.getPreco() - (fornecedor.getPreco() * (percentualDesconto / 100.0));
-            fornecedor.setPreco(novoPreco);
-            return ResponseEntity.ok("Desconto aplicado com sucesso.");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Fornecedor não encontrado ou percentual de desconto inválido.");
-        }
-    }*/
 
     public ResponseEntity<List<Fornecedor>> getFornecedorPorNome(String nome) {
         List<Fornecedor> fornecedores = repository.findByNomeFantasiaContainsIgnoreCase(nome);
