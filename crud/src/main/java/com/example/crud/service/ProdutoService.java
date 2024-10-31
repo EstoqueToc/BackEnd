@@ -7,14 +7,24 @@ import com.example.crud.dto.consultaResposta.ProdutoRespostaDto;
 import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
 import com.example.crud.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
 import com.example.crud.repository.ProdutoRepository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -158,6 +168,58 @@ public class ProdutoService {
 
     public List<Produto> pesquisarProdutoPorNome(String nome) {
         return repository.findByNomeProdutoContainsIgnoreCase(nome);
+    }
+
+    public void salvarProdutosEmLote(MultipartFile file) throws IOException {
+        List<Produto> produtos = lerXlsx(file);
+        repository.saveAll(produtos);
+    }
+
+    private List<Produto> lerXlsx(MultipartFile file) throws IOException {
+        List<Produto> produtos = new ArrayList<>();
+
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = new XSSFWorkbook(inputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(0);  // Pega a primeira aba do Excel
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            // Ignora a primeira linha se for o cabeçalho
+            if (rowIterator.hasNext()) {
+                rowIterator.next();
+            }
+
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                Produto produto = new Produto();
+
+                produto.setNomeProduto(getCellValue(row.getCell(0)));
+                produto.setDescricaoProduto(getCellValue(row.getCell(1)));
+                produto.setPrecoVendaProduto(Double.parseDouble(getCellValue(row.getCell(2))));
+                produto.setQtdEntrada(Integer.parseInt(getCellValue(row.getCell(3))));
+
+                produtos.add(produto);
+            }
+        }
+
+        return produtos;
+    }
+
+    private String getCellValue(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                return String.valueOf((int) cell.getNumericCellValue());
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            default:
+                return "";
+        }
     }
 
 
