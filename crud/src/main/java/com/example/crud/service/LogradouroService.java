@@ -3,7 +3,6 @@ package com.example.crud.service;
 import com.example.crud.Model.Logradouro;
 import com.example.crud.repository.LogradouroRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 

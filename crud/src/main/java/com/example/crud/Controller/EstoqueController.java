@@ -53,7 +53,7 @@ public class EstoqueController {
         List<Produto> produtosCriticos = estoqueService.getProdutosCriticos();
         for (Produto produto : produtosCriticos) {
             if (estoqueService.getQtdDisponivel(produto) <= produto.getAlerta().get(0).getAlertaGrave()) {
-                sendSlackMessage("Alerta: Estoque crítico para o produto " + produto.getNomeProduto() + ". Apenas " + produto.getQtdEntrada() + " unidades restantes.");
+                sendSlackMessage("Alerta: Estoque crítico para o produto " + produto.getNomeProduto() + ". Apenas " + estoqueService.getQtdDisponivel(produto) + " unidades restantes.");
             }
         }
 
@@ -63,7 +63,7 @@ public class EstoqueController {
             int alertaGrave = produto.getAlerta().get(0).getAlertaGrave();
             int alertaModerado = produto.getAlerta().get(0).getAlertaModerado();
             if (quantidadeDisponivel > alertaGrave && quantidadeDisponivel <= alertaModerado) {
-                sendSlackMessage("Aviso: Estoque moderado para o produto " + produto.getNomeProduto() + ". Apenas " + produto.getQtdEntrada() + " unidades restantes.");
+                sendSlackMessage("Aviso: Estoque moderado para o produto " + produto.getNomeProduto() + ". Apenas " + estoqueService.getQtdDisponivel(produto) + " unidades restantes.");
             }
         }
     }
@@ -122,10 +122,27 @@ public class EstoqueController {
         }
     }
 
+//    private void verificarEstoqueModerado() throws IOException, InterruptedException {
+//        List<Produto> produtosModerados = estoqueService.getProdutosModerados();
+//        for (Produto produto : produtosModerados) {
+//            sendSlackMessage("Aviso: Estoque moderado para o produto " + produto.getNomeProduto() + ". Apenas " + getTotalProdutosEmEstoque() + " unidades restantes.");
+//        }
+//    }
+
     private void verificarEstoqueModerado() throws IOException, InterruptedException {
         List<Produto> produtosModerados = estoqueService.getProdutosModerados();
         for (Produto produto : produtosModerados) {
-            sendSlackMessage("Aviso: Estoque moderado para o produto " + produto.getNomeProduto() + ". Apenas " + getTotalProdutosEmEstoque() + " unidades restantes.");
+            // Obtém a quantidade disponível diretamente do estoque
+            int quantidadeDisponivel = estoqueService.getQtdDisponivel(produto);
+
+            // Verifica se a quantidade disponível está entre os alertas moderado e grave
+            int alertaGrave = produto.getAlerta().get(0).getAlertaGrave();
+            int alertaModerado = produto.getAlerta().get(0).getAlertaModerado();
+
+            if (quantidadeDisponivel > alertaGrave && quantidadeDisponivel <= alertaModerado) {
+                sendSlackMessage("Aviso: Estoque moderado para o produto " + produto.getNomeProduto()
+                        + ". Apenas " + quantidadeDisponivel + " unidades restantes.");
+            }
         }
     }
 
@@ -278,14 +295,39 @@ public class EstoqueController {
         produto.setQtdEntrada(quantidadeAlterada);
         produto.setDataEntrada(LocalDate.now());
         produto.setId(produtoId);
+        estoque.setQtdDisponivel(estoque.getQtdDisponivel() + quantidadeAlterada);
         produtoRepository.save(produto);
         estoqueRepository.save(estoque);
 
         return ResponseEntity.ok().build();
     }
 
+//    @PostMapping("/remover/{produtoId}")
+//    public ResponseEntity<Void> removerQuantidade(@PathVariable Long produtoId, @RequestParam Integer quantidadeAlterada) {
+//        Estoque estoque = estoqueRepository.findByProdutoId(produtoId);
+//
+//        if (estoque == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        int novaQuantidade = estoque.getQtdDisponivel() - quantidadeAlterada;
+//
+//        if (novaQuantidade < 0) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//
+//        estoque.setDataSaida(LocalDate.now());
+//        estoque.setQtdSaida(novaQuantidade);
+//        estoque.setQtdDisponivel(quantidadeAlterada);
+//
+//        estoqueRepository.save(estoque);
+//
+//
+//        return ResponseEntity.ok().build();
+//    }
+
     @PostMapping("/remover/{produtoId}")
-    public ResponseEntity<Void> removerQuantidade(@PathVariable Long produtoId, @RequestParam Integer quantidadeAlterada) {
+    public ResponseEntity<Void> removerQuantidade(@PathVariable Long produtoId, @RequestParam Integer quantidadeAlterada) throws IOException, InterruptedException {
         Estoque estoque = estoqueRepository.findByProdutoId(produtoId);
 
         if (estoque == null) {
@@ -300,12 +342,16 @@ public class EstoqueController {
 
         estoque.setDataSaida(LocalDate.now());
         estoque.setQtdSaida(novaQuantidade);
-        estoque.setQtdDisponivel(quantidadeAlterada);
+        estoque.setQtdDisponivel(estoque.getQtdDisponivel() - quantidadeAlterada);
 
         estoqueRepository.save(estoque);
 
+        verificarEstoque();
+        verificarEstoqueModerado();
+
         return ResponseEntity.ok().build();
     }
+
 
     @GetMapping("/produtos/simples/{nome}/{empresaId}")
     public ResponseEntity<List<EstoqueInfo>> getProdutosSimples(@PathVariable String nome, @PathVariable Long empresaId) {

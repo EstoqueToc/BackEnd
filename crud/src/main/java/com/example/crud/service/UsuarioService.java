@@ -54,11 +54,6 @@ public class UsuarioService {
     private final ModelMapper mapper;
     private final EmpresaRepository empresaRepository;
 
-    //fazer metodo da service, para esse metodo 'listar' que esta na classe UsuarioController
-    public List<Usuario> listar() {
-        return usuarioRepository.findAll();
-    }
-
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(usuarioLoginDto.getEmail(), usuarioLoginDto.getSenha());
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
@@ -76,10 +71,6 @@ public class UsuarioService {
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(email, senha);
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
-        Usuario usuarioAutenticado = usuarioRepository.findByEmail(email)
-                .orElseThrow(
-                        () -> new ResponseStatusException(404, "Email do usuário não cadastrado", null)
-                );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return true;
     }
@@ -91,9 +82,8 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatusCode.valueOf(204));
         }
 
-        List<UsuarioConsultaDto> listaDtos = mapper.map(lista, new TypeToken<List<UsuarioConsultaDto>>() {
+        return mapper.map(lista, new TypeToken<List<UsuarioConsultaDto>>() {
         }.getType());
-        return listaDtos;
     }
 
     public List<UsuarioSimplesDto> getSimples(Long id) {
@@ -101,8 +91,7 @@ public class UsuarioService {
         if(lista.isEmpty()){
             throw new ResponseStatusException(HttpStatusCode.valueOf(204));
         }
-        List<UsuarioSimplesDto> listaDtos = mapper.map(lista, new TypeToken<List<UsuarioSimplesDto>>(){}.getType());
-        return listaDtos;
+        return mapper.map(lista, new TypeToken<List<UsuarioSimplesDto>>(){}.getType());
     }
 
     public List<UsuarioSimplesDto> getSimplesNome(String nome, Long id) {
@@ -110,8 +99,7 @@ public class UsuarioService {
         if(lista.isEmpty()){
             throw new ResponseStatusException(HttpStatusCode.valueOf(204));
         }
-        List<UsuarioSimplesDto> listaDtos = mapper.map(lista, new TypeToken<List<UsuarioSimplesDto>>(){}.getType());
-        return listaDtos;
+        return mapper.map(lista, new TypeToken<List<UsuarioSimplesDto>>(){}.getType());
     }
 
     public void criar(UsuarioCriacaoDto usuarioCriacaoDto) {
@@ -119,6 +107,8 @@ public class UsuarioService {
         String senhaCriptografada = passwordEncoder.encode(usuarioCriacaoDto.getSenha());
         usuario.setSenha(senhaCriptografada);
         var empresaId = usuarioCriacaoDto.getEmpresa().getId();
+        validadeUsuario(usuario);
+
         var empresa = empresaRepository.findById(empresaId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Empresa", empresaId));
         usuario.setEmpresa(empresa);
@@ -127,7 +117,8 @@ public class UsuarioService {
 
     public Usuario getUm(Long codigo) {
         validarCodigoFuncionario(codigo);
-        return usuarioRepository.findById(codigo).get();
+        return usuarioRepository.findById(codigo)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", codigo));
     }
 
     public void excluirUm(Long codigo) {
@@ -139,38 +130,6 @@ public class UsuarioService {
         if (!usuarioRepository.existsById(codigo)) {
             throw new RecursoNaoEncontradoException("Funcionário", codigo);
         }
-
-//    public void testListar() {
-//        List<Usuario> expectedUsuarios = new ArrayList<>();
-//        expectedUsuarios.add(usuario);
-//
-//        when(usuarioRepository.findAll()).thenReturn(expectedUsuarios);
-//
-//        List<Usuario> actualUsuarios = usuarioService.listar();
-//
-//        assertEquals(expectedUsuarios.size(), actualUsuarios.size());
-//        assertEquals(expectedUsuarios.get(0), actualUsuarios.get(0));
-//    }
-//        @Test
-//        public void testAutenticarSenha() {
-//            String email = "test@example.com";
-//            String senha = "testPassword";
-//
-//            when(usuarioRepository.findByEmail(email)).thenReturn(Optional.of(usuario));
-//            when(authenticationManager.authenticate(any())).thenReturn(mock(Authentication.class));
-//
-//            assertTrue(usuarioService.autenticarSenha(email, senha));
-//        }
-//
-//        @Test
-//        public void testExcluirUmNotFound() {
-//            Long codigo = 1L;
-//            when(usuarioRepository.existsById(codigo)).thenReturn(false);
-//
-//            assertThrows(RecursoNaoEncontradoException.class, () -> usuarioService.excluirUm(codigo));
-//        }
-
-
     }
 
     public void atualizar(Long codigo, UsuarioCriacaoDto usuarioCriacaoDto) {
@@ -179,6 +138,8 @@ public class UsuarioService {
         usuario.setId(codigo);
         String senhaCriptografada = passwordEncoder.encode(usuarioCriacaoDto.getSenha());
         usuario.setSenha(senhaCriptografada);
+        validadeUsuario(usuario);
+
         var empresa = empresaRepository.findById(usuarioCriacaoDto.getEmpresa().getId())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Empresa", usuarioCriacaoDto.getEmpresa().getId()));
         usuario.setEmpresa(empresa);
@@ -235,4 +196,35 @@ public class UsuarioService {
                 return "";
         }
     }
+  
+    private boolean usuarioExiste(String email) {
+        return usuarioRepository.existsByEmail(email);
+    }
+
+    private void validadeUsuario(Usuario usuario){
+        if(usuarioExiste(usuario.getEmail())){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email já cadastrado");
+        }
+
+        if (usuario.getNome() == null || usuario.getNome().isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Nome é obrigatório");
+        }
+
+        if (usuario.getEmail() == null || usuario.getEmail().isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Email é obrigatório");
+        }
+
+        if (usuario.getSenha() == null || usuario.getSenha().isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Senha é obrigatória");
+        }
+
+        if (usuario.getFuncao() == null || usuario.getFuncao().isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Função é obrigatória");
+        }
+
+        if (usuario.getEmpresa() == null) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Empresa é obrigatória");
+        }
+    }
+
 }
