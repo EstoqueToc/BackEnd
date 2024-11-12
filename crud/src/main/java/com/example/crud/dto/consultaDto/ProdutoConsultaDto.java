@@ -28,6 +28,7 @@ public class ProdutoConsultaDto {
     private Categoria categoria;
     private Fornecedor fornecedor;
     private List<Alerta> alerta;
+    private String codigoBarras;
 
     public ProdutoConsultaDto(Produto produto) {
         this.id = produto.getId();
@@ -42,6 +43,7 @@ public class ProdutoConsultaDto {
         this.categoria = produto.getCategoria();
         this.fornecedor = produto.getFornecedor();
         this.alerta = produto.getAlerta().isEmpty() ? null : produto.getAlerta();
+        this.codigoBarras = produto.getCodigoBarras(); // Adicionado
     }
 
 }

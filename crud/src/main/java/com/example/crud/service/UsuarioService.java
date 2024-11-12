@@ -221,10 +221,6 @@ public class UsuarioService {
         if (usuario.getFuncao() == null || usuario.getFuncao().isEmpty()) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Função é obrigatória");
         }
-
-        if (usuario.getEmpresa() == null) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Empresa é obrigatória");
-        }
     }
 
 }

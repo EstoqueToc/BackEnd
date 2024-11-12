@@ -3,8 +3,10 @@ package com.example.crud.service;
 import com.example.crud.Model.Alerta;
 import com.example.crud.Model.Estoque;
 import com.example.crud.Model.Produto;
+import com.example.crud.dto.consultaResposta.ProdutoCodigoRespostaDto;
 import com.example.crud.dto.consultaResposta.ProdutoRespostaDto;
 import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
+import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
 import com.example.crud.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
@@ -14,9 +16,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
-import com.example.crud.repository.ProdutoRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,15 +33,10 @@ import java.util.stream.Collectors;
 public class ProdutoService {
 
     private final CategoriaRepository categoriaRepository;
-
     private final ProdutoRepository repository;
-
     private final FornecedorRepository fornecedorRepository;
-
     private final AlertaRepository alertaRepository;
-
     private final EstoqueRepository estoqueRepository;
-
     private final ModelMapper mapper;
 
     @Transactional
@@ -78,24 +72,65 @@ public class ProdutoService {
         return mapper.map(produtoSalvo, ProdutoRespostaDto.class);
     }
 
+//    public Optional<ProdutoConsultaDto> verificarProdutoPorCodigoBarras(String codigoBarras) {
+//        Optional<Produto> produtoOpt = repository.findByCodigoBarras(codigoBarras);
+//        return produtoOpt.map(produto -> mapper.map(produto, ProdutoConsultaDto.class));
+//    }
+
+    public Optional<ProdutoCodigoRespostaDto> verificarProdutoPorCodigoBarras(String codigoBarras) {
+        return repository.findByCodigoBarras(codigoBarras)
+                .map(produto -> new ProdutoCodigoRespostaDto(
+                        produto.getNomeProduto(),
+                        produto.getDescricaoProduto(),
+                        produto.getUnidadeMedida(),
+                        produto.getDataValidade(),
+                        produto.getQtdEntrada()
+                ));
+    }
+
+    @Transactional
+    public ProdutoRespostaDto buscarOuCadastrarProduto(ProdutoCriacaoDto novoProdutoDto) {
+        // Verificar se já existe um produto com o código de barras
+        Optional<Produto> produtoExistente = repository.findByCodigoBarras(novoProdutoDto.getCodigoBarras());
+
+        if (produtoExistente.isPresent()) {
+            Produto produto = produtoExistente.get();
+            // Atualizar o estoque do produto existente
+            produto.setQtdEntrada(produto.getQtdEntrada() + novoProdutoDto.getQtdEntrada());
+            Produto produtoAtualizado = repository.save(produto);
+            return mapper.map(produtoAtualizado, ProdutoRespostaDto.class);
+        } else {
+            // Cadastrar novo produto
+            Produto novoProduto = mapper.map(novoProdutoDto, Produto.class);
+
+            // Validar se categoria e fornecedor existem
+            var categoria = categoriaRepository.findById(novoProdutoDto.getCategoria().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada"));
+
+            var fornecedor = fornecedorRepository.findById(novoProdutoDto.getFornecedor().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Fornecedor não encontrado"));
+
+            // Associar categoria e fornecedor ao produto
+            novoProduto.setCategoria(categoria);
+            novoProduto.setFornecedor(fornecedor);
+            novoProduto.setDataEntrada(LocalDate.now());
+
+            Produto produtoSalvo = repository.save(novoProduto);
+
+            // Atualizar estoque
+            adicionarNoEstoque(produtoSalvo, novoProdutoDto.getQtdEntrada());
+
+            return mapper.map(produtoSalvo, ProdutoRespostaDto.class);
+        }
+    }
+
     private void adicionarNoEstoque(Produto produto, int qtdEntrada) {
         Estoque estoque = new Estoque();
         estoque.setProduto(produto);
         estoque.setEmpresa(produto.getEmpresa());
         estoque.setQtdDisponivel(qtdEntrada);
-        estoque.setQtdDisponivel(qtdEntrada);
-
         estoqueRepository.save(estoque);
     }
-
-//    public ProdutoConsultaDto criarProduto(ProdutoCriacaoDto novoProdutoDto) {
-//        Produto novoProduto = modelMapper.map(novoProdutoDto, Produto.class);
-////        novoProduto.setCategoria(categoriaRepository.findById(novoProdutoDto.getCategoria().getId()).get());
-//        categoriaRepository.save(novoProduto.getCategoria());
-//        fornecedorRepository.save(novoProduto.getFornecedor());
-//        repository.save(novoProduto);
-//        return modelMapper.map(novoProduto, ProdutoConsultaDto.class);
-//    }
 
     public List<ProdutoConsultaDto> getProdutos() {
         List<Produto> lista = repository.findAll();
@@ -123,7 +158,6 @@ public class ProdutoService {
     public Optional<Produto> adicionarEstoque(Long id, Integer quantidadeAdicional) {
         return repository.findById(id).map(produto -> {
             produto.setQtdEntrada(produto.getQtdEntrada() + quantidadeAdicional);
-
             repository.save(produto);
             return produto;
         });

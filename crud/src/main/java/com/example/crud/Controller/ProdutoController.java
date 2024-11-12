@@ -1,16 +1,11 @@
 package com.example.crud.Controller;
 
-import com.example.crud.GerenciadorArquivo.ProdutoCSV;
-import com.example.crud.Helpers.ListaObj;
-import com.example.crud.Model.Alerta;
 import com.example.crud.Model.Produto;
 import com.example.crud.dto.consultaDto.ProdutoConsultaDto;
+import com.example.crud.dto.consultaResposta.ProdutoCodigoRespostaDto;
 import com.example.crud.dto.consultaResposta.ProdutoRespostaDto;
 import com.example.crud.dto.criacaoDto.ProdutoCriacaoDto;
-
-import com.example.crud.repository.AlertaRepository;
 import com.example.crud.service.ProdutoService;
-import com.example.crud.service.usuario.EstoqueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,13 +26,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
@@ -49,10 +39,17 @@ public class ProdutoController {
 
     private final ProdutoService produtoService;
 
-    private final ModelMapper modelMapper;
-
-    private final EstoqueService estoqueService; // Injeção do EstoqueService
-
+    @Operation(summary = "Busca ou cadastra um produto pelo código de barras")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produto encontrado ou cadastrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content)
+    })
+    @PostMapping("/buscar-ou-cadastrar")
+    public ResponseEntity<ProdutoRespostaDto> buscarOuCadastrarProduto(
+            @Parameter(description = "Objeto do produto a ser buscado ou cadastrado") @RequestBody @Valid ProdutoCriacaoDto produtoDto) {
+        ProdutoRespostaDto resposta = produtoService.buscarOuCadastrarProduto(produtoDto);
+        return ResponseEntity.ok(resposta);
+    }
 
     @Operation(summary = "Cria um novo produto")
     @ApiResponses(value = {
@@ -60,12 +57,11 @@ public class ProdutoController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content)
     })
     @PostMapping
-    public ResponseEntity<ProdutoRespostaDto> criarProduto(@Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid ProdutoCriacaoDto novoProdutoDto) {
+    public ResponseEntity<ProdutoRespostaDto> criarProduto(
+            @Parameter(description = "Objeto do produto a ser criado") @RequestBody @Valid ProdutoCriacaoDto novoProdutoDto) {
         ProdutoRespostaDto produtoCriadoDto = produtoService.criarProduto(novoProdutoDto);
         return status(201).body(produtoCriadoDto);
     }
-
-
 
     @Operation(summary = "Retorna todos os produtos")
     @ApiResponses(value = {
@@ -230,78 +226,37 @@ public class ProdutoController {
             @ApiResponse(responseCode = "204", description = "Nenhum produto encontrado com o nome especificado", content = @Content)
     })
     @GetMapping("/pesquisa-produto/{nome}")
-    public ResponseEntity<List<Produto>> pesquisarProdutoPorNome(@Parameter(description = "Nome do produto para pesquisa") @PathVariable String nome) {
+    public ResponseEntity<List<Produto>> pesquisarProdutoPorNome(
+            @Parameter(description = "Nome do produto para pesquisa") @PathVariable String nome) {
         List<Produto> produtos = produtoService.pesquisarProdutoPorNome(nome);
         return produtos.isEmpty() ? status(204).build() : status(200).body(produtos);
     }
 
-    // Endpoints para consumir as classes 'ProdutoCSV'
-    @Operation(summary = "Grava arquivo CSV de Produtos")
+
+//    @Operation(summary = "Verifica se um produto existe pelo código de barras")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Produto encontrado com sucesso"),
+//            @ApiResponse(responseCode = "404", description = "Produto com o código de barras informado não encontrado", content = @Content)
+//    })
+//    @GetMapping("/verificar/{codigoBarras}")
+//    public ResponseEntity<ProdutoConsultaDto> verificarProdutoPorCodigoBarras(
+//            @Parameter(description = "Código de barras do produto para verificação") @PathVariable String codigoBarras) {
+//        Optional<ProdutoConsultaDto> produtoOpt = produtoService.verificarProdutoPorCodigoBarras(codigoBarras);
+//        return produtoOpt.map(ResponseEntity::ok)
+//                .orElseGet(() -> ResponseEntity.status(404).build());
+//    }
+
+    @Operation(summary = "Verifica se um produto existe pelo código de barras")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Arquivo CSV de Produtos gravado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Erro ao gravar arquivo CSV de Produtos", content = @Content)
+            @ApiResponse(responseCode = "200", description = "Produto encontrado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Produto com o código de barras informado não encontrado", content = @Content)
     })
-    @PostMapping("/csv/produto")
-    public ResponseEntity<String> gravaArquivoCsvProduto() {
-        ListaObj<Produto> lista = new ListaObj<>(100);
-        lista.adicionaLista(produtoService.getProdutos().stream().map(dto -> modelMapper.map(dto, Produto.class)).collect(Collectors.toList()));
-        ProdutoCSV.gravaArquivoCsv(lista, "produtos");
-        return ok("Gravando arquivo CSV de Produtos");
-    }
-
-    @Operation(summary = "Lê arquivo CSV de Produtos")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Arquivo CSV de Produtos lido com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Erro ao ler arquivo CSV de Produtos", content = @Content)
-    })
-    @GetMapping("/csv/produto")
-    public ResponseEntity<String> leArquivoCsvProduto() {
-        ProdutoCSV.lerArquivoCsv("produtos");
-        return ok("Lendo arquivo CSV de Produtos");
-    }
-
-   /* @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizarProduto(
-            @Parameter(description = "ID do produto para atualização") @PathVariable Long id,
-            @Parameter(description = "Objeto do produto com dados atualizados") @Valid @RequestBody Produto produtoAtualizado) {
-        try {
-            if (repository.existsById(id)) {
-                produtoAtualizado.setId(id); // Garante que o ID do produto seja o mesmo do path da requisição
-                repository.save(produtoAtualizado);
-                return ResponseEntity.noContent().build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (ValidacaoException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }*/
-
-    @Operation(summary = "Baixa o arquivo CSV de Produtos")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Arquivo CSV de Produtos baixado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Erro ao baixar o arquivo CSV de Produtos", content = @Content)
-    })
-    @GetMapping("/csv/produto/download")
-    public ResponseEntity<Resource> downloadCsvProduto() {
-        String nomeArquivo = "produtos.csv";
-        Path filePath = Paths.get(nomeArquivo);
-
-        if (!Files.exists(filePath)) {
-            return ResponseEntity.badRequest().body(null);
-        }
-
-        Resource resource;
-        try {
-            resource = new UrlResource(filePath.toUri());
-        } catch (MalformedURLException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("text/csv"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + nomeArquivo + "\"")
-                .body(resource);
+    @GetMapping("/verificar/{codigoBarras}")
+    public ResponseEntity<ProdutoCodigoRespostaDto> verificarProdutoPorCodigoBarras(
+            @Parameter(description = "Código de barras do produto para verificação") @PathVariable String codigoBarras) {
+        Optional<ProdutoCodigoRespostaDto> produtoOpt = produtoService.verificarProdutoPorCodigoBarras(codigoBarras);
+        return produtoOpt.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(404).build());
     }
 
     @PostMapping("/upload-xlsx")
