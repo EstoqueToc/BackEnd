@@ -33,6 +33,9 @@ public class Produto {
     @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;
 
+    @Column(name = "codigo_barras", length = 80)
+    private String codigoBarras;
+
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;

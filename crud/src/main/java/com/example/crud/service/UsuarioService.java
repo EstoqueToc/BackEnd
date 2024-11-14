@@ -13,6 +13,11 @@ import com.example.crud.service.dto.UsuarioLoginDto;
 import com.example.crud.service.dto.UsuarioSomenteTokenDto;
 import com.example.crud.service.dto.UsuarioTokenDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +28,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -137,6 +147,57 @@ public class UsuarioService {
         this.usuarioRepository.save(usuario);
     }
 
+    public void salvarUsuariosEmLote(MultipartFile file) throws IOException {
+        List<Usuario> usuarios = lerXlsx(file);
+        usuarioRepository.saveAll(usuarios);
+    }
+
+    private List<Usuario> lerXlsx(MultipartFile file) throws IOException {
+        List<Usuario> usuarios = new ArrayList<>();
+
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = new XSSFWorkbook(inputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(0);  // Pega a primeira aba do Excel
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            // Ignora a primeira linha se for o cabeçalho
+            if (rowIterator.hasNext()) {
+                rowIterator.next();
+            }
+
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                Usuario usuario = new Usuario();
+
+                usuario.setNome(getCellValue(row.getCell(0)));
+                usuario.setEmail(getCellValue(row.getCell(1)));
+                usuario.setCpf(getCellValue(row.getCell(2)));
+
+                usuarios.add(usuario);
+            }
+        }
+
+        return usuarios;
+    }
+
+    private String getCellValue(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                return String.valueOf((int) cell.getNumericCellValue());
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            default:
+                return "";
+        }
+    }
+  
     private boolean usuarioExiste(String email) {
         return usuarioRepository.existsByEmail(email);
     }
