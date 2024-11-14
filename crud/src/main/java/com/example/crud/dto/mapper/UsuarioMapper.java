@@ -5,6 +5,7 @@ import com.example.crud.dto.consultaDto.EmpresaDetalhesConsulta;
 import com.example.crud.dto.consultaDto.UsuarioConsultaDto;
 import com.example.crud.dto.criacaoDto.UsuarioCriacaoDto;
 import com.example.crud.repository.EmpresaRepository;
+import com.example.crud.service.dto.UsuarioSomenteTokenDto;
 import com.example.crud.service.dto.UsuarioTokenDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -42,5 +43,11 @@ public class UsuarioMapper {
         usuarioTokenDto.setEmpresa(new EmpresaDetalhesConsulta(usuario.getEmpresa()));
         usuarioTokenDto.setAcesso(usuario.getAcesso());
         return usuarioTokenDto;
+    }
+
+    public static UsuarioSomenteTokenDto ofToken(Usuario usuario ,String token){
+        UsuarioSomenteTokenDto usuarioSomenteTokenDto = new UsuarioSomenteTokenDto();
+        usuarioSomenteTokenDto.setToken(token);
+        return usuarioSomenteTokenDto;
     }
 }

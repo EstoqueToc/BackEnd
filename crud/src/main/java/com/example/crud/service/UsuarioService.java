@@ -10,6 +10,7 @@ import com.example.crud.excecoes.RecursoNaoEncontradoException;
 import com.example.crud.repository.EmpresaRepository;
 import com.example.crud.repository.UsuarioRepository;
 import com.example.crud.service.dto.UsuarioLoginDto;
+import com.example.crud.service.dto.UsuarioSomenteTokenDto;
 import com.example.crud.service.dto.UsuarioTokenDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -159,10 +160,6 @@ public class UsuarioService {
 
         if (usuario.getFuncao() == null || usuario.getFuncao().isEmpty()) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Função é obrigatória");
-        }
-
-        if (usuario.getEmpresa() == null) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Empresa é obrigatória");
         }
     }
 

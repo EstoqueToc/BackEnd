@@ -9,6 +9,7 @@ import com.example.crud.dto.criacaoDto.UsuarioCriacaoDto;
 import com.example.crud.repository.UsuarioRepository;
 import com.example.crud.service.UsuarioService;
 import com.example.crud.service.dto.UsuarioLoginDto;
+import com.example.crud.service.dto.UsuarioSomenteTokenDto;
 import com.example.crud.service.dto.UsuarioTokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
