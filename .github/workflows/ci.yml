@@ -1,8 +1,11 @@
 name: CI EstoqueToc # Nome da ação
 
 on:
-  push: # Evento que irá disparar a ação
-    branches: [ develop ] # Branch que irá disparar a ação
+  pull_request: # Gatilho para Pull Request
+    branches:
+      - main
+      - develop
+    types: [opened, reopened] # Tipos de eventos que disparam o pipeline
 
 jobs:
   build: # Job para o build da aplicação
