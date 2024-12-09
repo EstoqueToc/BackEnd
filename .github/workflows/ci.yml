@@ -65,5 +65,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
+          context: ./crud
+          file: ./crud/Dockerfile
           push: true
           tags: luciogr/estoquetoc:1.0
