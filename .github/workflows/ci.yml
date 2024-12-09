@@ -3,7 +3,6 @@ name: CI EstoqueToc # Nome da ação
 on:
   pull_request: # Gatilho para Pull Request
     branches:
-      - main
       - develop
     types: [opened, reopened] # Tipos de eventos que disparam o pipeline
 
