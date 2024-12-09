@@ -2,7 +2,7 @@ name: CI  EstoqueToc # Nome da ação
 
 on:
   push: # Evento que irá disparar a ação
-    branches: [ main ] # Branch que irá disparar a ação
+    branches: [ develop ] # Branch que irá disparar a ação
 
 jobs:
   build: # Nome do trabalho pode ser qualquer um de sua escolha
