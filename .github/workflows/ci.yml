@@ -70,3 +70,4 @@ jobs:
           push: true
           tags: luciogr/estoquetoc:1.0
 
+          # Teste
