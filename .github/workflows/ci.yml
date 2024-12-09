@@ -69,3 +69,4 @@ jobs:
           file: ./crud/Dockerfile
           push: true
           tags: luciogr/estoquetoc:1.0
+
