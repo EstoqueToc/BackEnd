@@ -1,4 +1,4 @@
-name: CI  EstoqueToc # Nome da ação
+name: CI EstoqueToc # Nome da ação
 
 on:
   push: # Evento que irá disparar a ação
@@ -8,6 +8,7 @@ jobs:
   build: # Nome do trabalho pode ser qualquer um de sua escolha
     runs-on: ubuntu-latest # Sistema operacional a ser utilizado
     steps: # Passos a serem executados
+
       - name: Checkout code # Nome do passo, nesse caso, clonar o repositório
         uses: actions/checkout@v4 # Action escolhida para clonar o repositório
 
@@ -17,5 +18,8 @@ jobs:
           distribution: 'temurin' # Distribuição do JDK
           java-version: '17' # Versão do JDK
 
+      - name: Navigate to crud directory # Navegar para o diretório correto
+        run: cd crud
+
       - name: Build with Maven # Nome do passo, nesse caso, buildar com Maven
-        run: mvn -B package -DskipTests # Comando a ser executado
+        run: mvn -f ./crud/pom.xml -B package -DskipTests
