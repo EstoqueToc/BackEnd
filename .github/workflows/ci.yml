@@ -1,6 +1,10 @@
 name: CI EstoqueToc
 
 on:
+  push:
+    branches:
+      - main
+      - develop
   pull_request:
     branches:
       - main
@@ -61,5 +65,9 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
+          context: ./crud
+          file: ./crud/Dockerfile
           push: true
           tags: luciogr/estoquetoc:1.0
+
+          # Teste
