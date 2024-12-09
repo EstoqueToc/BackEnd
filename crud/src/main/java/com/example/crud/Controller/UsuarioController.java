@@ -9,6 +9,7 @@ import com.example.crud.dto.criacaoDto.UsuarioCriacaoDto;
 import com.example.crud.repository.UsuarioRepository;
 import com.example.crud.service.UsuarioService;
 import com.example.crud.service.dto.UsuarioLoginDto;
+import com.example.crud.service.dto.UsuarioSomenteTokenDto;
 import com.example.crud.service.dto.UsuarioTokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,8 +22,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -212,5 +215,15 @@ public class UsuarioController {
     public ResponseEntity<String> leArquivoCsvUsuario() {
         UsuarioCSV.lerArquivoCsv("usuarios");
         return ok("Lendo arquivo CSV de Usuário");
+    }
+
+    @PostMapping("/upload-xlsx")
+    public ResponseEntity<String> uploadUsuarios(@RequestParam("file") MultipartFile file) {
+        try {
+            usuarioService.salvarUsuariosEmLote(file);
+            return ResponseEntity.ok("Usuários cadastrados com sucesso.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar usuários: " + e.getMessage());
+        }
     }
 }

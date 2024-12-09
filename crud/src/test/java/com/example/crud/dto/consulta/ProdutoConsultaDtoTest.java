@@ -34,7 +34,7 @@ public class ProdutoConsultaDtoTest {
         produto.setCategoria(categoria);
         produto.setFornecedor(fornecedor);
         produto.setDataValidade(LocalDate.of(2023, 1, 1));
-        produto.setAlertaEstoque(new ArrayList<>());
+        produto.setAlerta(new ArrayList<>());
 
 
         ProdutoConsultaDto dto = new ProdutoConsultaDto(produto);

@@ -10,8 +10,14 @@ import com.example.crud.excecoes.RecursoNaoEncontradoException;
 import com.example.crud.repository.EmpresaRepository;
 import com.example.crud.repository.UsuarioRepository;
 import com.example.crud.service.dto.UsuarioLoginDto;
+import com.example.crud.service.dto.UsuarioSomenteTokenDto;
 import com.example.crud.service.dto.UsuarioTokenDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +28,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -44,11 +55,6 @@ public class UsuarioService {
     private final ModelMapper mapper;
     private final EmpresaRepository empresaRepository;
 
-    //fazer metodo da service, para esse metodo 'listar' que esta na classe UsuarioController
-    public List<Usuario> listar() {
-        return usuarioRepository.findAll();
-    }
-
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(usuarioLoginDto.getEmail(), usuarioLoginDto.getSenha());
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
@@ -66,10 +72,6 @@ public class UsuarioService {
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(email, senha);
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
-        Usuario usuarioAutenticado = usuarioRepository.findByEmail(email)
-                .orElseThrow(
-                        () -> new ResponseStatusException(404, "Email do usuário não cadastrado", null)
-                );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return true;
     }
@@ -81,9 +83,8 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatusCode.valueOf(204));
         }
 
-        List<UsuarioConsultaDto> listaDtos = mapper.map(lista, new TypeToken<List<UsuarioConsultaDto>>() {
+        return mapper.map(lista, new TypeToken<List<UsuarioConsultaDto>>() {
         }.getType());
-        return listaDtos;
     }
 
     public List<UsuarioSimplesDto> getSimples(Long id) {
@@ -91,8 +92,7 @@ public class UsuarioService {
         if(lista.isEmpty()){
             throw new ResponseStatusException(HttpStatusCode.valueOf(204));
         }
-        List<UsuarioSimplesDto> listaDtos = mapper.map(lista, new TypeToken<List<UsuarioSimplesDto>>(){}.getType());
-        return listaDtos;
+        return mapper.map(lista, new TypeToken<List<UsuarioSimplesDto>>(){}.getType());
     }
 
     public List<UsuarioSimplesDto> getSimplesNome(String nome, Long id) {
@@ -100,8 +100,7 @@ public class UsuarioService {
         if(lista.isEmpty()){
             throw new ResponseStatusException(HttpStatusCode.valueOf(204));
         }
-        List<UsuarioSimplesDto> listaDtos = mapper.map(lista, new TypeToken<List<UsuarioSimplesDto>>(){}.getType());
-        return listaDtos;
+        return mapper.map(lista, new TypeToken<List<UsuarioSimplesDto>>(){}.getType());
     }
 
     public void criar(UsuarioCriacaoDto usuarioCriacaoDto) {
@@ -109,6 +108,8 @@ public class UsuarioService {
         String senhaCriptografada = passwordEncoder.encode(usuarioCriacaoDto.getSenha());
         usuario.setSenha(senhaCriptografada);
         var empresaId = usuarioCriacaoDto.getEmpresa().getId();
+        validadeUsuario(usuario);
+
         var empresa = empresaRepository.findById(empresaId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Empresa", empresaId));
         usuario.setEmpresa(empresa);
@@ -117,7 +118,8 @@ public class UsuarioService {
 
     public Usuario getUm(Long codigo) {
         validarCodigoFuncionario(codigo);
-        return usuarioRepository.findById(codigo).get();
+        return usuarioRepository.findById(codigo)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", codigo));
     }
 
     public void excluirUm(Long codigo) {
@@ -129,38 +131,6 @@ public class UsuarioService {
         if (!usuarioRepository.existsById(codigo)) {
             throw new RecursoNaoEncontradoException("Funcionário", codigo);
         }
-
-//    public void testListar() {
-//        List<Usuario> expectedUsuarios = new ArrayList<>();
-//        expectedUsuarios.add(usuario);
-//
-//        when(usuarioRepository.findAll()).thenReturn(expectedUsuarios);
-//
-//        List<Usuario> actualUsuarios = usuarioService.listar();
-//
-//        assertEquals(expectedUsuarios.size(), actualUsuarios.size());
-//        assertEquals(expectedUsuarios.get(0), actualUsuarios.get(0));
-//    }
-//        @Test
-//        public void testAutenticarSenha() {
-//            String email = "test@example.com";
-//            String senha = "testPassword";
-//
-//            when(usuarioRepository.findByEmail(email)).thenReturn(Optional.of(usuario));
-//            when(authenticationManager.authenticate(any())).thenReturn(mock(Authentication.class));
-//
-//            assertTrue(usuarioService.autenticarSenha(email, senha));
-//        }
-//
-//        @Test
-//        public void testExcluirUmNotFound() {
-//            Long codigo = 1L;
-//            when(usuarioRepository.existsById(codigo)).thenReturn(false);
-//
-//            assertThrows(RecursoNaoEncontradoException.class, () -> usuarioService.excluirUm(codigo));
-//        }
-
-
     }
 
     public void atualizar(Long codigo, UsuarioCriacaoDto usuarioCriacaoDto) {
@@ -169,9 +139,89 @@ public class UsuarioService {
         usuario.setId(codigo);
         String senhaCriptografada = passwordEncoder.encode(usuarioCriacaoDto.getSenha());
         usuario.setSenha(senhaCriptografada);
+        validadeUsuario(usuario);
+
         var empresa = empresaRepository.findById(usuarioCriacaoDto.getEmpresa().getId())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Empresa", usuarioCriacaoDto.getEmpresa().getId()));
         usuario.setEmpresa(empresa);
         this.usuarioRepository.save(usuario);
     }
+
+    public void salvarUsuariosEmLote(MultipartFile file) throws IOException {
+        List<Usuario> usuarios = lerXlsx(file);
+        usuarioRepository.saveAll(usuarios);
+    }
+
+    private List<Usuario> lerXlsx(MultipartFile file) throws IOException {
+        List<Usuario> usuarios = new ArrayList<>();
+
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = new XSSFWorkbook(inputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(0);  // Pega a primeira aba do Excel
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            // Ignora a primeira linha se for o cabeçalho
+            if (rowIterator.hasNext()) {
+                rowIterator.next();
+            }
+
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                Usuario usuario = new Usuario();
+
+                usuario.setNome(getCellValue(row.getCell(0)));
+                usuario.setEmail(getCellValue(row.getCell(1)));
+                usuario.setCpf(getCellValue(row.getCell(2)));
+
+                usuarios.add(usuario);
+            }
+        }
+
+        return usuarios;
+    }
+
+    private String getCellValue(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                return String.valueOf((int) cell.getNumericCellValue());
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            default:
+                return "";
+        }
+    }
+  
+    private boolean usuarioExiste(String email) {
+        return usuarioRepository.existsByEmail(email);
+    }
+
+    private void validadeUsuario(Usuario usuario){
+        if(usuarioExiste(usuario.getEmail())){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(409), "Email já cadastrado");
+        }
+
+        if (usuario.getNome() == null || usuario.getNome().isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Nome é obrigatório");
+        }
+
+        if (usuario.getEmail() == null || usuario.getEmail().isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Email é obrigatório");
+        }
+
+        if (usuario.getSenha() == null || usuario.getSenha().isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Senha é obrigatória");
+        }
+
+        if (usuario.getFuncao() == null || usuario.getFuncao().isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Função é obrigatória");
+        }
+    }
+
 }

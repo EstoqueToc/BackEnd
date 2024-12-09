@@ -15,4 +15,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByEmail(String email);
     List<Usuario> findAllByEmpresaIdAndNomeContainingIgnoreCase(Long empresaId, String nome);
     List<Usuario> findAllByEmpresaIdOrderByNomeAsc(Long empresaId);
+    Boolean existsByEmail(String email);
 }

@@ -4,11 +4,7 @@ import com.example.crud.Model.Alerta;
 import com.example.crud.Model.Categoria;
 import com.example.crud.Model.Empresa;
 import com.example.crud.Model.Fornecedor;
-import com.example.crud.Model.Empresa;
 import jakarta.validation.constraints.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -56,6 +52,9 @@ public class ProdutoCriacaoDto {
     private Empresa empresa;
 
     private List<Alerta> alerta;
+
+    @NotBlank(message = "Código de barras é obrigatório")
+    private String codigoBarras;
 
     public ProdutoCriacaoDto() {
     }

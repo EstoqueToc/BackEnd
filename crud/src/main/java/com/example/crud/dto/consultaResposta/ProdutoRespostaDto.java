@@ -20,12 +20,13 @@ public class ProdutoRespostaDto {
     private LocalDate dataEntrada;
     private String unidadeMedida;
     private Integer qtdEntrada;
+    private String codigoBarras; // Adicionado
     private Empresa empresa;
     private List<AlertaRespostaDto> alerta;
 
     public ProdutoRespostaDto() {}
 
-    public ProdutoRespostaDto(Long id, String nomeProduto, String descricaoProduto, LocalDate dataValidade, Double precoCompraProduto, Double precoVendaProduto, LocalDate dataEntrada, String unidadeMedida, Integer qtdEntrada, Empresa empresa, List<AlertaRespostaDto> alerta) {
+    public ProdutoRespostaDto(Long id, String nomeProduto, String descricaoProduto, LocalDate dataValidade, Double precoCompraProduto, Double precoVendaProduto, LocalDate dataEntrada, String unidadeMedida, Integer qtdEntrada, String codigoBarras, Empresa empresa, List<AlertaRespostaDto> alerta) {
         this.id = id;
         this.nomeProduto = nomeProduto;
         this.descricaoProduto = descricaoProduto;
@@ -35,6 +36,7 @@ public class ProdutoRespostaDto {
         this.dataEntrada = dataEntrada;
         this.unidadeMedida = unidadeMedida;
         this.qtdEntrada = qtdEntrada;
+        this.codigoBarras = codigoBarras; // Adicionado
         this.empresa = empresa;
         this.alerta = alerta;
     }
